@@ -1,0 +1,20 @@
+{
+    "name": "solves/solvesdao",
+    "description": "Mapeamento Objeto relacional de forma simples e configurável para PHP.",
+    "type": "library",
+	"repositories": [
+		{"type": "github", "url": "https://github.com/thiagogoulart/solvesdao.git"}
+	],
+    "require": {
+        "php": ">=7.1"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Thiago G.S. Goulart",
+            "email": "thiago@solves.com.br"
+        }
+    ],
+    "minimum-stability": "beta",
+    "prefer-stable": true
+}
