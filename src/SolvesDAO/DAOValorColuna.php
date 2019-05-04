@@ -6,6 +6,8 @@ Autor:  Thiago Goulart.
 Data de cria??o: 02/01/2010.
 */
 
+namespace SolvesDAO;
+
 class DAOValorColuna {
 	
 	private $dao;

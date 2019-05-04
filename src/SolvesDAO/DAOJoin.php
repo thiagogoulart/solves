@@ -4,6 +4,8 @@ Autor:  Thiago Goulart.
 Data de criação: 04/10/2013
 */
 
+namespace SolvesDAO;
+
 class DAOJoin {
 	
 	public static $LEFT_JOIN = 'LEFT';

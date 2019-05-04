@@ -7,6 +7,8 @@ Data de criação: 17/10/2009.
 alterado em: 12-02-2014
 */
 
+namespace SolvesDAO;
+
 class DAOColuna {
 
 	private $dao;

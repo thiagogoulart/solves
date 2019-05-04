@@ -5,6 +5,8 @@ Data de criação: 01/01/2010.
 Última alteração: 28/03/2014.
 */
 
+namespace SolvesDAO;
+
 class DAO {
 	
 	private $connection;
