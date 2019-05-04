@@ -11,7 +11,5 @@
             "name": "Thiago G.S. Goulart",
             "email": "thiago@solves.com.br"
         }
-    ],
-    "minimum-stability": "beta",
-    "prefer-stable": true
+    ]
 }
