@@ -29,12 +29,12 @@ class DAOValorColuna {
 	}
 	public function getValor(){
 		if($this->column->isObrigatorio() && !notEmptyVal($this->valor)){
-                    if($this->column->isTipoBoolean()){
-                        $this->valor = 'false';
-                    }else{
-                        throw new Exception('Coluna "'.$this->column->getNome().'" é obrigatória.');
-                    }
-                }
+            if($this->column->isTipoBoolean()){
+                $this->valor = 'false';
+            }else{
+                throw new \Exception('Coluna "'.$this->column->getNome().'" é obrigatória.');
+            }
+        }
 		return $this->valor;
 	}
 	public function setValor($p){
