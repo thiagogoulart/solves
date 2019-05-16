@@ -1023,73 +1023,80 @@ class DAO {
 		}
 	}
 
-        private function getSqlFormSelectColNameAndLabel($coluna, $includeJoins=true) {
-            $joins_sql='';
-            $nomeColuna = $coluna->getNome();
-            $nomeColunaLabel = $nomeColuna . '_label';
-            $colName = $coluna->getDao()->getTabela() . "." . $nomeColuna;
-            if ($coluna->getTipo() == "boolean") {
-                $colLabel = 'formatBoolean(' . $colName . ')  as ' . $nomeColunaLabel;
-            } else if ($coluna->getTipo() == "date") {
-                $colLabel = 'formatDate(' . $colName . ')  as ' . $nomeColunaLabel;
-            } else if ($coluna->getTipo() == "timestamp") {
-                $colLabel = 'formatTimestamp(' . $colName . ')  as ' . $nomeColunaLabel;
-            } else if ($coluna->getTipo() == "time") {
-                $colLabel = '' . $colName . '  as ' . $nomeColunaLabel;
-            } else if ($coluna->getTipo() == "double") {
-                $colLabel = $colName . " as " . $nomeColunaLabel;
-            } else if ($coluna->getTipo() == "money") {
-                $colLabel = 'formatMoney(' . $colName . ')  as ' . $nomeColunaLabel;
-            }  else if ($coluna->getTipo() == "percentual") {
-                $colLabel = '(CASE WHEN '.$colName.' IS NOT NULL THEN replace(round(' . $colName . '::numeric,2)::text, \'.\', \',\')||\' %\'  ELSE \'\' END)  as ' . $nomeColunaLabel;
-            } else {
-                $join = $coluna->getJoin();
-                if (isset($join) && $includeJoins) {
-                    $origemJoinColName = $colName;
-                    $joinLabels = '';
-                    while (isset($join)) {
-                        $daoTarget = $join->getDaoTarget();
-                        $daoTargetTabela = $daoTarget->getTabela();
-                        $daoTargetAlias = $join->getAlias();
-                        $hasAlias = (isset($daoTargetAlias));
-                        if (!$hasAlias) {
-                            $daoTargetAlias = $daoTarget->getTabela();
-                        }
-                        $daoTargetPk = $daoTarget->getPk();
-                        $var_colunaLabel = $daoTarget->getColunaLabel();
-
-                        $daoTargetColLabel = $daoTarget->getColunaLabelName();
-                        $joins_sql .= ' ' . $join->getType() . ' JOIN ' . $daoTargetTabela . ' as ' . $daoTargetAlias . ' ON ' . $daoTargetAlias . '.' . $daoTargetPk . ' = ' . $origemJoinColName;
-
-                        $origemJoinColName = $daoTargetAlias . '.' . $daoTargetColLabel;
-                        $join = (isset($var_colunaLabel) ? $var_colunaLabel->getJoin() : null);
-
-                        $joinLabels .= (notEmptyVal($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaLabel;
-                        $daoTargetColsLabel = $daoTarget->getColsLabelOrder();
-	                    if(isset($daoTargetColsLabel) && count($daoTargetColsLabel)>0){
-	                    	//other join labels
-							foreach($daoTargetColsLabel as $targetColLabel){
-                        		$origemJoinColName = $daoTargetAlias . '.' . $targetColLabel->getNome();
-                        		$nomeColunaOtherJoinLabel = $nomeColuna . '_'.$targetColLabel->getNome();
-	                        	$joinLabels .= (notEmptyVal($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaOtherJoinLabel;
-		                    }
-		                }
+    private function getSqlFormSelectColNameAndLabel($coluna, $includeJoins=true) {
+        $joins_sql='';
+        $nomeColuna = $coluna->getNome();
+        $nomeColunaLabel = $nomeColuna . '_label';
+        $colName = $coluna->getDao()->getTabela() . "." . $nomeColuna;
+        if ($coluna->getTipo() == "boolean") {
+            $colLabel = 'formatBoolean(' . $colName . ')  as ' . $nomeColunaLabel;
+        } else if ($coluna->getTipo() == "date") {
+            $colLabel = 'formatDate(' . $colName . ')  as ' . $nomeColunaLabel;
+        } else if ($coluna->getTipo() == "timestamp") {
+            $colLabel = 'formatTimestamp(' . $colName . ')  as ' . $nomeColunaLabel;
+        } else if ($coluna->getTipo() == "time") {
+            $colLabel = '' . $colName . '  as ' . $nomeColunaLabel;
+        } else if ($coluna->getTipo() == "double") {
+            $colLabel = $colName . " as " . $nomeColunaLabel;
+        } else if ($coluna->getTipo() == "money") {
+            $colLabel = 'formatMoney(' . $colName . ')  as ' . $nomeColunaLabel;
+        }  else if ($coluna->getTipo() == "percentual") {
+            $colLabel = '(CASE WHEN '.$colName.' IS NOT NULL THEN replace(round(' . $colName . '::numeric,2)::text, \'.\', \',\')||\' %\'  ELSE \'\' END)  as ' . $nomeColunaLabel;
+        } else {
+            $join = $coluna->getJoin();
+            if (isset($join) && $includeJoins) {
+                $origemJoinColName = $colName;
+                $joinLabels = '';
+                while (isset($join)) {
+                    $daoTarget = $join->getDaoTarget();
+                    $daoTargetTabela = $daoTarget->getTabela();
+                    $daoTargetAlias = $join->getAlias();
+                    $hasAlias = (isset($daoTargetAlias));
+                    if (!$hasAlias) {
+                        $daoTargetAlias = $daoTarget->getTabela();
                     }
-                    $colLabel = $joinLabels;
-                } else {
-                    $colLabel = $colName . " as " . $nomeColunaLabel;
+                    $daoTargetPk = $daoTarget->getPk();
+                    $var_colunaLabel = $daoTarget->getColunaLabel();
+
+                    $daoTargetColLabel = $daoTarget->getColunaLabelName();
+                    $joins_sql .= ' ' . $join->getType() . ' JOIN ' . $daoTargetTabela . ' as ' . $daoTargetAlias . ' ON ' . $daoTargetAlias . '.' . $daoTargetPk . ' = ' . $origemJoinColName;
+
+                    $origemJoinColName = $daoTargetAlias . '.' . $daoTargetColLabel;
+                    $join = (isset($var_colunaLabel) ? $var_colunaLabel->getJoin() : null);
+
+                    $joinLabels .= (notEmptyVal($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaLabel;
+                    $daoTargetColsLabel = $daoTarget->getColsLabelOrder();
+                    if(isset($daoTargetColsLabel) && count($daoTargetColsLabel)>0){
+                    	//other join labels
+						foreach($daoTargetColsLabel as $targetColLabel){
+                    		$origemJoinColName = $daoTargetAlias . '.' . $targetColLabel->getNome();
+                    		$nomeColunaOtherJoinLabel = $nomeColuna . '_'.$targetColLabel->getNome();
+                        	$joinLabels .= (notEmptyVal($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaOtherJoinLabel;
+	                    }
+	                }
                 }
+                $colLabel = $joinLabels;
+            } else {
+                $colLabel = $colName . " as " . $nomeColunaLabel;
             }
-            $arr = array();
-            $arr[0] = $colName;
-            $arr[1] = $colLabel;
-            $arr[2] = $joins_sql;
-            $arr[3] = $colName . ', ' . $colLabel;
-            return $arr;
         }
-        
-        public function confereParametro($paramValue, $tipo, $maxSize){
-            return !strstr($paramValue,"'") && strlen($paramValue)<$maxSize;
-        }
+        $arr = array();
+        $arr[0] = $colName;
+        $arr[1] = $colLabel;
+        $arr[2] = $joins_sql;
+        $arr[3] = $colName . ', ' . $colLabel;
+        return $arr;
+    }
+    
+    public function confereParametro($paramValue, $tipo, $maxSize){
+        return !strstr($paramValue,"'") && strlen($paramValue)<$maxSize;
+    }
+	public function removeAtributosSensiveisDeArray($arrItem, $arrIdsColunas){
+		foreach($arrIdsColunas as $idColuna){ 
+			unset($arrItem[$this->getColunaNome($idColuna)]);
+			unset($arrItem[$this->getColunaNome($idColuna)."_label"]);
+		}
+		return $arrItem;
+	}
 }
 ?>
