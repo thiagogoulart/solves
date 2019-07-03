@@ -795,6 +795,9 @@ class DAO {
             else{
                 $vcol .= "null";	
             }
+            if(strlen($vcol)==0){
+                $vcol .= "null";
+            }
             return $vcol;
         }
 	public function getSqlUpdate($id){
