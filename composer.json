@@ -1,6 +1,6 @@
 {
-    "name": "thiagogoulart/solvesdao",
-    "description": "Mapeamento Objeto relacional de forma simples e configurável para PHP.",
+    "name": "thiagogoulart/solves",
+    "description": "Classes úteis para Autorização, Pagamento e Mapeamento Objeto relacional de forma simples e configurável para PHP.",
     "type": "library",
     "require": {
         "php": ">=7.1"
