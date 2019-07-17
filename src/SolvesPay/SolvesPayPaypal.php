@@ -4,6 +4,7 @@
  * @version 1.0
  * @created 26/06/2019
  */ 
+namespace SolvesPay;
 
 class SolvesPayPaypal {
 

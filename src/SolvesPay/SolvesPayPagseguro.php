@@ -4,6 +4,7 @@
  * @version 1.0
  * @created 06/05/2019
  */ 
+namespace SolvesPay;
 
 class SolvesPayPagseguro {
 

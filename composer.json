@@ -3,8 +3,20 @@
     "description": "Classes úteis para Autorização, Pagamento e Mapeamento Objeto relacional de forma simples e configurável para PHP.",
     "type": "library",
     "require": {
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "pagseguro/pagseguro-php-sdk" : "*",
+        "kreait/firebase-php" : "*"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:pagseguro/pagseguro-php-sdk.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:kreait/firebase-php.git"
+        }
+    ],
     "license": "proprietary",
     "authors": [
         {

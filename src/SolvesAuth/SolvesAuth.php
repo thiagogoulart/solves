@@ -4,6 +4,8 @@
  * @version 1.0
  * @created 08/05/2019
  */ 
+namespace SolvesAuth;
+
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;
 use Firebase\Auth\Token\Exception\InvalidToken;
