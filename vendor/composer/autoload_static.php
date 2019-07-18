@@ -31,6 +31,7 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Cache\\' => 10,
             'PagSeguro\\' => 10,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
         array (
@@ -96,6 +97,10 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         'PagSeguro\\' => 
         array (
             0 => __DIR__ . '/..' . '/pagseguro/pagseguro-php-sdk/source',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'Monolog\\' => 
         array (

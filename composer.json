@@ -5,7 +5,8 @@
     "require": {
         "php": ">=7.1",
         "pagseguro/pagseguro-php-sdk" : "*",
-        "kreait/firebase-php" : "*"
+        "kreait/firebase-php" : "*",
+        "phpmailer/phpmailer" : "~6.0"
     },
     "repositories": [
         {
@@ -15,6 +16,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:kreait/firebase-php.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/PHPMailer/PHPMailer.git"
         }
     ],
     "license": "proprietary",
