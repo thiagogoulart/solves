@@ -323,7 +323,7 @@ class DAO {
 			}
 			$sql .= $joins_sql;
 			
-			if(isNotBlank($this->orderByEspecifico)){
+			if(\Solves\Solves::isNotBlank($this->orderByEspecifico)){
 				$sql .= "  ".$this->orderByEspecifico. " ";
 			}else{
 				$sql .= $ordenation." "; 
@@ -492,7 +492,7 @@ class DAO {
 			$sql .= " ".$condition;
 
 
-			if(isNotBlank($this->orderByEspecifico)){
+			if(\Solves\Solves::isNotBlank($this->orderByEspecifico)){
 				$sql .= "  ".$this->orderByEspecifico. " ";
 			}else{
 				$sql .= $ordenation." "; 
@@ -550,7 +550,7 @@ class DAO {
 			foreach($this->colunas as $coluna){
 				if($coluna->getNome()==$key){
 					$conditionCol =$coluna->getSearchSql($search);
-					if(isNotBlank($conditionCol)){
+					if(\Solves\Solves::isNotBlank($conditionCol)){
 						if($entrou){
 							$condition .= ($useAndByColumn?"AND":"OR");							
 						}
@@ -752,11 +752,11 @@ class DAO {
             $vcol='';  
             $tipo = $coluna->getTipo();
             $isNotNull = $coluna->isObrigatorio();
-            $hasValue = (notEmptyVal($value));
+            $hasValue = (\Solves\Solves::isNotBlank($value));
             
             if($tipo=="string" || $tipo=="date" || $tipo=="text" || $tipo=="timestamp" || $tipo=="time"){
                  if($hasValue){
-                 	if(SolvesDAO::isSystemDbTypeMySql()){
+                 	if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
                  		$value = mysqli_real_escape_string($this->getConnection(), $value);
                  	}else{
                  		$value = addslashes($value);
@@ -772,7 +772,7 @@ class DAO {
                      $vcol .= "null";
                  }
             }else if($tipo=="boolean"){
-                $vcol .= (checkBoolean($value) ? 'true' : ((SolvesDAO::isSystemDbTypeMySql())?'0':'false'));
+                $vcol .= (checkBoolean($value) ? 'true' : ((\SolvesDAO\SolvesDAO::isSystemDbTypeMySql())?'0':'false'));
             }
             else if($tipo=="array_int"){
                 if($hasValue){
@@ -896,12 +896,12 @@ class DAO {
 	}
 	private function marcaDelete($id, $usuarioId, $ip, $data, $moduloId, $rotinaId){
 		if($this->tabela && $this->pk && 
-                        notEmptyVal($id) && 
-                        notEmptyVal($usuarioId) && 
-                        notEmptyVal($ip) && 
-                        notEmptyVal($data) && 
-                        notEmptyVal($moduloId) && 
-                        notEmptyVal($rotinaId)){
+                        \Solves\Solves::isNotBlank($id) && 
+                        \Solves\Solves::isNotBlank($usuarioId) && 
+                        \Solves\Solves::isNotBlank($ip) && 
+                        \Solves\Solves::isNotBlank($data) && 
+                        \Solves\Solves::isNotBlank($moduloId) && 
+                        \Solves\Solves::isNotBlank($rotinaId)){
                     
                     $rotina = new ErpRotina($this->connection);
                     $rotina = $rotina->findById($rotinaId);
@@ -940,11 +940,11 @@ class DAO {
 	public function mountWherePeriod($campoData, $dataInicio, $dataFim){
 		$where = "";
                 $campoData.='::date';
-		if(notEmptyVal($dataInicio) && notEmptyVal($dataFim)){
+		if(\Solves\Solves::isNotBlank($dataInicio) && \Solves\Solves::isNotBlank($dataFim)){
 			$where = " ".$campoData." BETWEEN '".$dataInicio."' AND '".$dataFim. "' ";
-		}else if(notEmptyVal($dataInicio)){
+		}else if(\Solves\Solves::isNotBlank($dataInicio)){
 			$where = " ".$campoData." >= '".$dataInicio. "' ";
-		}else if(notEmptyVal($dataFim)){
+		}else if(\Solves\Solves::isNotBlank($dataFim)){
 			$where = " ".$campoData." <= '".$dataFim. "' ";
 		}
 		return $where;
@@ -975,7 +975,7 @@ class DAO {
 		$this->msgError .= '['.$op.']';
 		if($sql && $sql!=""){
 		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$op." | ".$sql.". </div>";
-			if(SolvesDAO::isSystemDbTypeMySql()){ 
+			if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
 				$result = $this->connection->query($sql) or die($this->msgError.
                                         (true ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->connection->error."</div>". $this->connection->errno : ""));
 				if($op=='insert'){
@@ -983,9 +983,9 @@ class DAO {
 				}else{
 					return true;
 				}
-			}else if(SolvesDAO::isSystemDbTypePostgresql()){
+			}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
 				$result = pg_query($this->connection, $sql) or die($this->msgError.
-                                        (Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
+                                        (\Solves\Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
 				return true;
 			}
 		}
@@ -1000,7 +1000,7 @@ class DAO {
 		if($sql && $sql!=""){
 		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>";
 			$resultado = array();
-			if(SolvesDAO::isSystemDbTypeMySql()){ 
+			if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
 				$result = $this->connection->query($sql, MYSQLI_USE_RESULT) or die($this->msgError.
                                         (false ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->connection->error."</div>"));
 				while($dados=$result->fetch_array(MYSQLI_ASSOC)){ 
@@ -1011,9 +1011,9 @@ class DAO {
 				/* free result set */
    				@mysqli_free_result($result);
 				$result = null;
-			}else if(SolvesDAO::isSystemDbTypePostgresql()){
+			}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
 				$result = pg_query($this->connection, $sql) or die($this->msgError.
-                                        (Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
+                                        (\Solves\Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
 					
 				while($dados=pg_fetch_array($result)){
 					$resultado[] = $dados;	
@@ -1068,14 +1068,14 @@ class DAO {
                     $origemJoinColName = $daoTargetAlias . '.' . $daoTargetColLabel;
                     $join = (isset($var_colunaLabel) ? $var_colunaLabel->getJoin() : null);
 
-                    $joinLabels .= (notEmptyVal($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaLabel;
+                    $joinLabels .= (\Solves\Solves::isNotBlank($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaLabel;
                     $daoTargetColsLabel = $daoTarget->getColsLabelOrder();
                     if(isset($daoTargetColsLabel) && count($daoTargetColsLabel)>0){
                     	//other join labels
 						foreach($daoTargetColsLabel as $targetColLabel){
                     		$origemJoinColName = $daoTargetAlias . '.' . $targetColLabel->getNome();
                     		$nomeColunaOtherJoinLabel = $nomeColuna . '_'.$targetColLabel->getNome();
-                        	$joinLabels .= (notEmptyVal($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaOtherJoinLabel;
+                        	$joinLabels .= (\Solves\Solves::isNotBlank($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaOtherJoinLabel;
 	                    }
 	                }
                 }

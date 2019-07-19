@@ -88,7 +88,7 @@ class DAOColuna {
 		$this->searchable = $p;
 	}
 	public function isOrdenable(){
-		return isNotBlank($this->orderByType);
+		return \Solves\Solves::isNotBlank($this->orderByType);
 	}
 	public function getOrderByType(){
 		return $this->orderByType;

@@ -175,6 +175,12 @@ class Solves {
 	    return is_numeric($n);
 	}
 
+	public static function removeEspacos($string) {
+	    return Solves::substituiEspacos($string, "");
+	}
+	public static function substituiEspacos($string, $replaceFor) {
+	    return preg_replace("/\\s\\s+/", $replaceFor, (isset($string)?$string:""));
+	}
 	public static function descriptografaNumero($p) {
 	    if (isset($p)) {
 	        $p = Solves::descriptografa($p);

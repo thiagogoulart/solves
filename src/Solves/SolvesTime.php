@@ -11,11 +11,11 @@ class SolvesTime {
     
 
     public static function getPeriodoLabel($dtInicio, $dtFim) {
-        if (Solves::isNotBlank($dtInicio) && Solves::isNotBlank($dtFim)) {
+        if (\Solves\Solves::isNotBlank($dtInicio) && \Solves\Solves::isNotBlank($dtFim)) {
             return 'De ' . $dtInicio . ' até ' . $dtFim;
-        } else if (Solves::isNotBlank($dtInicio)) {
+        } else if (\Solves\Solves::isNotBlank($dtInicio)) {
             return 'A partir de ' . $dtInicio;
-        } else if (Solves::isNotBlank($dtFim)) {
+        } else if (\Solves\Solves::isNotBlank($dtFim)) {
             return 'Até ' . $dtFim;
         }
     }
@@ -153,7 +153,7 @@ class SolvesTime {
     }
 
     public static function getDateFormated($data) {
-        if (Solves::isNotBlank($data)) {
+        if (\Solves\Solves::isNotBlank($data)) {
             $dia = substr($data, 0, 2);
             $mes = substr($data, 3, 2);
             $ano = substr($data, 6, 4);
@@ -165,7 +165,7 @@ class SolvesTime {
         return $str;
     }
     public static function getTimestampFormated($data) {
-        if (Solves::isNotBlank($data)) {
+        if (\Solves\Solves::isNotBlank($data)) {
             $dia = substr($data, 0, 2);
             $mes = substr($data, 3, 2);
             $ano = substr($data, 6, 4);
@@ -178,7 +178,7 @@ class SolvesTime {
         return $str;
     }
     public static function getTimeFormated($data) {
-        if (Solves::isNotBlank($data)) {
+        if (\Solves\Solves::isNotBlank($data)) {
             $str = $data;
         } else {
             $str = "";

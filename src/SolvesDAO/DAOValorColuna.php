@@ -28,7 +28,7 @@ class DAOValorColuna {
 		$this->column = $p;
 	}
 	public function getValor(){
-		if($this->column->isObrigatorio() && !notEmptyVal($this->valor)){
+		if($this->column->isObrigatorio() && !\Solves\Solves::isNotBlank($this->valor)){
             if($this->column->isTipoBoolean()){
                 $this->valor = 'false';
             }else{

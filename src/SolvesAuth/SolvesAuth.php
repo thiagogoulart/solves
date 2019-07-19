@@ -88,18 +88,18 @@ class SolvesAuth {
         if ($receivedToken != $token){
             return null;
         }
-        $receivedData = Solves::descriptografa($receivedData);
+        $receivedData = \Solves\Solves::descriptografa($receivedData);
         $arrUserData = json_decode($receivedData);
-        $creationTimeToken = Solves::descriptografa($arrUserData->t);
-        $tipo = Solves::descriptografa($arrUserData->z);
-        $userIdToken = Solves::descriptografa($arrUserData->u);
-        $senhaToken = Solves::descriptografa($arrUserData->s);
-        $token_HTTP_USER_AGENT = Solves::descriptografa($arrUserData->HTTP_USER_AGENT);
-        $token_CLIENTE_IP = Solves::descriptografa($arrUserData->CLIENTE_IP);
-        $token_REQUEST_TIME = Solves::descriptografa($arrUserData->REQUEST_TIME);
+        $creationTimeToken = \Solves\Solves::descriptografa($arrUserData->t);
+        $tipo = \Solves\Solves::descriptografa($arrUserData->z);
+        $userIdToken = \Solves\Solves::descriptografa($arrUserData->u);
+        $senhaToken = \Solves\Solves::descriptografa($arrUserData->s);
+        $token_HTTP_USER_AGENT = \Solves\Solves::descriptografa($arrUserData->HTTP_USER_AGENT);
+        $token_CLIENTE_IP = \Solves\Solves::descriptografa($arrUserData->CLIENTE_IP);
+        $token_REQUEST_TIME = \Solves\Solves::descriptografa($arrUserData->REQUEST_TIME);
 
         if(isset($tipo) && isset($creationTimeToken) && isset($userIdToken) && isset($senhaToken)){
-            if(Solves::isNotBlank($token_HTTP_USER_AGENT) && Solves::isNotBlank($token_CLIENTE_IP) && 
+            if(\Solves\Solves::isNotBlank($token_HTTP_USER_AGENT) && \Solves\Solves::isNotBlank($token_CLIENTE_IP) && 
                 $_SERVER['HTTP_USER_AGENT']==$token_HTTP_USER_AGENT){ 
                 $classe = ucwords($tipo);
                 $obj = new $classe($ONNECTION); 
@@ -121,25 +121,25 @@ class SolvesAuth {
     }
     public static function auth($userId, $senha,$tipo='cliente'){
         $userData = new stdClass();
-        $userData->t = Solves::criptografa(time());
-        $userData->u = Solves::criptografa($userId);
-        $userData->z = Solves::criptografa($tipo);
-        $userData->s = Solves::criptografa($senha);
-        $userData->HTTP_USER_AGENT = Solves::criptografa($_SERVER['HTTP_USER_AGENT']);
-        $userData->CLIENTE_IP = Solves::criptografa(getClientIp());
-        $userData->REQUEST_TIME = Solves::criptografa($_SERVER['REQUEST_TIME']);
-        $data = SolvesJson::json_encode($userData);
-        $token = SolvesAuth::getToken(Solves::criptografa($data));
-        return SolvesJson::json_encode($token);
+        $userData->t = \Solves\Solves::criptografa(time());
+        $userData->u = \Solves\Solves::criptografa($userId);
+        $userData->z = \Solves\Solves::criptografa($tipo);
+        $userData->s = \Solves\Solves::criptografa($senha);
+        $userData->HTTP_USER_AGENT = \Solves\Solves::criptografa($_SERVER['HTTP_USER_AGENT']);
+        $userData->CLIENTE_IP = \Solves\Solves::criptografa(getClientIp());
+        $userData->REQUEST_TIME = \Solves\Solves::criptografa($_SERVER['REQUEST_TIME']);
+        $data = \Solves\SolvesJson::json_encode($userData);
+        $token = SolvesAuth::getToken(\Solves\Solves::criptografa($data));
+        return \Solves\SolvesJson::json_encode($token);
     }
     public static function getUserUid($firebaseAuthUser, $firebaseUserChecked){
-        return (Solves::isNotBlank($firebaseAuthUser) && Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->uid : $firebaseUserChecked->uid);
+        return (\Solves\Solves::isNotBlank($firebaseAuthUser) && \Solves\Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->uid : $firebaseUserChecked->uid);
     }
     public static function getUserEmail($firebaseAuthUser, $firebaseUserChecked){
-        return (Solves::isNotBlank($firebaseAuthUser) && Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->email : $firebaseUserChecked->email);
+        return (\Solves\Solves::isNotBlank($firebaseAuthUser) && \Solves\Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->email : $firebaseUserChecked->email);
     }
     public static function getUserPhone($firebaseAuthUser, $firebaseUserChecked){
-        return (Solves::isNotBlank($firebaseAuthUser) && Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->phoneNumber : $firebaseUserChecked->phoneNumber);
+        return (\Solves\Solves::isNotBlank($firebaseAuthUser) && \Solves\Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->phoneNumber : $firebaseUserChecked->phoneNumber);
     }
     public static function getUserName($firebaseAuthUser, $firebaseUserChecked){
         return $firebaseUserChecked->providerData[0]->displayName;
@@ -148,10 +148,10 @@ class SolvesAuth {
         $url = null;
         try{
             $url = $firebaseAuthUser->photoURL;
-            if(!Solves::isNotBlank($url)){
+            if(!\Solves\Solves::isNotBlank($url)){
                 $url = $firebaseUserChecked->providerData[0]->photoURL;
             }
-            if(!Solves::isNotBlank($url)){
+            if(!\Solves\Solves::isNotBlank($url)){
                 $url = $firebaseAuthUser->profile->picture->data->url;
             }
         }catch(Exception $e){
@@ -162,13 +162,13 @@ class SolvesAuth {
     public static function getCredentialProviderId($firebaseAuthUser, $firebaseUserChecked){
         $c = null;
         try{    
-            if(Solves::isNotBlank($firebaseAuthUser) && Solves::isNotBlank($firebaseAuthUser->user) && Solves::isNotBlank($firebaseAuthUser->user->providerData)){
+            if(\Solves\Solves::isNotBlank($firebaseAuthUser) && \Solves\Solves::isNotBlank($firebaseAuthUser->user) && \Solves\Solves::isNotBlank($firebaseAuthUser->user->providerData)){
                 $c = $firebaseAuthUser->user->providerData[0]->providerId;
             }
-            if(!Solves::isNotBlank($c)){
+            if(!\Solves\Solves::isNotBlank($c)){
                 $c = $firebaseAuthUser->credential->providerId;
             }
-            if(!Solves::isNotBlank($c)){
+            if(!\Solves\Solves::isNotBlank($c)){
                 $c = $firebaseUserChecked->providerData[0]->providerId;
             }
         }catch(Exception $e){

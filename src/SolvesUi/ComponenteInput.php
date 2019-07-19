@@ -74,7 +74,7 @@ class ComponenteInput {
         if ($this->type == "checkbox") {
             $this->onChange = 'clickCheck(this);';
         }
-        if(!notEmptyVal($this->help)){
+        if(!\Solves\Solves::isNotBlank($this->help)){
             $this->help = $this->label;
         }
         if($tamanho==null){
@@ -177,28 +177,28 @@ class ComponenteInput {
         $containerId = 'continputgr_'.$this->id;
         $html = '<div id="'.$containerId.'" ' . 
                 ($this->usingClasse ? 'class="input-group ' . ($this->getClasse()) . '"' : '') . ' ' .
-                (notEmptyVal($this->containerStyle) ? 'style="'.$this->containerStyle.'"' : '') . '>';
+                (\Solves\Solves::isNotBlank($this->containerStyle) ? 'style="'.$this->containerStyle.'"' : '') . '>';
 
         if ($this->showLabel) {
             $html .= '<span class="input-group-addon ' . ($this->obrigatorio ? 'label_obrigatorio' : '') . '" 
-				title="' . $this->help . '" alt="' . $this->label . '">
-					' . ($this->obrigatorio ? ' * ' : '') . '
-					' . $this->label . ': </span>';
+                title="' . $this->help . '" alt="' . $this->label . '">
+                    ' . ($this->obrigatorio ? ' * ' : '') . '
+                    ' . $this->label . ': </span>';
         }
         if ($this->type == "select") {
-            //select	
+            //select    
             $html .='<div ' . ($this->usingClasse ? 'class="form-control ' . ($this->getClasse()) . '"' : '') . ' style="padding: 0;">
-			<select ' . $this->attributes . '  alt="' . $this->label . '" title="' .$this->help. '" 
-					 id="' . $this->id . '" name="' . $this->name . '" 
-					 class="form-control select_chosen ' . ($this->getClasse()) . '" 
-					' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . ' 
-					 minlength="' . $this->minlength . '" 
-					 maxlength="' . $this->maxlength . '"
-					' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
-					' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
-					' . (strlen($this->onSelect) > 0 ? ' onchange="' . $this->onSelect . '" ' : '') . '
-					' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
-					' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '>';
+            <select ' . $this->attributes . '  alt="' . $this->label . '" title="' .$this->help. '" 
+                     id="' . $this->id . '" name="' . $this->name . '" 
+                     class="form-control select_chosen ' . ($this->getClasse()) . '" 
+                    ' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . ' 
+                     minlength="' . $this->minlength . '" 
+                     maxlength="' . $this->maxlength . '"
+                    ' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
+                    ' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
+                    ' . (strlen($this->onSelect) > 0 ? ' onchange="' . $this->onSelect . '" ' : '') . '
+                    ' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
+                    ' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '>';
 
             $html .='<option value=""></option>';
             if (isset($this->optionsSelect)) {
@@ -206,7 +206,7 @@ class ComponenteInput {
                 $qtdOptions = count($this->optionsSelect);
                 foreach ($this->optionsSelect as $opt) {
                     $html .='<option value="' . $opt[$this->optionPkName] . '" 
-							' . ((isset($this->value) && $this->value == $opt[$this->optionPkName]) ? ' selected' : '') . '>' .
+                            ' . ((isset($this->value) && $this->value == $opt[$this->optionPkName]) ? ' selected' : '') . '>' .
                             ($hasOptionMaskLabel ? $this->getMaskValue($opt) : $opt[$this->optionValueName . '_label']) . '</option>';
                 }
             }
@@ -214,40 +214,40 @@ class ComponenteInput {
         } else if ($this->type == "textarea") {
             //textarea
             $html .='<div ' . ($this->usingClasse ? 'class="form-control ' . ($this->getClasse()) . '"' : '') . ' style="padding: 0;">
-				<textarea ' . $this->attributes . ' 
-					 alt="' . $this->label . '" title="'.$this->help.'" 
-					 id="' . $this->id . '" name="' . $this->name . '" 
-					 style="margin: 0px; " 
-					 class="form-control ' . ($this->getClasse()) . '" 
+                <textarea ' . $this->attributes . ' 
+                     alt="' . $this->label . '" title="'.$this->help.'" 
+                     id="' . $this->id . '" name="' . $this->name . '" 
+                     style="margin: 0px; " 
+                     class="form-control ' . ($this->getClasse()) . '" 
                                              cke_class="'.$this->getCkeClasse().'" 
-					' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . '
-					validationType="' . $this->validationType . '"
-					 minlength="' . $this->minlength . '" 
-					 maxlength="' . $this->maxlength . '"
-					' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
-					' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
-					' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
-					' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
-					' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
-					placeholder="' . $this->placeHolder . '">' . $this->value . '</textarea></div>'.
+                    ' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . '
+                    validationType="' . $this->validationType . '"
+                     minlength="' . $this->minlength . '" 
+                     maxlength="' . $this->maxlength . '"
+                    ' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
+                    ' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
+                    ' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
+                    ' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
+                    ' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
+                    placeholder="' . $this->placeHolder . '">' . $this->value . '</textarea></div>'.
                     '<script type="text/javascript">'.
                     ("var editor = CKEDITOR.inline( '".$this->name."' );").
                     '</script>';
         } else if ($this->type == "checkbox") {
-            //checkbox	
+            //checkbox  
             $marcado = checkBoolean($this->value);
             $html .='<div ' . ($this->usingClasse ? 'class="form-control ' . ($this->getClasse()) . '"' : '') . ' style="padding: 0;">
-					<input ' . $this->attributes . '  type="' . $this->type . '"
-					 alt="' . $this->label . '" title="'.$this->help.'" 
-					 id="' . $this->id . '" name="' . $this->name . '" 
-					 class="' . ($this->getClasse()) . '" 
-					 ' . ($marcado ? ' checked="checked" ' : '') . '
-					' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
-					' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
-					' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
-					' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
-					' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
-					value="' . ($marcado ? 'true' : 'false') . '" ></div>';
+                    <input ' . $this->attributes . '  type="' . $this->type . '"
+                     alt="' . $this->label . '" title="'.$this->help.'" 
+                     id="' . $this->id . '" name="' . $this->name . '" 
+                     class="' . ($this->getClasse()) . '" 
+                     ' . ($marcado ? ' checked="checked" ' : '') . '
+                    ' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
+                    ' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
+                    ' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
+                    ' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
+                    ' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
+                    value="' . ($marcado ? 'true' : 'false') . '" ></div>';
         } else if ($this->type == "radio") {
             //radio  
             $html .='<div ' . ($this->usingClasse ? 'class="form-control ' . ($this->getClasse()) . '"' : '') . ' style="padding: 0;">';
@@ -266,63 +266,63 @@ class ComponenteInput {
         } else if ($this->type == "periodo") {
             $vlInicial = $this->value[0];
             $vlFinal = $this->value[1];
-            //input	
+            //input 
             $html .='<div ' . ($this->usingClasse ? 'class="form-control ' . ($this->getClasse()) . '"' : '') . ' style="padding: 0;">
-				<div style="width:170px; float:left; margin-right: 30px;">
-				<input ' . $this->attributes . ' type="text"
-					 alt="Data inicial" title="Data inicial" 
-					 id="' . $this->id . '_inicio" name="' . $this->name . '_inicio" 
-					 class="form-control ' . ($this->getClasse()) . '" 
-					' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . '
-					validationType="' . $this->validationType . '"
-					 minlength="' . $this->minlength . '" 
-					 maxlength="' . $this->maxlength . '"
-					' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
-					' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
-					' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
-					' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
-					' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
-					value="' . $vlInicial . '" 
-					placeholder="Data inicial">
-						</div>
-					
-					<div style="width:170px; float:left; ">
-					<input ' . $this->attributes . ' type="text"
-					 alt="Data final" title="Data final" 
-					 id="' . $this->id . '_final" name="' . $this->name . '_final" 
-					 class="form-control ' . ($this->getClasse()) . '" 
-					' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . '
-					validationType="' . $this->validationType . '"
-					 minlength="' . $this->minlength . '" 
-					 maxlength="' . $this->maxlength . '"
-					' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
-					' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
-					' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
-					' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
-					' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
-					value="' .$vlFinal. '" 
-					placeholder="Data final">
-						</div>
-					<div style="clear:both"></div>
-					</div>';
+                <div style="width:170px; float:left; margin-right: 30px;">
+                <input ' . $this->attributes . ' type="text"
+                     alt="Data inicial" title="Data inicial" 
+                     id="' . $this->id . '_inicio" name="' . $this->name . '_inicio" 
+                     class="form-control ' . ($this->getClasse()) . '" 
+                    ' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . '
+                    validationType="' . $this->validationType . '"
+                     minlength="' . $this->minlength . '" 
+                     maxlength="' . $this->maxlength . '"
+                    ' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
+                    ' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
+                    ' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
+                    ' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
+                    ' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
+                    value="' . $vlInicial . '" 
+                    placeholder="Data inicial">
+                        </div>
+                    
+                    <div style="width:170px; float:left; ">
+                    <input ' . $this->attributes . ' type="text"
+                     alt="Data final" title="Data final" 
+                     id="' . $this->id . '_final" name="' . $this->name . '_final" 
+                     class="form-control ' . ($this->getClasse()) . '" 
+                    ' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . '
+                    validationType="' . $this->validationType . '"
+                     minlength="' . $this->minlength . '" 
+                     maxlength="' . $this->maxlength . '"
+                    ' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
+                    ' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
+                    ' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
+                    ' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
+                    ' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
+                    value="' .$vlFinal. '" 
+                    placeholder="Data final">
+                        </div>
+                    <div style="clear:both"></div>
+                    </div>';
         } else {
-            //input	
+            //input 
             $html .='<div ' . ($this->usingClasse ? 'class="form-control ' . ($this->getClasse()) . '"' : '') . ' style="padding: 0;">
-				<input ' . $this->attributes . ' type="' . $this->type . '"
-					 alt="' . $this->label . '" title="'.$this->help.'" 
-					 id="' . $this->id . '" name="' . $this->name . '" 
-					 class="form-control ' . ($this->getClasse()) . '" 
-					' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . '
-					validationType="' . $this->validationType . '"
-					 minlength="' . $this->minlength . '" 
-					 maxlength="' . $this->maxlength . '"
-					' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
-					' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
-					' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
-					' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
-					' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
-					value="' . $this->value . '" 
-					placeholder="' . $this->placeHolder . '"></div>';
+                <input ' . $this->attributes . ' type="' . $this->type . '"
+                     alt="' . $this->label . '" title="'.$this->help.'" 
+                     id="' . $this->id . '" name="' . $this->name . '" 
+                     class="form-control ' . ($this->getClasse()) . '" 
+                    ' . ($this->obrigatorio ? ' obrigatorio="true" ' : '') . '
+                    validationType="' . $this->validationType . '"
+                     minlength="' . $this->minlength . '" 
+                     maxlength="' . $this->maxlength . '"
+                    ' . (strlen($this->onKeyUp) > 0 ? ' onKeyUp="' . $this->onKeyUp . '" ' : '') . '
+                    ' . (strlen($this->onKeyDown) > 0 ? ' onKeyDown="' . $this->onKeyDown . '" ' : '') . '
+                    ' . (strlen($this->onSelect) > 0 ? ' onSelect="' . $this->onSelect . '" ' : '') . '
+                    ' . (strlen($this->onChange) > 0 ? ' onchange="' . $this->onChange . '" ' : '') . '
+                    ' . (strlen($this->onBlur) > 0 ? ' onBlur="' . $this->onBlur . '" ' : '') . '
+                    value="' . $this->value . '" 
+                    placeholder="' . $this->placeHolder . '"></div>';
         }
         $html .='</div>';
         return $html;

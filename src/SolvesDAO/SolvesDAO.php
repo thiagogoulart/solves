@@ -91,14 +91,14 @@ class SolvesDAO {
 	    $bd_user = '';
 	    $bd_passwd = '';
 	    $bd_database = '';
-	    if (Solves::isDevMode()) {
+	    if (\Solves\Solves::isDevMode()) {
 	        $bd_host = SolvesDAO::getBdDevHost();
 	        $bd_port = SolvesDAO::getBdDevPort();
 	        $bd_url = SolvesDAO::getBdDevUrl();
 	        $bd_user = SolvesDAO::getBdDevUser();
 	        $bd_passwd = SolvesDAO::getBdDevPassword();
 	        $bd_database = SolvesDAO::getBdDevDatabase();
-	    } else if (Solves::isProdMode()) {
+	    } else if (\Solves\Solves::isProdMode()) {
             $bd_host = SolvesDAO::getBdProdHost();
             $bd_port = SolvesDAO::getBdProdPort();
             $bd_url = SolvesDAO::getBdProdUrl();
@@ -113,7 +113,7 @@ class SolvesDAO {
 	private static function connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database) {
 	    $CONNECTION = null;
 	    if (SolvesDAO::isSystemDbTypeMySql()) {
-	        $CONNECTION = new mysqli($bd_host, $bd_user, $bd_passwd, $bd_database);
+	        $CONNECTION = new \mysqli($bd_host, $bd_user, $bd_passwd, $bd_database);
 	        /* check connection */
 	        if (mysqli_connect_errno()) {
 	            printf("Erro na conexão: %s\n", mysqli_connect_error());
@@ -135,7 +135,7 @@ class SolvesDAO {
 	    return $CONNECTION;
 	}
 
-	public function closeConnection($con) {
+	public static function closeConnection($con) {
 	    if (isset($con)) {
 	        if (SolvesDAO::isSystemDbTypeMySql()) {
 	            @$con->close();
