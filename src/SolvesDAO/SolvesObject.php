@@ -12,23 +12,23 @@ abstract class SolvesObject {
 	protected $parentDao;
 	protected $connection;
 
-    private $numRows;
+    protected $numRows;
 
     /**Common atributes */
-	private $created_at= '0000-00-00 00:00:00';
-	private $created_atLabel;
-	private $updated_at= '0000-00-00 00:00:00';
-	private $updated_atLabel;
-	private $ativo;
-	private $ativoLabel;
-	private $ativo_at= '0000-00-00 00:00:00';
-	private $ativo_atLabel;
-	private $inativo_at= '0000-00-00 00:00:00';
-	private $inativo_atLabel;
-	private $removed;
-	private $removedLabel;
-	private $removed_at= '0000-00-00 00:00:00';
-	private $removed_atLabel;
+	protected $created_at= '0000-00-00 00:00:00';
+	protected $created_atLabel;
+	protected $updated_at= '0000-00-00 00:00:00';
+	protected $updated_atLabel;
+	protected $ativo;
+	protected $ativoLabel;
+	protected $ativo_at= '0000-00-00 00:00:00';
+	protected $ativo_atLabel;
+	protected $inativo_at= '0000-00-00 00:00:00';
+	protected $inativo_atLabel;
+	protected $removed;
+	protected $removedLabel;
+	protected $removed_at= '0000-00-00 00:00:00';
+	protected $removed_atLabel;
 
 	public function __construct($con, $tabela, $pk, $sequencia=null, $parentDao=null) {
 		$this->connection = $con;
@@ -76,7 +76,7 @@ abstract class SolvesObject {
 	public function getAtivoAtLabel() {return $this->ativo_atLabel;}
 	public function setAtivoAtLabel($p) {$this->ativo_atLabel = $p;}
 
-	public function isAtivo() {return checkBoolean($this->ativo);}
+	public function isAtivo() {return \Solves\Solves::checkBoolean($this->ativo);}
 	public function getAtivo() {return $this->ativo;}
 	public function setAtivo($p) {$this->ativo = $p;}
 	public function getAtivoLabel() {return $this->ativoLabel;}
@@ -87,7 +87,7 @@ abstract class SolvesObject {
 	public function getInativoAtLabel() {return $this->inativo_atLabel;}
 	public function setInativoAtLabel($p) {$this->inativo_atLabel = $p;}
 
-	public function isRemoved() {return checkBoolean($this->removed);}
+	public function isRemoved() {return \Solves\Solves::checkBoolean($this->removed);}
 	public function getRemoved() {return $this->removed;}
 	public function setRemoved($p) {$this->removed = $p;}
 	public function getRemovedLabel() {return $this->removedLabel;}

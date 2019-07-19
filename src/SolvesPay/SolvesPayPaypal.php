@@ -208,7 +208,7 @@ class SolvesPayPaypal extends SolvesPay{
 		        $this->isEmailOfReceiverCorrect($php_post['receiver_email']) ){
 		        
 				$this->log("--(NOTIFICACAO)-- ATRIBUTOS CORRETOS : ". $php_post['txn_id']);
-		        $compra_id = @getIntValue($php_post['invoice']);
+		        $compra_id = @\Solves\Solves::getIntValue($php_post['invoice']);
 		        $situacao = $php_post['payment_status'];
 				$this->log("--(NOTIFICACAO)-- [ ". $compra_id."; ".$situacao."]");
 

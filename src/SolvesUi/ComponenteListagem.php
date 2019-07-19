@@ -175,19 +175,19 @@ class ComponenteListagem {
     }
 
     public function podeInserir() {
-        return (checkBoolean($this->incluir) && ((isset($this->usuario) && $this->usuario->isAdmin()) || (isset($this->grupoUsuarioRotina) && $this->grupoUsuarioRotina->isInserir())));
+        return (\Solves\Solves::checkBoolean($this->incluir) && ((isset($this->usuario) && $this->usuario->isAdmin()) || (isset($this->grupoUsuarioRotina) && $this->grupoUsuarioRotina->isInserir())));
     }
 
     public function podeAlterar() {
-        return (checkBoolean($this->alterar) && ((isset($this->usuario) && $this->usuario->isAdmin()) || (isset($this->grupoUsuarioRotina) && $this->grupoUsuarioRotina->isAlterar())));
+        return (\Solves\Solves::checkBoolean($this->alterar) && ((isset($this->usuario) && $this->usuario->isAdmin()) || (isset($this->grupoUsuarioRotina) && $this->grupoUsuarioRotina->isAlterar())));
     }
 
     public function podeExcluir() {
-        return (checkBoolean($this->remover) && ((isset($this->usuario) && $this->usuario->isAdmin()) || (isset($this->grupoUsuarioRotina) && $this->grupoUsuarioRotina->isExcluir())));
+        return (\Solves\Solves::checkBoolean($this->remover) && ((isset($this->usuario) && $this->usuario->isAdmin()) || (isset($this->grupoUsuarioRotina) && $this->grupoUsuarioRotina->isExcluir())));
     }
 
     public function podeDetalhar() {
-        return (checkBoolean($this->detalhar) && ((isset($this->usuario) && $this->usuario->isAdmin()) || (isset($this->grupoUsuarioRotina) && $this->grupoUsuarioRotina->isVisualizar())));
+        return (\Solves\Solves::checkBoolean($this->detalhar) && ((isset($this->usuario) && $this->usuario->isAdmin()) || (isset($this->grupoUsuarioRotina) && $this->grupoUsuarioRotina->isVisualizar())));
     }
 
     public function getButtonNewTitle() {

@@ -11,6 +11,7 @@ class SolvesDAO {
 	const SYSTEM_DB_TYPE_MYSQL = 'MYSQL';
 	const SYSTEM_DB_TYPE_POSTGRESQL = 'POSTGRESQL';
 
+	private static $DEBUG = false;
 	private static $SYSTEM_DB_TYPE = 'MYSQL';
 
 	private static $BD_DEV_HOST;
@@ -27,6 +28,8 @@ class SolvesDAO {
 	private static $BD_PROD_PASSWORD;
 	private static $BD_PROD_DATABASE;
 
+
+	public static function isDebug(){return SolvesDAO::$DEBUG;}
 	public static function config($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase,
 	$bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase){
 		SolvesDAO::configDev($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase);
@@ -107,6 +110,10 @@ class SolvesDAO {
             $bd_database = SolvesDAO::getBdProdDatabase();
 	    }
 	    $CONNECTION = SolvesDAO::connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database);
+	    if(SolvesDAO::isDebug()){
+	    	echo '[$bd_host:'.$bd_host.'], [$bd_port:'.$bd_port.'], [$bd_url:'.$bd_url.'], [$bd_user:'.$bd_user.'], [$bd_passwd:'.$bd_passwd.'], [$bd_database:'.$bd_database.']';
+	    	var_dump( $CONNECTION);
+	    }
 	    return $CONNECTION;
 	}
 

@@ -38,7 +38,7 @@ class SolvesAuth {
     public static function initFirebase() {
         if(SolvesAuth::$firebase==null){ 
             if(!SolvesAuth::$FIREBASE_CONFIG_JSON_FILE){
-                throw new Exception('Configuração do Firebase não definida.');
+                throw new \Exception('Configuração do Firebase não definida.');
             }
             SolvesAuth::$firebaseServiceAccount = ServiceAccount::$fromJsonFile(SolvesAuth::getFirebaseConfigJsonFile());
             SolvesAuth::$firebaseFatory = (new Factory);
@@ -102,7 +102,7 @@ class SolvesAuth {
             if(\Solves\Solves::isNotBlank($token_HTTP_USER_AGENT) && \Solves\Solves::isNotBlank($token_CLIENTE_IP) && 
                 $_SERVER['HTTP_USER_AGENT']==$token_HTTP_USER_AGENT){ 
                 $classe = ucwords($tipo);
-                $obj = new $classe($ONNECTION); 
+                $obj = new $classe($CONNECTION); 
                 $user = $obj->findByIdAndSenha($userIdToken, $senhaToken);
                 return $user;
             }
@@ -120,17 +120,17 @@ class SolvesAuth {
         return array('token' => $token, 'userData' => $data);
     }
     public static function auth($userId, $senha,$tipo='cliente'){
-        $userData = new stdClass();
+        $userData = new \stdClass();
         $userData->t = \Solves\Solves::criptografa(time());
         $userData->u = \Solves\Solves::criptografa($userId);
         $userData->z = \Solves\Solves::criptografa($tipo);
         $userData->s = \Solves\Solves::criptografa($senha);
         $userData->HTTP_USER_AGENT = \Solves\Solves::criptografa($_SERVER['HTTP_USER_AGENT']);
-        $userData->CLIENTE_IP = \Solves\Solves::criptografa(getClientIp());
+        $userData->CLIENTE_IP = \Solves\Solves::criptografa(\Solves\Solves::getClientIp());
         $userData->REQUEST_TIME = \Solves\Solves::criptografa($_SERVER['REQUEST_TIME']);
-        $data = \Solves\SolvesJson::json_encode($userData);
+        $data = json_encode($userData);
         $token = SolvesAuth::getToken(\Solves\Solves::criptografa($data));
-        return \Solves\SolvesJson::json_encode($token);
+        return json_encode($token);
     }
     public static function getUserUid($firebaseAuthUser, $firebaseUserChecked){
         return (\Solves\Solves::isNotBlank($firebaseAuthUser) && \Solves\Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->uid : $firebaseUserChecked->uid);

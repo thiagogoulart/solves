@@ -772,7 +772,7 @@ class DAO {
                      $vcol .= "null";
                  }
             }else if($tipo=="boolean"){
-                $vcol .= (checkBoolean($value) ? 'true' : ((\SolvesDAO\SolvesDAO::isSystemDbTypeMySql())?'0':'false'));
+                $vcol .= (\Solves\Solves::checkBoolean($value) ? 'true' : ((\SolvesDAO\SolvesDAO::isSystemDbTypeMySql())?'0':'false'));
             }
             else if($tipo=="array_int"){
                 if($hasValue){

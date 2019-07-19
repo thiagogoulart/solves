@@ -235,7 +235,7 @@ class ComponenteInput {
                     '</script>';
         } else if ($this->type == "checkbox") {
             //checkbox  
-            $marcado = checkBoolean($this->value);
+            $marcado = \Solves\Solves::checkBoolean($this->value);
             $html .='<div ' . ($this->usingClasse ? 'class="form-control ' . ($this->getClasse()) . '"' : '') . ' style="padding: 0;">
                     <input ' . $this->attributes . '  type="' . $this->type . '"
                      alt="' . $this->label . '" title="'.$this->help.'" 
