@@ -27,17 +27,17 @@ class SolvesAuth {
     }
 
     public static function getKeyToken(){return SolvesAuth::$KEY_TOKEN;}
-    public static function setFirebaseConfigJsonFile($p){SolvesAuth:$FIREBASE_CONFIG_JSON_FILE = $p;}
-    public static function setFirebaseConfigUser($p){SolvesAuth:$FIREBASE_CONFIG_USER = $p;}
+    public static function setFirebaseConfigJsonFile($p){SolvesAuth::$FIREBASE_CONFIG_JSON_FILE = $p;}
+    public static function setFirebaseConfigUser($p){SolvesAuth::$FIREBASE_CONFIG_USER = $p;}
 
-    public static function getFirebaseConfigJsonFile(){return __DIR__.'/../'.SolvesAuth:$FIREBASE_CONFIG_JSON_FILE;}
-    public static function getFirebaseConfigUser(){return SolvesAuth:$FIREBASE_CONFIG_USER;}
+    public static function getFirebaseConfigJsonFile(){return __DIR__.'/../'.SolvesAuth::$FIREBASE_CONFIG_JSON_FILE;}
+    public static function getFirebaseConfigUser(){return SolvesAuth::$FIREBASE_CONFIG_USER;}
 
     public static function getFirebase(){initFirebase();return SolvesAuth::$firebase;}
 
     public static function initFirebase() {
         if(SolvesAuth::$firebase==null){ 
-            if(!SolvesAuth:$FIREBASE_CONFIG_JSON_FILE){
+            if(!SolvesAuth::$FIREBASE_CONFIG_JSON_FILE){
                 throw new Exception('Configuração do Firebase não definida.');
             }
             SolvesAuth::$firebaseServiceAccount = ServiceAccount::$fromJsonFile(SolvesAuth::getFirebaseConfigJsonFile());

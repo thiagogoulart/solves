@@ -46,7 +46,6 @@ abstract class SolvesObject {
 	public abstract function getId();
 	public abstract function addValores();
 	public abstract function getObject($itemArr);
-	public abstract function toArray();
 
 
     public function getConnection() {
@@ -106,7 +105,7 @@ abstract class SolvesObject {
   	public function getNextIdValue() {return $this->dao->getNextIdValue();}
 
  	 public function findByCondition($empresaId, $condition) {$list = $this->dao->findByCondition($condition);return $this->toObjectArray($list);}
- 	 
+
     public function findBySearch($search) {
         $list = $this->dao->findBySearch($search);
         $resultado = $this->toObjectArray($list);
@@ -121,5 +120,15 @@ abstract class SolvesObject {
   	 public function remove() {$this->setRemoved(1);$this->setUpdatedAt(getTimestampAtual());return $this->update();}
 
  	 public function toObjectArray($list) {$resultado = array();$qtd = count($list);for ($i = 0; $i != $qtd; $i++) {$object = $this->getObject($list[$i]);$resultado[] = $object;}return $resultado;}
+
+ 	 public function toArray() {
+  		 $arr = array(); 
+  		 $cols = $this->dao->getColunas();
+		
+		foreach($cols as $col){
+			$arr[$col->getNome()] = $this->dao->getValorColunaByOrder($col->getColumnOrder());
+		}
+  		 return $arr; 
+  	}
 }
 ?>
