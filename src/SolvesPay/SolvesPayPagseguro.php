@@ -6,7 +6,7 @@
  */ 
 namespace SolvesPay;
 
-class SolvesPayPagseguro {
+class SolvesPayPagseguro extends SolvesPay{
 
 	private $environment;
 	private $session;

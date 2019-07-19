@@ -4,23 +4,30 @@
  * @version 1.0
  * @created 18/07/2019
  */ 
-namespace Solves;
+namespace SolvesUi;
 
+//TODO criar layout
+//TODO scripts e CSS
+//TODO compactar script e css
 
 class SolvesUi {
     
+    private static $SCRIPTS = '';
+    private static $SCRIPTS_ONLOAD = '';
+    private static $INCLUDE_SCRIPTS_TAGS='';
+    private static $IS_APP=false;
 
     public static function getScriptAjusteMetaTags($completeUrl, $titulo, $descr, $img){
-        $completeUrl = Solves::$SITE_URL.$completeUrl;
+        $completeUrl = Solves::getSiteUrl().$completeUrl;
         return "
         $('link[rel=\"canonical\"]').attr('href', '".$completeUrl."');
         $('meta[property=\"og:url\"]').attr('content', '".$completeUrl."');
-        ".((Solves::isNotBlank($titulo) && $titulo!=Solves::$SITE_TITULO)?"
-                            $('title').html('".Solves::$SITE_TITULO.' - '.$titulo."');
-                            $('meta[name=\"twitter:title\"]').attr('content', '".Solves::$SITE_TITULO.' - '.$titulo."');
-                            $('meta[property=\"og:title\"]').attr('content', '".Solves::$SITE_TITULO.' - '.$titulo."');":"")."
-        ".(Solves::isNotBlank($img)?"$('meta[property=\"og:image\"]').attr('content', '".Solves::$SITE_URL.$img."');
-                            $('meta[name=\"twitter:image\"]').attr('content', '".Solves::$SITE_URL.$img."');":"")."
+        ".((Solves::isNotBlank($titulo) && $titulo!=Solves::getSiteTitulo())?"
+                            $('title').html('".Solves::getSiteTitulo().' - '.$titulo."');
+                            $('meta[name=\"twitter:title\"]').attr('content', '".Solves::getSiteTitulo().' - '.$titulo."');
+                            $('meta[property=\"og:title\"]').attr('content', '".Solves::getSiteTitulo().' - '.$titulo."');":"")."
+        ".(Solves::isNotBlank($img)?"$('meta[property=\"og:image\"]').attr('content', '".Solves::getSiteUrl().$img."');
+                            $('meta[name=\"twitter:image\"]').attr('content', '".Solves::getSiteUrl().$img."');":"")."
         ".(Solves::isNotBlank($descr)?"
         $('meta[name=\"description\"]').attr('content', '".$descr."'+$('meta[name=description]').attr('content'));
         $('meta[name=\"twitter:description\"]').attr('content', '".$descr."'+$('meta[name=description]').attr('content'));
@@ -28,8 +35,8 @@ class SolvesUi {
         ";
     }
     public static function getHtmlShareButtons($titulo, $completeUrl, $img){
-        $completeUrl = Solves::$SITE_URL.$completeUrl;
-        $linkMsg = 'Olha%20o%20que%20eu%20vi%20no%20site%20'.Solves::$SITE_TITULO.':%20'.$titulo;
+        $completeUrl = Solves::getSiteUrl().$completeUrl;
+        $linkMsg = 'Olha%20o%20que%20eu%20vi%20no%20site%20'.Solves::getSiteTitulo().':%20'.$titulo;
         $linkMsgComUrl = $linkMsg.'%20'.$completeUrl.'';
         return '
         <div class="share_social_box"><span class="share_social_box_title">Compartilhar: </span>
@@ -42,7 +49,7 @@ class SolvesUi {
     <a href="http://twitter.com/share?text='.$linkMsg.'&amp;url='.$completeUrl.'" target="_blank" data-role="shareLink" title="Compartilhar no Twitter">
         <i class="fab fa-lg fa-twitter"></i>
     </a>
-    <a href="http://pinterest.com/pin/create/button/?url='.$completeUrl.(Solves::isNotBlank($img)?'&amp;media='.Solves::$SITE_URL.$img:'').'" target="_blank" title="Compartilhar no Pinterest">
+    <a href="http://pinterest.com/pin/create/button/?url='.$completeUrl.(Solves::isNotBlank($img)?'&amp;media='.Solves::getSiteUrl().$img:'').'" target="_blank" title="Compartilhar no Pinterest">
         <i class="fab fa-lg fa-pinterest"></i>
     </a>
     <!-- a href="https://plus.google.com/share?url='.$completeUrl.'" target="_blank" title="Compartilhar no Google+ ">
@@ -100,7 +107,7 @@ class SolvesUi {
     public static function getPublicLoadingContainerHtml(){
         return '<div id="public-loading" class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white" style="background-color: #ffffffa1;color: #000000;">
             <div class="signin-logo tx-center tx-24 tx-bold tx-inverse">
-              <div><img src="'.Solves::$IMG_LOGO.'" alt="'.Solves::$SITE_TITULO.'" title="'.Solves::$SITE_TITULO.'"/></div>
+              <div><img src="'.Solves::getImgPathLogo().'" alt="'.Solves::getSiteTitulo().'" title="'.Solves::getSiteTitulo().'"/></div>
               <div>'.getLoadingElementHtml().'</div>
             </div>
             <div class="tx-center mg-b-60">Carregando...</div>

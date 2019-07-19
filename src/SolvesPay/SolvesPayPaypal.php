@@ -6,7 +6,7 @@
  */ 
 namespace SolvesPay;
 
-class SolvesPayPaypal {
+class SolvesPayPaypal extends SolvesPay{
 
 	private $environment;
 	private $initialized=false;

@@ -8,15 +8,67 @@ namespace Solves;
 
 
 class Solves {
+	const SYSTEM_MODE_DEV = 'DEV';
+	const SYSTEM_MODE_PROD = 'PROD';
+	const SOLVES_CDN = 'https://cdn.solves.com.br/';
+	const SOLVES_CDN_JS = 'https://cdn.solves.com.br/js/';
+	const SOLVES_CDN_CSS =  'https://cdn.solves.com.br/css/';
+	const SOLVES_CDN_IMG =  'https://cdn.solves.com.br/img/';
+	const SOLVES_CDN_LIB =  'https://cdn.solves.com.br/lib/';
+
 	private static $BLACKLIST = array("'", "/", "|", "-", " OR ", " AND ", " XOR ", " NOR ", ";", "(", ")", "SELECT", "UNION ", " FROM ");
 	private static $CORINGA_CRIPTOGRAFIA = "_1aZ7_";
 
-	public static $SITE_TITULO = 'Solves';
-	public static $SITE_URL = 'http://localhost/';
-	public static $SITE_DESCR = '';
+	private static $SITE_TITULO = 'Solves';
+	private static $SITE_URL = 'http://localhost/';
+	private static $SITE_DESCR = '';
+	private static $SITE_KEYS = '';
 
-	public static $IMG;
-	public static $IMG_LOGO;
+	private static $SYSTEM_NAME = '';
+	private static $SYSTEM_VERSION = '';
+	private static $SYSTEM_MODE = 'DEV';
+	private static $DEFAULT_CHARSET = '';
+	private static $MODO_SOON_ATIVADO = false;
+
+	private static $IMG_PATH;
+	private static $IMG_PATH_LOGO;
+
+    public static function config($siteTitulo, $siteUrl, $siteDescr, $imgPath, $imgPathLogo){
+    	Solves::setSiteTitulo($siteTitulo);
+    	Solves::setSiteUrl($siteUrl);
+    	Solves::setSiteDescr($siteDescr);
+    	Solves::setImgPath($imgPath);
+    	Solves::setImgPathLogo($imgPathLogo);
+    }
+    public static function configAuth($firebaseJsonFile, $firebaseUser){
+    	SolvesAuth::config($firebaseJsonFile, $firebaseUser);
+    }
+    public static function configMail($emailHost, $emailPort, $emailRemetente, $emailRemetentePasswd, $emailRemetenteFromLabel){
+    	SolvesMail::config($emailHost, $emailPort, $emailRemetente, $emailRemetentePasswd, $emailRemetenteFromLabel);
+    }
+    public static function configDAO($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase, $bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase){
+    	SolvesDAO::config($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase,$bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase);
+    }
+    public static function setSiteTitulo($p){Solves::$SITE_TITULO = $p;}
+    public static function setSiteUrl($p){Solves::$SITE_URL = $p;}
+    public static function setSiteDescr($p){Solves::$SITE_DESCR = $p;}
+    public static function setImgPath($p){Solves::$IMG_PATH = $p;}
+    public static function setImgPathLogo($p){Solves::$IMG_PATH_LOGO = $p;}
+
+    public static function getSystemName(){return Solves::$SYSTEM_NAME;}
+    public static function getSystemVersion(){return Solves::$SYSTEM_VERSION;}
+    public static function getSiteTitulo(){return Solves::$SITE_TITULO;}
+    public static function getSiteUrl(){return Solves::$SITE_URL;}
+    public static function getSiteDescr(){return Solves::$SITE_DESCR;}
+    public static function getImgPath(){return Solves::$IMG_PATH;}
+    public static function getImgPathLogo(){return Solves::$IMG_PATH_LOGO;}
+
+	public static function isDevMode() {return (SYSTEM_MODE_DEV==Solves::$SYSTEM_MODE);}
+	public static function isProdMode() {return (SYSTEM_MODE_PROD==Solves::$SYSTEM_MODE);}
+	public static function setDevMode() {Solves::$SYSTEM_MODE=SYSTEM_MODE_DEV;}
+	public static function setProdMode() {Solves::$SYSTEM_MODE=SYSTEM_MODE_PROD;}
+	public static function isModoSoon() {return Solves::$MODO_SOON_ATIVADO;}
+	public static function setModoSoon() {Solves::$MODO_SOON_ATIVADO=true;}
 
 	public static function isNotBlank($n) {
 	    return (isset($n) && $n !== 'null' && $n !== null && $n !== "" && $n !== " ");

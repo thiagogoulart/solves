@@ -2,7 +2,8 @@
 /*
 Autor:  Thiago Goulart.
 Data de criação: 01/01/2010.
-Última alteração: 28/03/2014.
+Penúltima alteração: 28/03/2014.
+Última alteração: 19/07/2019.
 */
 
 namespace SolvesDAO;
@@ -82,7 +83,7 @@ class DAO {
 		$this->colunas[$order]->setObrigatorio(true);
 	}
 	public function addColuna($order, $nome, $tipo, $searchable, $orderByType){
-		$coluna = new DAOColuna;
+		$coluna = new DAOColuna();
 		$coluna->setColumnOrder($order);
 		$coluna->setNome($nome);
 		$coluna->setLabel($nome);
@@ -755,7 +756,7 @@ class DAO {
             
             if($tipo=="string" || $tipo=="date" || $tipo=="text" || $tipo=="timestamp" || $tipo=="time"){
                  if($hasValue){
-                 	if(SYSTEM_DB_TYPE==SYSTEM_DB_TYPE_MYSQL){
+                 	if(SolvesDAO::isSystemDbTypeMySql()){
                  		$value = mysqli_real_escape_string($this->getConnection(), $value);
                  	}else{
                  		$value = addslashes($value);
@@ -771,7 +772,7 @@ class DAO {
                      $vcol .= "null";
                  }
             }else if($tipo=="boolean"){
-                $vcol .= (checkBoolean($value) ? 'true' : ((SYSTEM_DB_TYPE==SYSTEM_DB_TYPE_MYSQL)?'0':'false'));
+                $vcol .= (checkBoolean($value) ? 'true' : ((SolvesDAO::isSystemDbTypeMySql())?'0':'false'));
             }
             else if($tipo=="array_int"){
                 if($hasValue){
@@ -974,7 +975,7 @@ class DAO {
 		$this->msgError .= '['.$op.']';
 		if($sql && $sql!=""){
 		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$op." | ".$sql.". </div>";
-			if(SYSTEM_DB_TYPE==SYSTEM_DB_TYPE_MYSQL){ 
+			if(SolvesDAO::isSystemDbTypeMySql()){ 
 				$result = $this->connection->query($sql) or die($this->msgError.
                                         (true ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->connection->error."</div>". $this->connection->errno : ""));
 				if($op=='insert'){
@@ -982,9 +983,9 @@ class DAO {
 				}else{
 					return true;
 				}
-			}else if(SYSTEM_DB_TYPE==SYSTEM_DB_TYPE_POSTGRESQL){
+			}else if(SolvesDAO::isSystemDbTypePostgresql()){
 				$result = pg_query($this->connection, $sql) or die($this->msgError.
-                                        (SYSTEM_MODE==SYSTEM_MODE_PROD ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
+                                        (Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
 				return true;
 			}
 		}
@@ -999,7 +1000,7 @@ class DAO {
 		if($sql && $sql!=""){
 		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>";
 			$resultado = array();
-			if(SYSTEM_DB_TYPE==SYSTEM_DB_TYPE_MYSQL){ 
+			if(SolvesDAO::isSystemDbTypeMySql()){ 
 				$result = $this->connection->query($sql, MYSQLI_USE_RESULT) or die($this->msgError.
                                         (false ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->connection->error."</div>"));
 				while($dados=$result->fetch_array(MYSQLI_ASSOC)){ 
@@ -1010,9 +1011,9 @@ class DAO {
 				/* free result set */
    				@mysqli_free_result($result);
 				$result = null;
-			}else if(SYSTEM_DB_TYPE==SYSTEM_DB_TYPE_POSTGRESQL){
+			}else if(SolvesDAO::isSystemDbTypePostgresql()){
 				$result = pg_query($this->connection, $sql) or die($this->msgError.
-                                        (SYSTEM_MODE==SYSTEM_MODE_PROD ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
+                                        (Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
 					
 				while($dados=pg_fetch_array($result)){
 					$resultado[] = $dados;	

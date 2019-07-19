@@ -1,8 +1,9 @@
 <?php
 /**
  * @author Thiago G.S. Goulart
- * @version 1.0
+ * @version 1.1
  * @created 08/05/2019
+ * @updated 19/07/2019
  */ 
 namespace SolvesAuth;
 
@@ -11,133 +12,134 @@ use Kreait\Firebase\ServiceAccount;
 use Firebase\Auth\Token\Exception\InvalidToken;
 
 class SolvesAuth {
-    private static $instance;
-    private $firebase;
-    private $firebaseServiceAccount;
-    private $firebaseFatory;
-    private $debug = false;
+    private static $firebase;
+    private static $firebaseServiceAccount;
+    private static $firebaseFatory;
+    private static $debug = false;
 
-    public function __construct($initFirebase = true) {
-        if($initFirebase){ 
-            if(!FIREBASE_CONFIG_JSON_FILE){
+    private static $KEY_TOKEN = 'S!@&!#511.;,;.,[[[q1';
+    private static $FIREBASE_CONFIG_JSON_FILE;
+    private static $FIREBASE_CONFIG_USER;
+    
+    public static function config($firebaseJsonFile, $firebaseUser){
+        SolvesAuth::setFirebaseConfigJsonFile($firebaseJsonFile);
+        SolvesAuth::setFirebaseConfigUser($firebaseUser);
+    }
+
+    public static function getKeyToken(){return SolvesAuth::$KEY_TOKEN;}
+    public static function setFirebaseConfigJsonFile($p){SolvesAuth:$FIREBASE_CONFIG_JSON_FILE = $p;}
+    public static function setFirebaseConfigUser($p){SolvesAuth:$FIREBASE_CONFIG_USER = $p;}
+
+    public static function getFirebaseConfigJsonFile(){return __DIR__.'/../'.SolvesAuth:$FIREBASE_CONFIG_JSON_FILE;}
+    public static function getFirebaseConfigUser(){return SolvesAuth:$FIREBASE_CONFIG_USER;}
+
+    public static function getFirebase(){initFirebase();return SolvesAuth::$firebase;}
+
+    public static function initFirebase() {
+        if(SolvesAuth::$firebase==null){ 
+            if(!SolvesAuth:$FIREBASE_CONFIG_JSON_FILE){
                 throw new Exception('Configuração do Firebase não definida.');
             }
-            $this->firebaseServiceAccount = ServiceAccount::fromJsonFile(__DIR__.'/../'.FIREBASE_CONFIG_JSON_FILE);
-            $this->firebaseFatory = (new Factory);
-            $this->firebaseFatory = $this->firebaseFatory->withServiceAccount($this->firebaseServiceAccount);
-            if(FIREBASE_CONFIG_USER){
-                $this->firebaseFatory = $this->firebaseFatory->asUser(FIREBASE_CONFIG_USER);
+            SolvesAuth::$firebaseServiceAccount = ServiceAccount::$fromJsonFile(SolvesAuth::getFirebaseConfigJsonFile());
+            SolvesAuth::$firebaseFatory = (new Factory);
+            SolvesAuth::$firebaseFatory = SolvesAuth::$firebaseFatory->withServiceAccount(SolvesAuth::$firebaseServiceAccount);
+            if(SolvesAuth::getFirebaseConfigUser()){
+                SolvesAuth::$firebaseFatory = SolvesAuth::$firebaseFatory->asUser(SolvesAuth::getFirebaseConfigUser());
             }
-            $this->firebase =  $this->firebaseFatory->create();
+            SolvesAuth::$firebase =  SolvesAuth::$firebaseFatory->create();
         }
     }
-
-    public static function getInstance($initFirebase = true){
-        if(!isset(SolvesAuth::$instance)){
-            SolvesAuth::$instance = new SolvesAuth($initFirebase);
-        }
-        return SolvesAuth::$instance;
-    }
-    public function checkFirebaseUser($firebaseAuthUser){
+    public static function checkFirebaseUser($firebaseAuthUser){
         if(isset($firebaseAuthUser) && property_exists($firebaseAuthUser, 'stsTokenManager')){
             $stokenManager = ($firebaseAuthUser->stsTokenManager);
-            return ($this->checkFirebaseToken($stokenManager->accessToken));
+            return (SolvesAuth::checkFirebaseToken($stokenManager->accessToken));
         }
         return null;
     }
 
-    public function checkFirebaseToken($idTokenString){
+    public static function checkFirebaseToken($idTokenString){
         $verifiedIdToken = null;
         try {
-            $verifiedIdToken = $this->firebase->getAuth()->verifyIdToken($idTokenString);
+            $verifiedIdToken = SolvesAuth::getFirebase()->getAuth()->verifyIdToken($idTokenString);
         } catch (InvalidToken $e) {
             throw $e;
         }
         if(isset($verifiedIdToken)){
             $uid = $verifiedIdToken->getClaim('sub');
-            $user = $this->firebase->getAuth()->getUser($uid);
+            $user = SolvesAuth::getFirebase()->getAuth()->getUser($uid);
             return $user;
         }
         return null;
     }
-    public function getUserLogado($CONNECTION, $empresaId, $token, $userData, $perfil, $usuario, $createdAt){
+    public static function getUserLogado($CONNECTION, $empresaId, $token, $userData, $perfil, $usuario, $createdAt){
         $object = null;
         /*Autentica por TOKEN*/
-        $user = $this->checkToken($CONNECTION, $token, $userData);
+        $user = SolvesAuth::checkToken($CONNECTION, $token, $userData);
         if (isset($user) && $user->getId()>0) {
            $object = $user;
         }
         return $object;
     }
-    public function checkToken($CONNECTION, $receivedToken, $receivedData){
-        $token = $this->createToken($receivedData);
+    public static function checkToken($CONNECTION, $receivedToken, $receivedData){
+        $token = SolvesAuth::createToken($receivedData);
         // We check if token is ok !
        //    echo 'wrong data !['.$receivedData.']';
            //echo 'wrong Token !['.$receivedToken.'] != ['.$token.']';
         if ($receivedToken != $token){
             return null;
         }
-        $receivedData = descriptografa($receivedData);
+        $receivedData = Solves::descriptografa($receivedData);
         $arrUserData = json_decode($receivedData);
-        $creationTimeToken = descriptografa($arrUserData->t);
-        $tipo = descriptografa($arrUserData->z);
-        $userIdToken = descriptografa($arrUserData->u);
-        $senhaToken = descriptografa($arrUserData->s);
-        $token_HTTP_USER_AGENT = descriptografa($arrUserData->HTTP_USER_AGENT);
-        $token_CLIENTE_IP = descriptografa($arrUserData->CLIENTE_IP);
-        $token_REQUEST_TIME = descriptografa($arrUserData->REQUEST_TIME);
+        $creationTimeToken = Solves::descriptografa($arrUserData->t);
+        $tipo = Solves::descriptografa($arrUserData->z);
+        $userIdToken = Solves::descriptografa($arrUserData->u);
+        $senhaToken = Solves::descriptografa($arrUserData->s);
+        $token_HTTP_USER_AGENT = Solves::descriptografa($arrUserData->HTTP_USER_AGENT);
+        $token_CLIENTE_IP = Solves::descriptografa($arrUserData->CLIENTE_IP);
+        $token_REQUEST_TIME = Solves::descriptografa($arrUserData->REQUEST_TIME);
 
         if(isset($tipo) && isset($creationTimeToken) && isset($userIdToken) && isset($senhaToken)){
-            if(isNotBlank($token_HTTP_USER_AGENT) && isNotBlank($token_CLIENTE_IP) && 
+            if(Solves::isNotBlank($token_HTTP_USER_AGENT) && Solves::isNotBlank($token_CLIENTE_IP) && 
                 $_SERVER['HTTP_USER_AGENT']==$token_HTTP_USER_AGENT){ 
-                 if('autonomo'==$tipo){
-                    $user = new Autonomo($CONNECTION);
-                    if($this->debug){
-                        var_dump($userIdToken);
-                        var_dump($senhaToken);
-                    }
-                    $user = $user->findByIdAndSenha($userIdToken, $senhaToken);
-                 }
-                 else if('cliente'==$tipo){
-                    $user = new Cliente($CONNECTION);
-                    $user = $user->findByIdAndSenha($userIdToken, $senhaToken);
-                 }
+                $classe = ucwords($tipo);
+                $obj = new $classe($ONNECTION); 
+                $user = $obj->findByIdAndSenha($userIdToken, $senhaToken);
                 return $user;
             }
         }
         return null;
     }
-    public function createToken($data){
+    public static function createToken($data){
         /* Create a part of token using secretKey and other stuff */
-        $tokenGeneric = EMAIL_HOST.$_SERVER["SERVER_NAME"]; 
+        $tokenGeneric = SolvesAuth::getKeyToken().$_SERVER["SERVER_NAME"]; 
         /* Encoding token */
         return  hash('sha256', $tokenGeneric.$data);
     }
-    public function getToken($data){
-        $token = $this->createToken($data);
+    public static function getToken($data){
+        $token = SolvesAuth::createToken($data);
         return array('token' => $token, 'userData' => $data);
     }
-    public function auth($userId, $senha,$tipo='cliente'){
+    public static function auth($userId, $senha,$tipo='cliente'){
         $userData = new stdClass();
-        $userData->t = criptografa(time());
-        $userData->u = criptografa($userId);
-        $userData->z = criptografa($tipo);
-        $userData->s = criptografa($senha);
-        $userData->HTTP_USER_AGENT = criptografa($_SERVER['HTTP_USER_AGENT']);
-        $userData->CLIENTE_IP = criptografa(getClientIp());
-        $userData->REQUEST_TIME = criptografa($_SERVER['REQUEST_TIME']);
-        $data = json_encode($userData);
-        $token = $this->getToken(criptografa($data));
-        return json_encode($token);
+        $userData->t = Solves::criptografa(time());
+        $userData->u = Solves::criptografa($userId);
+        $userData->z = Solves::criptografa($tipo);
+        $userData->s = Solves::criptografa($senha);
+        $userData->HTTP_USER_AGENT = Solves::criptografa($_SERVER['HTTP_USER_AGENT']);
+        $userData->CLIENTE_IP = Solves::criptografa(getClientIp());
+        $userData->REQUEST_TIME = Solves::criptografa($_SERVER['REQUEST_TIME']);
+        $data = SolvesJson::json_encode($userData);
+        $token = SolvesAuth::getToken(Solves::criptografa($data));
+        return SolvesJson::json_encode($token);
     }
     public static function getUserUid($firebaseAuthUser, $firebaseUserChecked){
-        return (isNotBlank($firebaseAuthUser) && isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->uid : $firebaseUserChecked->uid);
+        return (Solves::isNotBlank($firebaseAuthUser) && Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->uid : $firebaseUserChecked->uid);
     }
     public static function getUserEmail($firebaseAuthUser, $firebaseUserChecked){
-        return (isNotBlank($firebaseAuthUser) && isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->email : $firebaseUserChecked->email);
+        return (Solves::isNotBlank($firebaseAuthUser) && Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->email : $firebaseUserChecked->email);
     }
     public static function getUserPhone($firebaseAuthUser, $firebaseUserChecked){
-        return (isNotBlank($firebaseAuthUser) && isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->phoneNumber : $firebaseUserChecked->phoneNumber);
+        return (Solves::isNotBlank($firebaseAuthUser) && Solves::isNotBlank($firebaseAuthUser->user) ? $firebaseAuthUser->user->phoneNumber : $firebaseUserChecked->phoneNumber);
     }
     public static function getUserName($firebaseAuthUser, $firebaseUserChecked){
         return $firebaseUserChecked->providerData[0]->displayName;
@@ -146,10 +148,10 @@ class SolvesAuth {
         $url = null;
         try{
             $url = $firebaseAuthUser->photoURL;
-            if(!isNotBlank($url)){
+            if(!Solves::isNotBlank($url)){
                 $url = $firebaseUserChecked->providerData[0]->photoURL;
             }
-            if(!isNotBlank($url)){
+            if(!Solves::isNotBlank($url)){
                 $url = $firebaseAuthUser->profile->picture->data->url;
             }
         }catch(Exception $e){
@@ -160,13 +162,13 @@ class SolvesAuth {
     public static function getCredentialProviderId($firebaseAuthUser, $firebaseUserChecked){
         $c = null;
         try{    
-            if(isNotBlank($firebaseAuthUser) && isNotBlank($firebaseAuthUser->user) && isNotBlank($firebaseAuthUser->user->providerData)){
+            if(Solves::isNotBlank($firebaseAuthUser) && Solves::isNotBlank($firebaseAuthUser->user) && Solves::isNotBlank($firebaseAuthUser->user->providerData)){
                 $c = $firebaseAuthUser->user->providerData[0]->providerId;
             }
-            if(!isNotBlank($c)){
+            if(!Solves::isNotBlank($c)){
                 $c = $firebaseAuthUser->credential->providerId;
             }
-            if(!isNotBlank($c)){
+            if(!Solves::isNotBlank($c)){
                 $c = $firebaseUserChecked->providerData[0]->providerId;
             }
         }catch(Exception $e){
