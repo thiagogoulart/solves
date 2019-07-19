@@ -6,6 +6,10 @@
  */ 
 namespace Solves;
 
+use SolvesAuth\SolvesAuth;
+use SolvesMail\SolvesMail;
+use SolvesDAO\SolvesDAO;
+use SolvesPay\SolvesPay;
 
 class Solves {
 	const SYSTEM_MODE_DEV = 'DEV';
@@ -49,7 +53,7 @@ class Solves {
     public static function configDAO($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase, $bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase){
     	SolvesDAO::config($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase,$bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase);
     }
-    
+
     public static function setSiteTitulo($p){Solves::$SITE_TITULO = $p;}
     public static function setSiteUrl($p){Solves::$SITE_URL = $p;}
     public static function setSiteDescr($p){Solves::$SITE_DESCR = $p;}
