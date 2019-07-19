@@ -21,6 +21,8 @@ abstract class SolvesObject {
 	private $updated_atLabel;
 	private $ativo;
 	private $ativoLabel;
+	private $ativo_at= '0000-00-00 00:00:00';
+	private $ativo_atLabel;
 	private $inativo_at= '0000-00-00 00:00:00';
 	private $inativo_atLabel;
 	private $removed;
@@ -70,6 +72,11 @@ abstract class SolvesObject {
 	public function getUpdatedAtLabel() {return $this->updated_atLabel;}
 	public function setUpdatedAtLabel($p) {$this->updated_atLabel = $p;}
 
+	public function getAtivoAt() {return $this->ativo_at;}
+	public function setAtivoAt($p) {$this->ativo_at = $p;}
+	public function getAtivoAtLabel() {return $this->ativo_atLabel;}
+	public function setAtivoAtLabel($p) {$this->ativo_atLabel = $p;}
+
 	public function isAtivo() {return checkBoolean($this->ativo);}
 	public function getAtivo() {return $this->ativo;}
 	public function setAtivo($p) {$this->ativo = $p;}
@@ -99,6 +106,12 @@ abstract class SolvesObject {
   	public function getNextIdValue() {return $this->dao->getNextIdValue();}
 
  	 public function findByCondition($empresaId, $condition) {$list = $this->dao->findByCondition($condition);return $this->toObjectArray($list);}
+ 	 
+    public function findBySearch($search) {
+        $list = $this->dao->findBySearch($search);
+        $resultado = $this->toObjectArray($list);
+        return $resultado;
+    }
 
  	 public function findById($id) {if (@$id && isset($id)) {$list = $this->findObjectArrayById($id);$resultado = $this->toObjectArray($list);if (isset($resultado) && count($resultado) > 0) {return $resultado[0];} }return null;}
 
