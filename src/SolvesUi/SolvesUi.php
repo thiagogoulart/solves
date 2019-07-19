@@ -6,16 +6,18 @@
  */ 
 namespace SolvesUi;
 
-//TODO criar layout
-//TODO scripts e CSS
-//TODO compactar script e css
 
 class SolvesUi {
+
+    private static $SCRIPT_FILEPATHS = array();
+    private static $CSS_FILEPATHS = array();
     
-    private static $SCRIPTS = '';
     private static $SCRIPTS_ONLOAD = '';
     private static $INCLUDE_SCRIPTS_TAGS='';
     private static $IS_APP=false;
+
+    public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
+    public static function setCssFilePaths($arr){SolvesUi::$CSS_FILEPATHS = $arr;}
 
     public static function getScriptAjusteMetaTags($completeUrl, $titulo, $descr, $img){
         $completeUrl = Solves::getSiteUrl().$completeUrl;
