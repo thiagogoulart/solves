@@ -37,10 +37,11 @@ class Solves {
 	private static $IMG_PATH;
 	private static $IMG_PATH_LOGO;
 
-    public static function config($siteTitulo, $siteUrl, $siteDescr, $imgPath, $imgPathLogo){
+    public static function config($siteTitulo, $siteUrl, $siteDescr, $sitekeys, $imgPath, $imgPathLogo){
     	Solves::setSiteTitulo($siteTitulo);
     	Solves::setSiteUrl($siteUrl);
     	Solves::setSiteDescr($siteDescr);
+    	Solves::setSiteKeys($siteKeys);
     	Solves::setImgPath($imgPath);
     	Solves::setImgPathLogo($imgPathLogo);
     }
@@ -57,6 +58,7 @@ class Solves {
     public static function setSiteTitulo($p){Solves::$SITE_TITULO = $p;}
     public static function setSiteUrl($p){Solves::$SITE_URL = $p;}
     public static function setSiteDescr($p){Solves::$SITE_DESCR = $p;}
+    public static function setSiteKeys($p){Solves::$SITE_KEYS = $p;}
     public static function setImgPath($p){Solves::$IMG_PATH = $p;}
     public static function setImgPathLogo($p){Solves::$IMG_PATH_LOGO = $p;}
 
@@ -65,6 +67,7 @@ class Solves {
     public static function getSiteTitulo(){return Solves::$SITE_TITULO;}
     public static function getSiteUrl(){return Solves::$SITE_URL;}
     public static function getSiteDescr(){return Solves::$SITE_DESCR;}
+    public static function getSiteKeys(){return Solves::$SITE_KEYS;}
     public static function getImgPath(){return Solves::$IMG_PATH;}
     public static function getImgPathLogo(){return Solves::$IMG_PATH_LOGO;}
 

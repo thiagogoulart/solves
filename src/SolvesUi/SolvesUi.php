@@ -18,6 +18,8 @@ class SolvesUi {
 
     public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
     public static function setCssFilePaths($arr){SolvesUi::$CSS_FILEPATHS = $arr;}
+    public static function getScriptFilePaths(){return SolvesUi::$SCRIPT_FILEPATHS;}
+    public static function getCssFilePaths(){return SolvesUi::$CSS_FILEPATHS;}
 
     public static function getScriptAjusteMetaTags($completeUrl, $titulo, $descr, $img){
         $completeUrl = \Solves\Solves::getSiteUrl().$completeUrl;
