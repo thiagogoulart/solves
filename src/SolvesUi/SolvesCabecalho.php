@@ -10,7 +10,8 @@ namespace SolvesUi;
 class SolvesCabecalho {
 
     private static $AUTHOR = 'Thiago G.S. Goulart';
-    private static $SCRIPT_ANALYTICS;
+    private static $TWITTER_CREATOR = '@solves';
+    private static $SCRIPT_ANALYTICS='';
 
 
     public static function config($scriptAnalytics){SolvesCabecalho::setScriptAnalytics($scriptAnalytics);}
@@ -58,7 +59,7 @@ class SolvesCabecalho {
 
     <link rel="canonical" href="'.$CANNONICAL.'" />
     <meta name="twitter:site" content="'.$SITE_TITULO.'">
-    <meta name="twitter:creator" content="@solves">
+    <meta name="twitter:creator" content="'.SolvesCabecalho::$TWITTER_CREATOR.'">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="'.$SITE_TITULO.'">
     <meta name="twitter:description" content="'.$SITE_DESCRIPTION.'">
@@ -75,7 +76,7 @@ class SolvesCabecalho {
 
 /*CSS*/
     $cssFilePaths = \SolvesUi\SolvesUi::getCssFilePaths();
-    foreach($cssFilePath in $cssFilePaths)
+    foreach($cssFilePaths as $cssFilePath)
         $html .='<link rel="stylesheet" href="'.$cssFilePath.'">';
     }
 
@@ -109,14 +110,12 @@ class SolvesCabecalho {
     Carregando
 </div>
 <div id="overlay_loaded" style="display:none;"></div>
-
-
 <div id="preloader" style="">
   <div class="preloader-container">
     <h4 class="preload-logo" style="visibility: visible;">
       <span class="navbar-brand">'.$SITE_TITULO.'</span>
     </h4>
-    <img src="'.\Solves\Solves::getImgPath().'preload.gif" alt="preload" style="visibility: visible;">
+    <img src="'.\Solves\Solves::getImgPath().'preload.gif" alt="Loading" style="visibility: visible;">
   </div>
 </div>
 
