@@ -21,8 +21,8 @@ class SolvesCabecalho {
 
     public static function getHtml($completeUrl, $pageTitle, $pageDescr){
         $CANNONICAL = \Solves\Solves::getSiteUrl().$completeUrl;
-        $SITE_TITULO = \Solves\Solves::getSiteTitulo().' - '.$pageTitle;
-        $SITE_DESCRIPTION = $pageDescr.' '.(\Solves\Solves::getSiteDescr());
+        $SITE_TITULO = \Solves\Solves::getSiteTitulo().(\Solves\Solves::isNotBlank($pageTitle) ? ' - '.$pageTitle : '');
+        $SITE_DESCRIPTION =(\Solves\Solves::isNotBlank($pageTitle) ?  $pageDescr.' ' : '').(\Solves\Solves::getSiteDescr());
         $html = '<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR">
 <head>
@@ -76,7 +76,7 @@ class SolvesCabecalho {
 
 /*CSS*/
     $cssFilePaths = \SolvesUi\SolvesUi::getCssFilePaths();
-    foreach($cssFilePaths as $cssFilePath)
+    foreach($cssFilePaths as $cssFilePath){
         $html .='<link rel="stylesheet" href="'.$cssFilePath.'">';
     }
 
@@ -120,6 +120,8 @@ class SolvesCabecalho {
 </div>
 
 <div id="firebase_login"></div>';
+
+return $html;
     }
    
 }
