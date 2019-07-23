@@ -13,6 +13,7 @@ abstract class SolvesObject {
 	protected $connection;
 
     protected $numRows;
+    private $old;
 
     /**Common atributes */
 	protected $created_at= '0000-00-00 00:00:00';
@@ -46,6 +47,9 @@ abstract class SolvesObject {
 	public abstract function getId();
 	public abstract function addValores();
 	public abstract function getObject($itemArr);
+	public abstract function afterSave();
+	public abstract function afterUpdate($old);
+	public abstract function afterDelete();
 
 
     public function getConnection() {
@@ -98,7 +102,7 @@ abstract class SolvesObject {
 	public function getRemovedAtLabel() {return $this->removed_atLabel;}
 	public function setRemovedAtLabel($p) {$this->removed_atLabel = $p;}
 
-  	public function saveReturningId() {$id = $this->save();$this->setId($id);return $id;}
+  	public function saveReturningId() {return $this->save();}
 
  	public function getDao() {return $this->dao;}
 
@@ -112,12 +116,12 @@ abstract class SolvesObject {
         return $resultado;
     }
 
- 	 public function findById($id) {if (@$id && isset($id)) {$list = $this->findObjectArrayById($id);$resultado = $this->toObjectArray($list);if (isset($resultado) && count($resultado) > 0) {return $resultado[0];} }return null;}
+ 	 public function findById($id) {if (@$id && isset($id)) {$list = $this->findObjectArrayById($id);$resultado = $this->toObjectArray($list);if (isset($resultado) && count($resultado) > 0) {$this->old = $resultado[0];return $this->old;} }return null;}
 
  	 public function findObjectArrayById($id) {if (@$id && isset($id)) {return $this->dao->findById($id);}return null;}
- 	 public function save() {$this->addValores();return $this->dao->save();}
-  	 public function update() {$this->addValores();return $this->dao->update($this->getId());}
-  	 public function remove() {$this->setRemoved(1);$this->setUpdatedAt(getTimestampAtual());return $this->update();}
+ 	 public function save() {$this->addValores();$id = $this->dao->save();$this->setId($id);$this->afterSave(); return $id;}
+  	 public function update() {$this->addValores();$result = $this->dao->update($this->getId());$this->afterUpdate($this->old);return $result;}
+  	 public function remove() {$this->setRemoved(1);$this->setUpdatedAt(getTimestampAtual());$result = $this->update();$this->afterDelete();return $result;}
 
  	 public function toObjectArray($list) {$resultado = array();$qtd = count($list);for ($i = 0; $i != $qtd; $i++) {$object = $this->getObject($list[$i]);$resultado[] = $object;}return $resultado;}
 
