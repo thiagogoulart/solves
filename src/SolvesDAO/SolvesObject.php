@@ -116,7 +116,7 @@ abstract class SolvesObject {
         return $resultado;
     }
 
- 	 public function findById($id) {if (@$id && isset($id)) {$list = $this->findObjectArrayById($id);return $this->toOneObject($list);}
+ 	 public function findById($id) {if (@$id && isset($id)) {$list = $this->findObjectArrayById($id);return $this->toOneObject($list);}return null; }
 
  	 public function findObjectArrayById($id) {if (@$id && isset($id)) {return $this->dao->findById($id);}return null;}
  	 public function save() {$this->addValores();$id = $this->dao->save();$this->setId($id);$this->afterSave(); return $id;}
