@@ -13,7 +13,8 @@ abstract class SolvesObject {
 	protected $connection;
 
     protected $numRows;
-    private $old;
+    protected $old;
+    protected $oldArray;
 
     /**Common atributes */
 	protected $created_at= '0000-00-00 00:00:00';
@@ -128,6 +129,9 @@ abstract class SolvesObject {
  	 	$resultado = $this->toObjectArray($list);
         if (isset($resultado) && count($resultado) > 0) {
             $this->old = $resultado[0];
+            $this->old->old = $resultado[0];
+            $this->oldArray = $list[0];
+            $this->old->oldArray = $list[0];
             return $this->old;
         } else {
             return null;
