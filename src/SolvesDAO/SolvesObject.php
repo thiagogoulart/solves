@@ -116,7 +116,7 @@ abstract class SolvesObject {
         return $resultado;
     }
 
- 	 public function findById($id) {if (@$id && isset($id)) {$list = $this->findObjectArrayById($id);$resultado = $this->toObjectArray($list);if (isset($resultado) && count($resultado) > 0) {$this->old = $resultado[0];return $this->old;} }return null;}
+ 	 public function findById($id) {if (@$id && isset($id)) {$list = $this->findObjectArrayById($id);return $this->toOneObject($list);}
 
  	 public function findObjectArrayById($id) {if (@$id && isset($id)) {return $this->dao->findById($id);}return null;}
  	 public function save() {$this->addValores();$id = $this->dao->save();$this->setId($id);$this->afterSave(); return $id;}
@@ -124,6 +124,15 @@ abstract class SolvesObject {
   	 public function remove() {$this->setRemoved(1);$this->setUpdatedAt(getTimestampAtual());$result = $this->update();$this->afterDelete();return $result;}
 
  	 public function toObjectArray($list) {$resultado = array();$qtd = count($list);for ($i = 0; $i != $qtd; $i++) {$object = $this->getObject($list[$i]);$resultado[] = $object;}return $resultado;}
+ 	 public function toOneObject($list) {
+ 	 	$resultado = $this->toObjectArray($list);
+        if (isset($resultado) && count($resultado) > 0) {
+            $this->old = $resultado[0];
+            return $this->old;
+        } else {
+            return null;
+        }
+ 	 }
 
  	 public function toArray() {
   		 $arr = array(); 
