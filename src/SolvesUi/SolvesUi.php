@@ -44,25 +44,25 @@ class SolvesUi {
         $linkMsgComUrl = $linkMsg.'%20'.$completeUrl.'';
         return '
         <div class="share_social_box"><span class="share_social_box_title">Compartilhar: </span>
-    <a href="https://api.whatsapp.com/send?text='.$linkMsg.'" target="_blank" title="Compartilhar no Whatsapp">
+    <a rel="noopener" href="https://api.whatsapp.com/send?text='.$linkMsg.'" target="_blank" title="Compartilhar no Whatsapp">
         <i class="fab fa-lg fa-whatsapp"></i>
     </a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u='.$completeUrl.'" target="_blank" title="Compartilhar no Facebook">
+    <a rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u='.$completeUrl.'" target="_blank" title="Compartilhar no Facebook">
         <i class="fab fa-lg fa-facebook"></i>
     </a>
-    <a href="http://twitter.com/share?text='.$linkMsg.'&amp;url='.$completeUrl.'" target="_blank" data-role="shareLink" title="Compartilhar no Twitter">
+    <a rel="noopener" href="http://twitter.com/share?text='.$linkMsg.'&amp;url='.$completeUrl.'" target="_blank" data-role="shareLink" title="Compartilhar no Twitter">
         <i class="fab fa-lg fa-twitter"></i>
     </a>
-    <a href="http://pinterest.com/pin/create/button/?url='.$completeUrl.(\Solves\Solves::isNotBlank($img)?'&amp;media='.\Solves\Solves::getSiteUrl().$img:'').'" target="_blank" title="Compartilhar no Pinterest">
+    <a rel="noopener" href="http://pinterest.com/pin/create/button/?url='.$completeUrl.(\Solves\Solves::isNotBlank($img)?'&amp;media='.\Solves\Solves::getSiteUrl().$img:'').'" target="_blank" title="Compartilhar no Pinterest">
         <i class="fab fa-lg fa-pinterest"></i>
     </a>
-    <!-- a href="https://plus.google.com/share?url='.$completeUrl.'" target="_blank" title="Compartilhar no Google+ ">
+    <!-- a rel="noopener" href="https://plus.google.com/share?url='.$completeUrl.'" target="_blank" title="Compartilhar no Google+ ">
         <i class="fab fa-lg fa-google-plus"></i>
     </a -->
-    <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url='.$completeUrl.'" target="_blank" title="Compartilhar no LinkedIn">
+    <a rel="noopener" href="http://www.linkedin.com/shareArticle?mini=true&amp;url='.$completeUrl.'" target="_blank" title="Compartilhar no LinkedIn">
         <i class="fab fa-lg fa-linkedin"></i>
     </a>
-    <!-- a href="mailto:?Subject='.$titulo.'&amp;Body='.$linkMsgComUrl.'" target="_blank" title="Compartilhar por e-mail">
+    <!-- a rel="noopener" href="mailto:?Subject='.$titulo.'&amp;Body='.$linkMsgComUrl.'" target="_blank" title="Compartilhar por e-mail">
         <i class="fa fa-lg fa-envelope"></i>
     </a -->
     </div>
