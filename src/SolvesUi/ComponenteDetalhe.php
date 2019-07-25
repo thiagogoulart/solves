@@ -4,6 +4,8 @@
  * @author Thiago Goulart
   @since 2013-09-04
  */
+namespace SolvesUi;
+
 class ComponenteDetalhe {
 
     private $id;

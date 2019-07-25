@@ -1,10 +1,7 @@
 <?php
 
-/**
- * Description of ComponenteListagem
- *
- * @author ricardo.cuevas
- */
+namespace SolvesUi;
+
 class ComponenteListagem {
 
     private $ar_colunas;

@@ -5,6 +5,8 @@
   @since 2013-09-11
   @modified 2013-09-19
  */
+namespace SolvesUi;
+
 class ComponenteLista {
 
     private $pkName;

@@ -8,6 +8,8 @@
   @since 2013-09-04
   @version 2.0
  */
+namespace SolvesUi;
+
 class ComponenteInput {
 
     public static $CLASSE_INPUT_GRANDE = 'input-group-lg';
