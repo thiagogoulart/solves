@@ -93,14 +93,14 @@ class ComponenteListagem {
             if ($this->podeInserir()) {
                 $html .= '<button onclick="loadView(\'' . $this->getLinkUrlWithAction(ID_VIEW_INCLUSAO) . '\');" class="btn btn-small btn-success"><i class="icon icon-white icon-add"></i>' . $this->getButtonNewTitle() . '</button>';
             }
-            $html .= '</div><div style="clear:both;"></div>	';
+            $html .= '</div><div style="clear:both;"></div> ';
         }
 
         $html .= '<table id="' . $gridId . '" class="sortable"><thead><tr>';
         $cIt = 0;
         foreach ($this->ar_colunas as $col) {
             $html .= '<th class="head" ' . (strlen($col['w']) > 0 ? 'width="' . $col['w'] . '"' : '') . '><h3><b>' . $col['header'] . '</b></h3></th>';
-            if(isNotEmptyVal($col['order'])){
+            if(\Solves\Solves::isNotBlank($col['order'])){
                 $colOrder = $cIt;
             }
             $cIt++;
@@ -109,7 +109,7 @@ class ComponenteListagem {
         $qtdButtons = ($this->podeDetalhar() ? 1 : 0) + ($this->podeAlterar() ? 1 : 0) + ($this->podeExcluir() ? 1 : 0);
         $widthColAction = (148 / $qtdTotalButtons) * $qtdButtons;
         $html .= '<th class="nosort columnAction" width="' . $widthColAction . '"></th></tr></thead>
-		     <tbody id="' . $this->getTbodyId() . '">';
+             <tbody id="' . $this->getTbodyId() . '">';
 
         $qtdDado = count($this->ar_dados);
         $hasDados = ($qtdDado > 0);
@@ -119,7 +119,7 @@ class ComponenteListagem {
             $html .= '<tr id="tr_none"><td colspan="' . $qtdCols . '"><span class="nenhum_registro">Nenhum registro</span></td></tr>';
         } else {
             foreach ($this->ar_dados as $dado) {
-                $trId = criptografa($dado[$this->chave]);
+                $trId =  \Solves\Solves::criptografa($dado[$this->chave]);
                 $html .= '<tr object_id="' . $trId . '">';
                 foreach ($this->ar_colunas as $col) {
                     $colId = $trId . '_' . $col['campo'];
@@ -193,7 +193,7 @@ class ComponenteListagem {
 
     public function getLinkUrlWithActionAndId($idView, $key) {
         if ($this->adminMode) {
-            return 'index.php?r=' . $this->adminRotinaId . '&action=' . criptografa($idView) . '&id=' . criptografa($key);
+            return 'index.php?r=' . $this->adminRotinaId . '&action=' . \Solves\Solves::criptografa($idView) . '&id=' .  \Solves\Solves::criptografa($key);
         } else {
             return $this->rotina->getLinkUrlWithActionAndId($idView, $key);
         }
@@ -201,7 +201,7 @@ class ComponenteListagem {
 
     public function getLinkUrlWithAction($idView) {
         if ($this->adminMode) {
-            return 'index.php?r=' . $this->adminRotinaId . '&action=' . criptografa($idView);
+            return 'index.php?r=' . $this->adminRotinaId . '&action=' .  \Solves\Solves::criptografa($idView);
         } else {
             return $this->rotina->getLinkUrlWithAction($idView);
         }
@@ -209,13 +209,13 @@ class ComponenteListagem {
 
     public function getHtmlButtonEdit($id) {
         return '<a class="btn btn-sm btn-info" 
-				  onclick="loadView(\'' . $this->getLinkUrlWithActionAndId(ID_VIEW_ALTERACAO, $id) . '\');" '
+                  onclick="loadView(\'' . $this->getLinkUrlWithActionAndId(ID_VIEW_ALTERACAO, $id) . '\');" '
                 . ' alt="' . $this->editButtonName . '" title="' . $this->editButtonName . '"><div class="bt_editar">&nbsp;</div></a>';
     }
 
     public function getHtmlButtonDetail($id) {
         return '<a class="btn btn-sm btn-success" 
-				  onclick="loadView(\'' . $this->getLinkUrlWithActionAndId(ID_VIEW_DETALHAR, $id) . '\');" alt="Detalhar" title="Detalhar"><div class="bt_detalhar">&nbsp;</div></a>';
+                  onclick="loadView(\'' . $this->getLinkUrlWithActionAndId(ID_VIEW_DETALHAR, $id) . '\');" alt="Detalhar" title="Detalhar"><div class="bt_detalhar">&nbsp;</div></a>';
     }
 
 }
