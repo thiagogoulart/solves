@@ -1,5 +1,5 @@
 <?php
-
+try{ 
 $navInside = '';
 $navInsideConfs = '';
 $isPageController = false;
