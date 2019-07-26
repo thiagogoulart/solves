@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Messaging;
 
 /**
+ * @deprecated 4.27.0 Use CloudMessage instead
  * @codeCoverageIgnore
  */
 trait MessageTrait
@@ -33,6 +34,9 @@ trait MessageTrait
      * @var WebPushConfig|null
      */
     protected $webPushConfig;
+
+    /** @var FcmOptions|null */
+    protected $fcmOptions;
 
     /**
      * @return array|null
@@ -75,8 +79,14 @@ trait MessageTrait
     }
 
     /**
-     * @param array $data
-     *
+     * @return FcmOptions|null
+     */
+    public function fcmOptions()
+    {
+        return $this->fcmOptions;
+    }
+
+    /**
      * @return static
      */
     public function withData(array $data)
@@ -88,8 +98,6 @@ trait MessageTrait
     }
 
     /**
-     * @param AndroidConfig $androidConfig
-     *
      * @return static
      */
     public function withAndroidConfig(AndroidConfig $androidConfig)
@@ -101,8 +109,6 @@ trait MessageTrait
     }
 
     /**
-     * @param ApnsConfig $apnsConfig
-     *
      * @return static
      */
     public function withApnsConfig(ApnsConfig $apnsConfig)
@@ -114,14 +120,23 @@ trait MessageTrait
     }
 
     /**
-     * @param WebPushConfig $webPushConfig
-     *
      * @return static
      */
     public function withWebPushConfig(WebPushConfig $webPushConfig)
     {
         $message = clone $this;
         $message->webPushConfig = $webPushConfig;
+
+        return $message;
+    }
+
+    /**
+     * @param FcmOptions|array $options
+     */
+    public function withFcmOptions($options): self
+    {
+        $message = clone $this;
+        $message->fcmOptions = $options instanceof FcmOptions ? $options : FcmOptions::fromArray($options);
 
         return $message;
     }

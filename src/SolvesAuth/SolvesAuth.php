@@ -33,7 +33,7 @@ class SolvesAuth {
     public static function getFirebaseConfigJsonFile(){return __DIR__.'/../'.SolvesAuth::$FIREBASE_CONFIG_JSON_FILE;}
     public static function getFirebaseConfigUser(){return SolvesAuth::$FIREBASE_CONFIG_USER;}
 
-    public static function getFirebase(){initFirebase();return SolvesAuth::$firebase;}
+    public static function getFirebase(){SolvesAuth::initFirebase();return SolvesAuth::$firebase;}
 
     public static function initFirebase() {
         if(SolvesAuth::$firebase==null){ 

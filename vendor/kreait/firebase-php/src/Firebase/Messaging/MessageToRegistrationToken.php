@@ -42,8 +42,6 @@ class MessageToRegistrationToken implements Message
      * @deprecated 4.14 Use CloudMessage::fromArray() instead
      * @see CloudMessage::fromArray()
      *
-     * @param array $data
-     *
      * @throws InvalidArgumentException
      *
      * @return MessageToRegistrationToken
@@ -76,6 +74,10 @@ class MessageToRegistrationToken implements Message
             $message = $message->withWebPushConfig(WebPushConfig::fromArray($data['webpush']));
         }
 
+        if ($data['fcm_options'] ?? null) {
+            $message = $message->withFcmOptions(FcmOptions::fromArray($data['fcm_options']));
+        }
+
         return $message;
     }
 
@@ -94,6 +96,7 @@ class MessageToRegistrationToken implements Message
             'android' => $this->androidConfig,
             'apns' => $this->apnsConfig,
             'webpush' => $this->webPushConfig,
+            'fcm_options' => $this->fcmOptions,
         ]);
     }
 }

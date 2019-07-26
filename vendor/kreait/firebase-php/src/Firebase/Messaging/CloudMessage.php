@@ -5,38 +5,30 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Messaging;
 
 use Kreait\Firebase\Exception\InvalidArgumentException;
+use Kreait\Firebase\Exception\Messaging\InvalidArgument;
 
 class CloudMessage implements Message
 {
-    /**
-     * @var MessageTarget|null
-     */
+    /** @var MessageTarget|null */
     private $target;
 
-    /**
-     * @var MessageData|null
-     */
+    /** @var MessageData|null */
     private $data;
 
-    /**
-     * @var Notification|null
-     */
+    /** @var Notification|null */
     private $notification;
 
-    /**
-     * @var AndroidConfig|null
-     */
+    /** @var AndroidConfig|null */
     private $androidConfig;
 
-    /**
-     * @var ApnsConfig|null
-     */
+    /** @var ApnsConfig|null */
     private $apnsConfig;
 
-    /**
-     * @var WebPushConfig|null
-     */
+    /** @var WebPushConfig|null */
     private $webPushConfig;
+
+    /** @var FcmOptions|null */
+    private $fcmOptions;
 
     private function __construct()
     {
@@ -44,7 +36,6 @@ class CloudMessage implements Message
 
     /**
      * @param string $type One of "condition", "token", "topic"
-     * @param string $value
      *
      * @throws InvalidArgumentException if the target type or value is invalid
      *
@@ -63,6 +54,13 @@ class CloudMessage implements Message
     public static function fromArray(array $data): self
     {
         $new = new self();
+
+        if (\count(\array_intersect(\array_keys($data), MessageTarget::TYPES)) > 1) {
+            throw new InvalidArgument(
+                'A message can only have one of the following targets: '
+                .\implode(', ', MessageTarget::TYPES)
+            );
+        }
 
         if ($targetValue = $data[MessageTarget::CONDITION] ?? null) {
             $new = $new->withChangedTarget(MessageTarget::CONDITION, (string) $targetValue);
@@ -92,12 +90,15 @@ class CloudMessage implements Message
             $new = $new->withWebPushConfig(WebPushConfig::fromArray($data['webpush']));
         }
 
+        if ($data['fcm_options'] ?? null) {
+            $new = $new->withFcmOptions(FcmOptions::fromArray($data['fcm_options']));
+        }
+
         return $new;
     }
 
     /**
      * @param string $type One of "condition", "token", "topic"
-     * @param string $value
      *
      * @throws InvalidArgumentException if the target type or value is invalid
      *
@@ -171,10 +172,24 @@ class CloudMessage implements Message
         return $new;
     }
 
+    /**
+     * @param WebPushConfig|array $config
+     */
     public function withWebPushConfig($config): self
     {
         $new = clone $this;
         $new->webPushConfig = $config instanceof WebPushConfig ? $config : WebPushConfig::fromArray($config);
+
+        return $new;
+    }
+
+    /**
+     * @param FcmOptions|array $options
+     */
+    public function withFcmOptions($options): self
+    {
+        $new = clone $this;
+        $new->fcmOptions = $options instanceof FcmOptions ? $options : FcmOptions::fromArray($options);
 
         return $new;
     }
@@ -192,6 +207,7 @@ class CloudMessage implements Message
             'android' => $this->androidConfig,
             'apns' => $this->apnsConfig,
             'webpush' => $this->webPushConfig,
+            'fcm_options' => $this->fcmOptions,
         ];
 
         if ($this->target) {

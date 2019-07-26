@@ -11,6 +11,7 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         'f7c6080b46f9fe41a46a657439674576' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase.php',
     );
@@ -36,6 +37,7 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Minishlink\\WebPush\\' => 19,
         ),
         'L' => 
         array (
@@ -49,6 +51,11 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         ),
         'J' => 
         array (
+            'Jose\\Component\\Signature\\Algorithm\\' => 35,
+            'Jose\\Component\\Signature\\' => 25,
+            'Jose\\Component\\KeyManagement\\' => 29,
+            'Jose\\Component\\Core\\Util\\Ecc\\' => 29,
+            'Jose\\Component\\Core\\' => 20,
             'JmesPath\\' => 9,
         ),
         'G' => 
@@ -58,6 +65,7 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
             'GuzzleHttp\\' => 11,
             'Google\\Cloud\\Storage\\' => 21,
             'Google\\Cloud\\Core\\' => 18,
+            'Google\\CRC32\\' => 13,
             'Google\\Auth\\' => 12,
             'Giggsey\\Locale\\' => 15,
         ),
@@ -66,6 +74,11 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
             'Firebase\\JWT\\' => 13,
             'Firebase\\Auth\\Token\\' => 20,
             'Fig\\Http\\Message\\' => 17,
+            'FG\\' => 3,
+        ),
+        'B' => 
+        array (
+            'Base64Url\\' => 10,
         ),
     );
 
@@ -106,6 +119,10 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'Minishlink\\WebPush\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/minishlink/web-push/src',
+        ),
         'League\\Flysystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
@@ -121,6 +138,30 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         'Kreait\\' => 
         array (
             0 => __DIR__ . '/..' . '/kreait/gcp-metadata/src',
+        ),
+        'Jose\\Component\\Signature\\Algorithm\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-ecdsa',
+            1 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-eddsa',
+            2 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-hmac',
+            3 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-none',
+            4 => __DIR__ . '/..' . '/web-token/jwt-signature-algorithm-rsa',
+        ),
+        'Jose\\Component\\Signature\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-signature',
+        ),
+        'Jose\\Component\\KeyManagement\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-key-mgmt',
+        ),
+        'Jose\\Component\\Core\\Util\\Ecc\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-util-ecc',
+        ),
+        'Jose\\Component\\Core\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-core',
         ),
         'JmesPath\\' => 
         array (
@@ -146,6 +187,10 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         array (
             0 => __DIR__ . '/..' . '/google/cloud-core/src',
         ),
+        'Google\\CRC32\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/crc32/src',
+        ),
         'Google\\Auth\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/auth/src',
@@ -165,6 +210,14 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         'Fig\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/fig/http-message-util/src',
+        ),
+        'FG\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fgrosse/phpasn1/lib',
+        ),
+        'Base64Url\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spomky-labs/base64url/src',
         ),
     );
 
