@@ -134,29 +134,7 @@ class Solves {
 	}
 
 	public static function removeAcentos($var) {
-	    $var = strtolower($var);
-	    $var = str_replace('ç', 'c', $var);
-
-	    $var = str_replace('á', 'a', $var);
-	    $var = str_replace('à', 'a', $var);
-	    $var = str_replace('â', 'a', $var);
-	    $var = str_replace('ã', 'a', $var);
-	    $var = str_replace('ª', 'a', $var);
-
-	    $var = str_replace('é', 'e', $var);
-	    $var = str_replace('è', 'e', $var);
-	    $var = str_replace('ê', 'e', $var);
-
-	    $var = str_replace('í', 'i', $var);
-	    $var = str_replace('ì', 'i', $var);
-	    $var = str_replace('î', 'i', $var);
-
-	    $var = str_replace('ó', 'o', $var);
-	    $var = str_replace('ò', 'o', $var);
-	    $var = str_replace('ô', 'o', $var);
-	    $var = str_replace('õ', 'o', $var);
-	    $var = str_replace('º', 'o', $var);
-	    return $var;
+    	return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/","/(ç)/","/(Ç)/"),explode(" ","a A e E i I o O u U n N c C"),$var);
 	}
 
 	public static function filtrar($p, $blacklist) {
@@ -383,10 +361,11 @@ class Solves {
 	}
 	public static function getUrlNormalizada($string) {
 	    $string = Solves::removeAcentos($string);
+	    $string = strtolower($string);
 	    $string = preg_replace( "`&([a-z])(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig|quot|rsquo);`i","", $string );
-	    $string = str_replace(' ','_', $string);
-	    $string = preg_replace("/[^a-zA-Z_]/", "", $string);
+	    $string = str_replace(' ','-', $string);
 	    $string = str_replace('__','_', $string);
+	    $string = str_replace('--','-', $string);
 	    return $string;
 	}
 	public static function getApenasNumeros($string) {
