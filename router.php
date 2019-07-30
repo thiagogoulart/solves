@@ -11,6 +11,7 @@ $incluiTopoApp = false;
 $isPageController = false;
 $IS_SOON_PAGE = false;
 $isJs = false;
+$isServiceWorkerFile = false;
 $requestedPage = $_GET['p'];
 if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<100){
   if(substr_compare($requestedPage, 'processupload.php', -strlen('processupload.php')) === 0){
@@ -72,8 +73,9 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
         header("HTTP/1.1 500 Internal Server Error");
     }
   }else if(substr($requestedPage, 0, 5)=='sw.js'){
+    $isServiceWorkerFile = true;
     $isJs = true;
-    $pagInclude= '/sw.js'; 
+    $pagInclude= '/sw.js';
   }else if(substr($requestedPage, 0, 4)=='soon'){
     //SOON PAGES
     $IS_SOON_PAGE = true;
@@ -134,6 +136,8 @@ if($isJs){
   header("Content-Type: text/javascript");
   if(file_exists($pagInclude)) {
     readfile($pagInclude);
+  }else if($isServiceWorkerFile){ 
+    echo \SolvesUi\SolvesServiceWorker::getScript();
   }else{
     header ("HTTP/1.0 404 Not Found");
     return;

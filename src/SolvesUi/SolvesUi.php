@@ -112,7 +112,7 @@ class SolvesUi {
         return '<div id="public-loading" class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white" style="background-color: #ffffffa1;color: #000000;">
             <div class="signin-logo tx-center tx-24 tx-bold tx-inverse">
               <div><img src="'.\Solves\Solves::getImgPathLogo().'" alt="'.\Solves\Solves::getSiteTitulo().'" title="'.\Solves\Solves::getSiteTitulo().'"/></div>
-              <div>'.getLoadingElementHtml().'</div>
+              <div>'.SolvesUi::getLoadingElementHtml().'</div>
             </div>
             <div class="tx-center mg-b-60">Carregando...</div>
           </div>';
