@@ -37,7 +37,9 @@ class Solves {
 	private static $IMG_PATH;
 	private static $IMG_PATH_LOGO;
 
-    public static function config($siteTitulo, $siteUrl, $siteDescr, $sitekeys, $imgPath, $imgPathLogo){
+    public static function config($systemName, $systemVersion, $siteTitulo, $siteUrl, $siteDescr, $sitekeys, $imgPath, $imgPathLogo){
+    	Solves::setSystemName($systemName);
+    	Solves::setSystemVersion($systemVersion);
     	Solves::setSiteTitulo($siteTitulo);
     	Solves::setSiteUrl($siteUrl);
     	Solves::setSiteDescr($siteDescr);
@@ -55,6 +57,8 @@ class Solves {
     	SolvesDAO::config($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase,$bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase);
     }
 
+    public static function setSystemName($p){Solves::$SYSTEM_NAME = $p;}
+    public static function setSystemVersion($p){Solves::$SYSTEM_VERSION = $p;}
     public static function setSiteTitulo($p){Solves::$SITE_TITULO = $p;}
     public static function setSiteUrl($p){Solves::$SITE_URL = $p;}
     public static function setSiteDescr($p){Solves::$SITE_DESCR = $p;}

@@ -26,14 +26,17 @@ const precacheFiles = [
 /*JS*/
     $jsFilePaths = \SolvesUi\SolvesUi::getScriptFilePaths();
     foreach($jsFilePaths as $jsFilePath){
+        if("/sw_register.js"==$jsFilePath){
+            continue;
+        }
         $script .= ', "'.$jsFilePath.'"';
     }
 
 $script .= '
 ];
 const offlineFallbackPage = "/offline";
-const networkFirstPaths = ["/admin","/rest","/controller"];
-const avoidCachingPaths = ["/admin","/rest","/controller"];
+const networkFirstPaths = ["/admin","/rest","/controller","/sw_register.js"];
+const avoidCachingPaths = ["/admin","/rest","/controller","/sw_register.js"];
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));
