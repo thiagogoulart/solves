@@ -69,7 +69,7 @@ class SolvesFile {
         }
         imagedestroy($img);
     }
-    public static function  ($string) {
+    public static function normalizeImgUrl($string) {
         return (\Solves\Solves::isNotBlank($string) ? (strpos($string,'data:')>0 ? \Solves\Solves::substituiEspacos($string, "+")  : $string):"");
     }
     public static function getFileBlobUploaded($paramHttpFile, $paramFileName){

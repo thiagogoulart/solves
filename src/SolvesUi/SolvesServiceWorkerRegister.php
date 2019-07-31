@@ -18,7 +18,7 @@ class SolvesServiceWorkerRegister {
 
   // The click event on the pop up notification
   document.getElementById("reload_new_version").addEventListener("click", function(){
-    newWorker.postMessage({ action: "skipWaiting" });
+    if(newWorker!==undefined){newWorker.postMessage({ action: "skipWaiting" });}
   });
 
 if ("serviceWorker" in navigator) {

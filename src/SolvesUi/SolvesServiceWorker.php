@@ -26,7 +26,7 @@ const precacheFiles = [
 /*JS*/
     $jsFilePaths = \SolvesUi\SolvesUi::getScriptFilePaths();
     foreach($jsFilePaths as $jsFilePath){
-        if("/sw_register.js"==$jsFilePath){
+        if("/sw_register.js"==$jsFilePath || "/sw.js"==$jsFilePath){
             continue;
         }
         $script .= ', "'.$jsFilePath.'"';
@@ -35,8 +35,8 @@ const precacheFiles = [
 $script .= '
 ];
 const offlineFallbackPage = "/offline";
-const networkFirstPaths = ["/admin","/rest","/controller","/sw_register.js"];
-const avoidCachingPaths = ["/admin","/rest","/controller","/sw_register.js"];
+const networkFirstPaths = ["/admin","/rest","/controller","/sw.js","/sw_register.js"];
+const avoidCachingPaths = ["/admin","/rest","/controller","/sw.js","/sw_register.js"];
 let newWorker;
 
 function pathComparer(requestUrl, pathRegEx) {
