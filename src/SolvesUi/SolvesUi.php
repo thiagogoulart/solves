@@ -15,11 +15,17 @@ class SolvesUi {
     private static $SCRIPTS_ONLOAD = '';
     private static $INCLUDE_SCRIPTS_TAGS='';
     private static $IS_APP=false;
+    private static $UI_VERSION=null;
 
     public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
     public static function setCssFilePaths($arr){SolvesUi::$CSS_FILEPATHS = $arr;}
     public static function getScriptFilePaths(){return SolvesUi::$SCRIPT_FILEPATHS;}
     public static function getCssFilePaths(){return SolvesUi::$CSS_FILEPATHS;}
+    public static function getUiVersion(){return SolvesUi::$UI_VERSION;}
+    public static function setUiVersion($p){SolvesUi::$UI_VERSION = $p;}
+    public static function getCacheUiVersion(){
+        return \Solves\Solves::getSystemName().'_'.\Solves\Solves::getSystemVersion().(\Solves\Solves::isNotBlank(SolvesUi::$UI_VERSION)?'_ui'.SolvesUi::$UI_VERSION:'');
+    }
 
     public static function getScriptAjusteMetaTags($completeUrl, $titulo, $descr, $img){
         $completeUrl = \Solves\Solves::getSiteUrl().$completeUrl;

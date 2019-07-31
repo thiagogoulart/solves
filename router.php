@@ -12,6 +12,7 @@ $isPageController = false;
 $IS_SOON_PAGE = false;
 $isJs = false;
 $isServiceWorkerFile = false;
+$isServiceWorkerRegisterFile = false;
 $requestedPage = $_GET['p'];
 if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<100){
   if(substr_compare($requestedPage, 'processupload.php', -strlen('processupload.php')) === 0){
@@ -76,6 +77,10 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
     $isServiceWorkerFile = true;
     $isJs = true;
     $pagInclude= '/sw.js';
+  }else if(substr($requestedPage, 0, 14)=='sw_register.js'){
+    $isServiceWorkerRegisterFile = true;
+    $isJs = true;
+    $pagInclude= '/sw_register.js';
   }else if(substr($requestedPage, 0, 4)=='soon'){
     //SOON PAGES
     $IS_SOON_PAGE = true;
@@ -138,6 +143,8 @@ if($isJs){
     readfile($pagInclude);
   }else if($isServiceWorkerFile){ 
     echo \SolvesUi\SolvesServiceWorker::getScript();
+  }else if($isServiceWorkerRegisterFile){ 
+    echo \SolvesUi\SolvesServiceWorkerRegister::getScript();
   }else{
     header ("HTTP/1.0 404 Not Found");
     return;

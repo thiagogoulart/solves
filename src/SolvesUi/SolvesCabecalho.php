@@ -119,6 +119,15 @@ class SolvesCabecalho {
   </div>
 </div>
 
+<div class="solves_notification" id="notification_new_version" style="">
+  <div class="solves_notification-container">
+    <h4 class="preload-logo" style="visibility: visible;">
+      <span class="navbar-brand">'.$SITE_TITULO.'</span>
+    </h4>
+    Uma nova versão está disponível. Clique <a id="reload_new_version">aqui</a> para atualizar.
+  </div>
+</div>
+
 <div id="firebase_login"></div>';
 
 return $html;

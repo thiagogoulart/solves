@@ -11,7 +11,7 @@ class SolvesServiceWorker {
 
     public static function getScript(){
         $script = '
-const CACHE = "'.\Solves\Solves::getSystemName().'_'.\Solves\Solves::getSystemVersion().'";
+const CACHE = "'.\SolvesUi\SolvesUi::getCacheUiVersion().'";
 const precacheFiles = [
     "/offline",
     "/manifest.webmanifest"';
@@ -37,6 +37,7 @@ $script .= '
 const offlineFallbackPage = "/offline";
 const networkFirstPaths = ["/admin","/rest","/controller","/sw_register.js"];
 const avoidCachingPaths = ["/admin","/rest","/controller","/sw_register.js"];
+let newWorker;
 
 function pathComparer(requestUrl, pathRegEx) {
   return requestUrl.match(new RegExp(pathRegEx));
@@ -66,6 +67,12 @@ self.addEventListener("install", function (event) {
       });
     })
   );
+});
+
+self.addEventListener("message", function(event) {
+  if (event.data.action === "skipWaiting") {
+    self.skipWaiting();
+  }
 });
 
 // Allow sw to control of current page
@@ -99,8 +106,6 @@ self.addEventListener("push", function (event) {
         event.waitUntil(sendNotification(json));
     }
 });
-
-
 function cacheFirstFetch(event) {
   event.respondWith(
     fromCache(event.request).then(
