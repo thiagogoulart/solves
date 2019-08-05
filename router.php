@@ -62,7 +62,7 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
                 header("Access-Control-Allow-Methods: GET, POST");
                 header("Access-Control-Allow-Headers: GET, POST");
                 header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
-                include 'rest/'.$restService.'.rest.php';
+                $pagInclude = 'rest/'.$restService.'.rest.php';
             }else if(strpos($requestedPage, 'avatar/')===0){                
               header("Access-Control-Allow-Origin: *");
               header("Access-Control-Allow-Methods: GET");
@@ -70,8 +70,14 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
               header("Cache-control: private, max-age=0, no-cache");
               header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
               header('content-type: image/png');
-              include 'rest/avatar.rest.php';
+              $pagInclude = 'rest/avatar.rest.php';
+            }else{
+              $isPageController = false;
+              $pagInclude= 'views/404.php';
             }
+        }else{
+          $isPageController = false;
+          $pagInclude= 'views/404.php';
         }
         //Fecha conexão com a base
         $CONNECTION = \SolvesDAO\SolvesDAO::closeConnection($CONNECTION);
@@ -158,7 +164,13 @@ if($isJs){
     return;
   }
 }else if($isPageController){
-  include $pagInclude;
+  if(file_exists($pagInclude)) {
+    include $pagInclude;
+  }else{
+    header ("HTTP/1.0 404 Not Found");
+    echo ',{"router":"Página ['.$pagInclude.'] não encontrada. Requisição ['.$requestedPage.']!"}';
+    return;
+  }
 }else{ 
   $CONNECTION = \SolvesDAO\SolvesDAO::openConnection();
   $CANNONICAL = \Solves\Solves::getSiteUrl().$ATUAL_URL;
