@@ -12,14 +12,20 @@ class SolvesCabecalho {
     private static $AUTHOR = 'Thiago G.S. Goulart';
     private static $TWITTER_CREATOR = '@solves';
     private static $SCRIPT_ANALYTICS='';
+    private static $THEME_COLOR='#FFFFFF';
 
 
     public static function config($scriptAnalytics){SolvesCabecalho::setScriptAnalytics($scriptAnalytics);}
 
     public static function getScriptAnalytics(){return SolvesCabecalho::$SCRIPT_ANALYTICS;}
     public static function setScriptAnalytics($p){SolvesCabecalho::$SCRIPT_ANALYTICS=$p;}
+    public static function getThemeColor(){return SolvesCabecalho::$THEME_COLOR;}
+    public static function setThemeColor($p){SolvesCabecalho::$THEME_COLOR=$p;}
 
-    public static function getHtml($completeUrl, $pageTitle, $pageDescr){
+    public static function getHtml($completeUrl, $pageTitle, $pageDescr, $themeColor=null){
+        if(\Solves\Solves::isNotBlank($themeColor)){
+            SolvesCabecalho::setThemeColor($themeColor);
+        }
         $CANNONICAL = \Solves\Solves::getSiteUrl().$completeUrl;
         $SITE_TITULO = \Solves\Solves::getSiteTitulo().(\Solves\Solves::isNotBlank($pageTitle) ? ' - '.$pageTitle : '');
         $SITE_DESCRIPTION =(\Solves\Solves::isNotBlank($pageTitle) ?  $pageDescr.' ' : '').(\Solves\Solves::getSiteDescr());
@@ -33,10 +39,10 @@ class SolvesCabecalho {
     <title>'.$SITE_TITULO.'</title>
     <meta name="application-name" content="'.$SITE_TITULO.'">
     <link rel="manifest" href="/manifest.webmanifest">
-    <meta name="theme-color" content="#FFFFFF"/>
-    <meta name="msapplication-navbutton-color" content="#FFFFFF">
+    <meta name="theme-color" content="'.SolvesCabecalho::getThemeColor().'"/>
+    <meta name="msapplication-navbutton-color" content="'.SolvesCabecalho::getThemeColor().'">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#FFFFFF">
+    <meta name="apple-mobile-web-app-status-bar-style" content="'.SolvesCabecalho::getThemeColor().'">
 
     <link rel="apple-touch-icon-precomposed" sizes="60x60" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-60x60.png" />
     <link rel="apple-touch-icon-precomposed" sizes="76x76" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-76x76.png" />
@@ -44,7 +50,7 @@ class SolvesCabecalho {
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-152x152.png" />
     <link rel="apple-touch-icon-precomposed" sizes="167x167" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-167x167.png" />    
     <link rel="apple-touch-icon-precomposed" sizes="180x180" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-180x180.png" />
-    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileColor" content="'.SolvesCabecalho::getThemeColor().'" />
     <meta name="msapplication-square70x70logo" content="'.(\Solves\Solves::getImgPathLogo()).'tile70x70.png" />
     <meta name="msapplication-TileImage" content="'.(\Solves\Solves::getImgPathLogo()).'mstile-144x144.png" />
     <meta name="msapplication-square150x150logo" content="'.(\Solves\Solves::getImgPathLogo()).'tile150x150.png" />
