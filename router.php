@@ -141,6 +141,7 @@ if($MODO_SOON_ATIVADO && !$isPageController && !$IS_SOON_PAGE){
   $IS_SOON_PAGE = true;
   $incluiTopo = false;
   $incluiTopoPublic = false;
+  //TODO deixar parametrizado Quais URLS serão abertas durante SOON
   if($ATUAL_URL=='meu_perfil' || $ATUAL_URL=='termo_uso' || $ATUAL_URL=='termo_privacidade'){
     $pagInclude= 'views/'.$ATUAL_URL.'.php';
     if(!file_exists($pagInclude)) {
