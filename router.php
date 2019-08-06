@@ -169,7 +169,7 @@ if($isJs){
     include $pagInclude;
   }else{
     header ("HTTP/1.0 404 Not Found");
-    echo ',{"router":"Página ['.$pagInclude.'] não encontrada. Requisição ['.$requestedPage.']!"}';
+    echo '{"router":"Página ['.$pagInclude.'] não encontrada. Requisição ['.$requestedPage.']!"}';
     return;
   }
 }else{ 
