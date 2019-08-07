@@ -11,6 +11,14 @@ use Minishlink\WebPush\Subscription;
 
 class SolvesNotification {
 
+	private static $publicKey='';
+	private static $privateKey='';
+
+	public static config($publicKey, $privateKey){
+		SolvesNotification::$publicKey = $publicKey;
+		SolvesNotification::$privateKey = $privateKey;
+	}
+
 	public static function sendNotifications($isSendFirefox, $isSendChrome, $title, $message){ 
 		// array of notifications
 		$notifications = [
@@ -83,7 +91,47 @@ class SolvesNotification {
 		    }
 		}
 	}
-	public static function sendOneNotification($webPush){ 
+	public static function sendNotificationToOneEndpoint($authToken, $content_encoding, $endpoint, $publicKey,
+			$idNotification, $title, $message, $image=null){
+		$subscription = SolvesNotification::getSubscriptionObject($authToken, $content_encoding, $endpoint, $publicKey);
+		$json = SolvesNotification::mountJsonMessaging($idNotification, $title, $message, $image);
+		$auth = array(
+		    'VAPID' => array(
+		        'subject' => \Solves\Solves::getSiteUrl(),
+		        'publicKey' => SolvesNotification::$publicKey, // don't forget that your public key also lives in app.js
+		        'privateKey' => SolvesNotification::$privateKey, // in the real world, this would be in a secret file
+		    ),
+		);
+		$webPush = new WebPush($auth);
+		SolvesNotification::sendOneNotification($webPush, $subscription, $json);
+	}
+	private static mountJsonMessaging($idNotification, $title, $message, $image){
+	    if(\Solves\Solves::isNotBlank($idNotification)){
+	        $idNotification = \Solves\Solves::getSystemName().'_'.\Solves\Solves::getSystemVersion().'_'.\Solves\SolvesTime::getTimestampAtual().'_'.
+	        	time();
+	    }
+	    $json = array();
+	    $json["title"] = $title; 
+	    $json["body"] = $message; 
+	    $json["tag"] = $idNotification; 
+	    $json["icon"]= \Solves\Solves::getSiteIcone();
+	    if(\Solves\Solves::isNotBlank($image)){
+	      $json["image"] = $image;
+	    }
+	 /*   if(this.actions && this.actions.length>0){
+	      $json["actions"] = this.actions;
+	    } */
+	    return $json;
+  }
+	private static function getSubscriptionObject($authToken, $content_encoding, $endpoint, $publicKey){ 
+		$objJson = array();
+		$objJson['auth_token'] = $authToken;
+		$objJson['content_encoding'] = $content_encoding;
+		$objJson['endpoint'] = $endpoint;
+		$objJson['publicKey'] = $publicKey;
+		return Subscription::create($objJson);
+	}
+	private static function sendOneNotification($webPush, $subscription, $json){ 
 		/**
 		 * send one notification and flush directly
 		 * @var \Generator<MessageSentReport> $sent

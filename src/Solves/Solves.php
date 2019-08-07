@@ -10,6 +10,7 @@ use SolvesAuth\SolvesAuth;
 use SolvesMail\SolvesMail;
 use SolvesDAO\SolvesDAO;
 use SolvesPay\SolvesPay;
+use SolvesNotification\SolvesNotification;
 
 class Solves {
 	const SYSTEM_MODE_DEV = 'DEV';
@@ -56,6 +57,9 @@ class Solves {
     public static function configDAO($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase, $bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase){
     	SolvesDAO::config($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase,$bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase);
     }
+    public static function configNotifications($publicKey, $privateKey){
+    	SolvesNotification::config($publicKey, $privateKey);
+    }
 
     public static function setSystemName($p){Solves::$SYSTEM_NAME = $p;}
     public static function setSystemVersion($p){Solves::$SYSTEM_VERSION = $p;}
@@ -74,6 +78,7 @@ class Solves {
     public static function getSiteKeys(){return Solves::$SITE_KEYS;}
     public static function getImgPath(){return Solves::$IMG_PATH;}
     public static function getImgPathLogo(){return Solves::$IMG_PATH_LOGO;}
+    public static function getSiteIcone(){return Solves::$IMG_PATH_LOGO.'favicon-32x32.png';}
 
 	public static function isDevMode() {return (SYSTEM_MODE_DEV==Solves::$SYSTEM_MODE);}
 	public static function isProdMode() {return (SYSTEM_MODE_PROD==Solves::$SYSTEM_MODE);}
