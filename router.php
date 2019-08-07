@@ -32,6 +32,14 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
                 $restDetails = substr($requisicaoRest, $pos_startDetails, strlen($requisicaoRest)-$pos_startDetails-(substr($requisicaoRest, -1)=='/'?1:0));
                 $file_array= null;
                 $dados = $_POST["dados"];
+
+                $method = $_SERVER['REQUEST_METHOD'];
+                if("POST"==$method) {
+                  $dados = $_POST["dados"];
+                }else if("PUT"==$method || "DELETE"==$method) {
+                  \Solves\Solves::parsePutRequest();
+                  $dados = $_PUT["dados"];
+                }
                 if(substr($_SERVER['CONTENT_TYPE'],0,19)=='multipart/form-data'){ 
                     if(substr($dados, 0, 1)=='?'){
                         $dados = substr($dados, 1);
@@ -56,7 +64,6 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
                 $userData = json_decode(utf8_encode($userData), false);
                 $perfil = json_decode(utf8_encode($perfil), false);
                 $usuario = json_decode(utf8_encode($usuario), false);
-                $method = $_SERVER['REQUEST_METHOD'];
                 
                 header("Access-Control-Allow-Origin: *");
                 header("Access-Control-Allow-Methods: GET, POST");
