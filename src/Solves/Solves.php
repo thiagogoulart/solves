@@ -44,7 +44,7 @@ class Solves {
     	Solves::setSiteTitulo($siteTitulo);
     	Solves::setSiteUrl($siteUrl);
     	Solves::setSiteDescr($siteDescr);
-    	Solves::setSiteKeys($siteKeys);
+    	Solves::setSiteKeys($sitekeys);
     	Solves::setImgPath($imgPath);
     	Solves::setImgPathLogo($imgPathLogo);
     }

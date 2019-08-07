@@ -14,7 +14,7 @@ class SolvesNotification {
 	private static $publicKey='';
 	private static $privateKey='';
 
-	public static config($publicKey, $privateKey){
+	public static function config($publicKey, $privateKey){
 		SolvesNotification::$publicKey = $publicKey;
 		SolvesNotification::$privateKey = $privateKey;
 	}
@@ -105,7 +105,7 @@ class SolvesNotification {
 		$webPush = new WebPush($auth);
 		SolvesNotification::sendOneNotification($webPush, $subscription, $json);
 	}
-	private static mountJsonMessaging($idNotification, $title, $message, $image){
+	private static function mountJsonMessaging($idNotification, $title, $message, $image){
 	    if(\Solves\Solves::isNotBlank($idNotification)){
 	        $idNotification = \Solves\Solves::getSystemName().'_'.\Solves\Solves::getSystemVersion().'_'.\Solves\SolvesTime::getTimestampAtual().'_'.
 	        	time();
@@ -132,13 +132,16 @@ class SolvesNotification {
 		return Subscription::create($objJson);
 	}
 	private static function sendOneNotification($webPush, $subscription, $json){ 
+		if(is_array($json)){
+			$json = json_encode($json);
+		}
 		/**
 		 * send one notification and flush directly
 		 * @var \Generator<MessageSentReport> $sent
 		 */
-		$sent = $webPush->sendNotification(
-		    $notifications[0]['subscription'],
-		    $notifications[0]['payload'], // optional (defaults null)
+		return $webPush->sendNotification(
+		    $subscription,
+		    $json, // optional (defaults null)
 		    true // optional (defaults false)
 		);
 	}
