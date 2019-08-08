@@ -8,15 +8,19 @@ namespace SolvesNotification;
 
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
+use Minishlink\WebPush\VAPID;
 
 class SolvesNotification {
 
 	private static $publicKey='';
 	private static $privateKey='';
+	private static $senderId = '';
+	private static $debug=true;
 
-	public static function config($publicKey, $privateKey){
+	public static function config($publicKey, $privateKey, $senderId){
 		SolvesNotification::$publicKey = $publicKey;
 		SolvesNotification::$privateKey = $privateKey;
+		SolvesNotification::$senderId = $senderId;
 	}
 
 	public static function sendNotifications($isSendFirefox, $isSendChrome, $title, $message){ 
@@ -88,6 +92,7 @@ class SolvesNotification {
 		        echo "[v] Message sent successfully for subscription {$endpoint}.";
 		    } else {
 		        echo "[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}";
+		      //  var_dump($report->getResponse());
 		    }
 		}
 	}
@@ -96,6 +101,7 @@ class SolvesNotification {
 		$subscription = SolvesNotification::getSubscriptionObject($authToken, $content_encoding, $endpoint, $publicKey);
 		$json = SolvesNotification::mountJsonMessaging($idNotification, $title, $message, $image);
 		$auth = array(
+    		'GCM' => SolvesNotification::$senderId, 
 		    'VAPID' => array(
 		        'subject' => \Solves\Solves::getSiteUrl(),
 		        'publicKey' => SolvesNotification::$publicKey, // don't forget that your public key also lives in app.js
@@ -103,7 +109,12 @@ class SolvesNotification {
 		    ),
 		);
 		$webPush = new WebPush($auth);
-		SolvesNotification::sendOneNotification($webPush, $subscription, $json);
+		$result = SolvesNotification::sendOneNotification($webPush, $subscription, $json);
+		if(SolvesNotification::$debug){
+			//var_dump(VAPID::createVapidKeys()); 
+			SolvesNotification::checkSentResults($webPush);
+		}
+		return $result;
 	}
 	private static function mountJsonMessaging($idNotification, $title, $message, $image){
 	    if(\Solves\Solves::isNotBlank($idNotification)){
@@ -118,7 +129,8 @@ class SolvesNotification {
 	    if(\Solves\Solves::isNotBlank($image)){
 	      $json["image"] = $image;
 	    }
-	 /*   if(this.actions && this.actions.length>0){
+	 /*   
+	 	if(this.actions && this.actions.length>0){
 	      $json["actions"] = this.actions;
 	    } */
 	    return $json;
