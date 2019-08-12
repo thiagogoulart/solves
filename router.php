@@ -13,6 +13,7 @@ $IS_SOON_PAGE = false;
 $isJs = false;
 $isServiceWorkerFile = false;
 $isServiceWorkerRegisterFile = false;
+$isWebManifest = false;
 $requestedPage = $_GET['p'];
 if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<100){
   if(substr_compare($requestedPage, 'processupload.php', -strlen('processupload.php')) === 0){
@@ -102,6 +103,9 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
     $isServiceWorkerRegisterFile = true;
     $isJs = true;
     $pagInclude= '/sw_register.js';
+  }else if(substr($requestedPage, 0, 20)=='manifest.webmanifest'){ 
+    $isWebManifest = true;
+    $pagInclude= '/manifest.webmanifest';
   }else if(substr($requestedPage, 0, 4)=='soon'){
     //SOON PAGES
     $IS_SOON_PAGE = true;
@@ -170,6 +174,13 @@ if($isJs){
   }else{
     header ("HTTP/1.0 404 Not Found");
     return;
+  }
+}else if($isWebManifest){
+  header('Content-Type: application/json');
+  if(file_exists($pagInclude)) {
+    readfile($pagInclude);
+  }else{
+    echo \SolvesUi\SolvesWebmanifest::getManifest();
   }
 }else if($isPageController){
   if(file_exists($pagInclude)) {

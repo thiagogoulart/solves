@@ -11,6 +11,7 @@ use SolvesMail\SolvesMail;
 use SolvesDAO\SolvesDAO;
 use SolvesPay\SolvesPay;
 use SolvesNotification\SolvesNotification;
+use SolvesUi\SolvesUi;
 
 class Solves {
 	const SYSTEM_MODE_DEV = 'DEV';
@@ -34,6 +35,10 @@ class Solves {
 	private static $SYSTEM_MODE = 'DEV';
 	private static $DEFAULT_CHARSET = '';
 	private static $MODO_SOON_ATIVADO = false;
+
+	private static $APP_GOOGLE_PLAY_STORE_LINK = '';
+	private static $APP_APPLE_STORE_LINK = '';
+	private static $APP_WINDOWS_STORE_LINK = '';
 
 	private static $IMG_PATH;
 	private static $IMG_PATH_LOGO;
@@ -60,6 +65,9 @@ class Solves {
     public static function configNotifications($publicKey, $privateKey, $senderId){
     	SolvesNotification::config($publicKey, $privateKey, $senderId);
     }
+    public static function configUi($cssFilePaths, $jsFilePaths, $themeBgColor, $themeColor, $uiVersion){
+    	SolvesUi::config($cssFilePaths, $jsFilePaths, $themeBgColor, $themeColor,$uiVersion);
+    }
 
     public static function setSystemName($p){Solves::$SYSTEM_NAME = $p;}
     public static function setSystemVersion($p){Solves::$SYSTEM_VERSION = $p;}
@@ -79,6 +87,13 @@ class Solves {
     public static function getImgPath(){return Solves::$IMG_PATH;}
     public static function getImgPathLogo(){return Solves::$IMG_PATH_LOGO;}
     public static function getSiteIcone(){return Solves::$IMG_PATH_LOGO.'favicon-32x32.png';}
+
+    public static function getGooglePlayStoreLink(){return Solves::$APP_GOOGLE_PLAY_STORE_LINK;}
+    public static function setGooglePlayStoreLink($p){Solves::$APP_GOOGLE_PLAY_STORE_LINK = $p;}
+    public static function getAppleStoreLink(){return Solves::$APP_APPLE_STORE_LINK;}
+    public static function setAppleStoreLink($p){Solves::$APP_APPLE_STORE_LINK = $p;}
+    public static function getWindowsStoreLink(){return Solves::$APP_WINDOWS_STORE_LINK;}
+    public static function setWindowsStoreLink($p){Solves::$APP_WINDOWS_STORE_LINK = $p;}
 
 	public static function isDevMode() {return (SYSTEM_MODE_DEV==Solves::$SYSTEM_MODE);}
 	public static function isProdMode() {return (SYSTEM_MODE_PROD==Solves::$SYSTEM_MODE);}

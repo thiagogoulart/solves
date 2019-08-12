@@ -14,8 +14,20 @@ class SolvesUi {
     
     private static $SCRIPTS_ONLOAD = '';
     private static $INCLUDE_SCRIPTS_TAGS='';
+
+    private static $THEME_BACKGROUND_COLOR='#FFFFFF';
+    private static $THEME_COLOR='#FFFFFF';
+
     private static $IS_APP=false;
     private static $UI_VERSION=null;
+
+    public static function config($cssFilePaths, $jsFilePaths, $themeBgColor, $themeColor, $uiVersion){
+        SolvesUi::setCssFilePaths($cssFilePaths);
+        SolvesUi::setScriptFilePaths($jsFilePaths);
+        SolvesUi::setThemeBackgroundColor($themeBgColor);
+        SolvesUi::setThemeColor($themeColor);
+        SolvesUi::setUiVersion($uiVersion);
+    }
 
     public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
     public static function setCssFilePaths($arr){SolvesUi::$CSS_FILEPATHS = $arr;}
@@ -26,6 +38,11 @@ class SolvesUi {
     public static function getCacheUiVersion(){
         return \Solves\Solves::getSystemName().'_'.\Solves\Solves::getSystemVersion().(\Solves\Solves::isNotBlank(SolvesUi::$UI_VERSION)?'_ui'.SolvesUi::$UI_VERSION:'');
     }
+
+    public static function getThemeBackgroundColor(){return SolvesUi::$THEME_BACKGROUND_COLOR;}
+    public static function setThemeBackgroundColor($p){SolvesUi::$THEME_BACKGROUND_COLOR = $p;}
+    public static function getThemeColor(){return SolvesUi::$THEME_COLOR;}
+    public static function setThemeColor($p){SolvesUi::$THEME_COLOR = $p;}
 
     public static function getScriptAjusteMetaTags($completeUrl, $titulo, $descr, $img){
         $completeUrl = \Solves\Solves::getSiteUrl().$completeUrl;

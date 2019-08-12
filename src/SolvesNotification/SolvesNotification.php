@@ -22,6 +22,7 @@ class SolvesNotification {
 		SolvesNotification::$privateKey = $privateKey;
 		SolvesNotification::$senderId = $senderId;
 	}
+    public static function getSenderId(){return SolvesNotification::$senderId;}
 
 	public static function sendNotifications($isSendFirefox, $isSendChrome, $title, $message){ 
 		// array of notifications
