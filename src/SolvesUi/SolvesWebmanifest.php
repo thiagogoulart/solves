@@ -14,7 +14,7 @@ class SolvesWebmanifest {
 
         $result = '{
       "name": "'.\Solves\Solves::getSiteTitulo().'",
-      "short_name": "'.\Solves\Solves::setSystemName().'",
+      "short_name": "'.\Solves\Solves::getSystemName().'",
       "start_url": "'.\Solves\Solves::getSiteUrl().'?utm_source=homescreen",
       "display": "standalone",
       "background_color": "'.\SolvesUi\SolvesUi::getThemeBackgroundColor().'",
@@ -23,7 +23,7 @@ class SolvesWebmanifest {
       "description": "'.\Solves\Solves::getSiteDescr().'",'.
       (\Solves\Solves::isNotBlank(\SolvesNotification\SolvesNotification::getSenderId()) ? 
           '"gcm_sender_id": "'.\SolvesNotification\SolvesNotification::getSenderId().'",':
-      '')
+      '').
       '"icons": [{
         "src": "'.\Solves\Solves::getImgPathLogo().'favicon-48x48.png", 
         "sizes": "48x48",
