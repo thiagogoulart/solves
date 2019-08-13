@@ -14,6 +14,7 @@ $isJs = false;
 $isServiceWorkerFile = false;
 $isServiceWorkerRegisterFile = false;
 $isWebManifest = false;
+$isConfigJsFile = false;
 $requestedPage = $_GET['p'];
 if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<100){
   if(substr_compare($requestedPage, 'processupload.php', -strlen('processupload.php')) === 0){
@@ -99,6 +100,10 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
     $isServiceWorkerFile = true;
     $isJs = true;
     $pagInclude= '/sw.js';
+  }else if(substr($requestedPage, 0, 9)=='config.js'){
+    $isConfigJsFile = true;
+    $isJs = true;
+    $pagInclude= '/config.js';
   }else if(substr($requestedPage, 0, 14)=='sw_register.js'){
     $isServiceWorkerRegisterFile = true;
     $isJs = true;
@@ -171,6 +176,8 @@ if($isJs){
     echo \SolvesUi\SolvesServiceWorker::getScript();
   }else if($isServiceWorkerRegisterFile){ 
     echo \SolvesUi\SolvesServiceWorkerRegister::getScript();
+  }else if($isConfigJsFile){ 
+    echo \SolvesUi\SolvesConfigJS::getScript();
   }else{
     header ("HTTP/1.0 404 Not Found");
     return;
