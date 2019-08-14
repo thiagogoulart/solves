@@ -62,8 +62,8 @@ class Solves {
     public static function configDAO($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase, $bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase){
     	SolvesDAO::config($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase,$bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase);
     }
-    public static function configNotifications($publicKey, $privateKey, $senderId){
-    	SolvesNotification::config($publicKey, $privateKey, $senderId);
+    public static function configNotifications($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId){
+    	SolvesNotification::config($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId);
     }
     public static function configUi($cssFilePaths, $jsFilePaths, $themeBgColor, $themeColor, $uiVersion){
     	SolvesUi::config($cssFilePaths, $jsFilePaths, $themeBgColor, $themeColor,$uiVersion);

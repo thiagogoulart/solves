@@ -26,9 +26,6 @@ class SolvesConfigJS {
     private static $AUTH_URL_TERMO_PRIVACIDADE = "/termo_privacidade";
     private static $AUTH_FUNCTION_SUCESSO = "loginSuccess";
 
-    private static $NOTIFICATIONS_SERVER_URL = '/rest/notifications';
-    private static $NOTIFICATIONS_SERVER_KEY = '';
-
     public static function getScript(){
         $script = SolvesConfigJS::getFacebookMessenger();
         $script .= SolvesConfigJS::getNotificationsSettings();
@@ -51,8 +48,8 @@ class SolvesConfigJS {
     }
     private static function getNotificationsSettings(){
       return '//SolvesNotifications
-$.SolvesNotifications.serverUrlNotifications = "'.SolvesConfigJS::getNotificationsServerUrl().'"; 
-$.SolvesNotifications.setApplicationServerKey = "'.SolvesConfigJS::getNotificationsServerKey().'";';
+$.SolvesNotifications.serverUrlNotifications = "'.\SolvesNotification\SolvesNotification::getServerSubscriptionsUrl().'"; 
+$.SolvesNotifications.setApplicationServerKey = "'.\SolvesNotification\SolvesNotification::getPublicKey().'";';
     }
     private static function getFirebaseNotificationsSettings(){
         //TODO attrs dinamicos
@@ -163,17 +160,5 @@ $.SolvesAuth.initFireBaseConfig();
     }
     public static function setAuthFunctionSucesso($p){
       SolvesConfigJS::$AUTH_FUNCTION_SUCESSO = $p;
-    }
-    public static function getNotificationsServerUrl(){
-      return SolvesConfigJS::$NOTIFICATIONS_SERVER_URL;
-    }
-    public static function setNotificationsServerUrl($p){
-      SolvesConfigJS::$NOTIFICATIONS_SERVER_URL = $p;
-    }
-    public static function getNotificationsServerKey(){
-      return SolvesConfigJS::$NOTIFICATIONS_SERVER_KEY;
-    }
-    public static function setNotificationsServerKey($p){
-      SolvesConfigJS::$NOTIFICATIONS_SERVER_KEY = $p;
     }
 }

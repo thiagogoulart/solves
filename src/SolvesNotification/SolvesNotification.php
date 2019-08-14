@@ -12,12 +12,16 @@ use Minishlink\WebPush\VAPID;
 
 class SolvesNotification {
 
+	private static $serverSubscriptionsUrl='/rest/notifications';
 	private static $publicKey='';
 	private static $privateKey='';
 	private static $senderId = '';
 	private static $debug=true;
 
-	public static function config($publicKey, $privateKey, $senderId){
+	public static function config($serverSubscriptionsUrl='/rest/notifications', $publicKey, $privateKey, $senderId){
+		if(\Solves\Solves::isNotBlank($serverSubscriptionsUrl)){
+			SolvesNotification::$serverSubscriptionsUrl = $serverSubscriptionsUrl;
+		}
 		SolvesNotification::$publicKey = $publicKey;
 		SolvesNotification::$privateKey = $privateKey;
 		SolvesNotification::$senderId = $senderId;
@@ -157,6 +161,12 @@ class SolvesNotification {
 		    $json, // optional (defaults null)
 		    true // optional (defaults false)
 		);
+	}
+	public static function getServerSubscriptionsUrl(){
+		return SolvesNotification::$serverSubscriptionsUrl;
+	}
+	public static function getPublicKey(){
+		return SolvesNotification::$publicKey;
 	}
 }
 ?>
