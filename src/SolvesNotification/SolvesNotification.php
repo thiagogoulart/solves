@@ -109,12 +109,12 @@ class SolvesNotification {
     		'GCM' => SolvesNotification::$senderId, 
 		    'VAPID' => array(
 		        'subject' => \Solves\Solves::getSiteUrl(),
-		        'publicKey' => SolvesNotification::$publicKey, // don't forget that your public key also lives in app.js
-		        'privateKey' => SolvesNotification::$privateKey, // in the real world, this would be in a secret file
-		    ),
+		        'publicKey' => $publicKey, // don't forget that your public key also lives in app.js
+		        'privateKey' => SolvesNotification::$privateKey // in the real world, this would be in a secret file
+		    )
 		);
 		$webPush = new WebPush($auth);
-		$result = SolvesNotification::sendOneNotification($webPush, $subscription, $json);
+		$result = SolvesNotification::sendOneNotification($webPush, $subscription, $json, $publicKey, $authToken);
 		if(SolvesNotification::$debug){
 			//var_dump(VAPID::createVapidKeys()); 
 			SolvesNotification::checkSentResults($webPush);
@@ -134,6 +134,7 @@ class SolvesNotification {
 	    if(\Solves\Solves::isNotBlank($image)){
 	      $json["image"] = $image;
 	    }
+	    $json["vibrate"] = [100, 50, 100];
 	 /*   
 	 	if(this.actions && this.actions.length>0){
 	      $json["actions"] = this.actions;
@@ -148,7 +149,7 @@ class SolvesNotification {
 		$objJson['publicKey'] = $publicKey;
 		return Subscription::create($objJson);
 	}
-	private static function sendOneNotification($webPush, $subscription, $json){ 
+	private static function sendOneNotification($webPush, $subscription, $json, $userPublicKey, $userAuthToken){ 
 		if(is_array($json)){
 			$json = json_encode($json);
 		}
@@ -158,8 +159,7 @@ class SolvesNotification {
 		 */
 		return $webPush->sendNotification(
 		    $subscription,
-		    $json, // optional (defaults null)
-		    true // optional (defaults false)
+		    $json
 		);
 	}
 	public static function getServerSubscriptionsUrl(){

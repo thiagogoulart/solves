@@ -31,7 +31,19 @@
     "authors": [
         {
             "name": "Thiago G.S. Goulart",
-            "email": "thiago@solves.com.br"
+            "email": "thiago@solves.com.br",
+            "homepage": "https://github.com/thiagogoulart"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Solves\\": "src/Solves/",
+            "SolvesAuth\\": "src/SolvesAuth/",
+            "SolvesDAO\\": "src/SolvesDAO/",
+            "SolvesMail\\": "src/SolvesMail/",
+            "SolvesPay\\": "src/SolvesPay/",
+            "SolvesUi\\": "src/SolvesUi/",
+            "SolvesNotification\\": "src/SolvesNotification/"
+        }
+    }
 }
