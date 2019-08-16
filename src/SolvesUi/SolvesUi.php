@@ -65,9 +65,10 @@ class SolvesUi {
         $completeUrl = \Solves\Solves::getSiteUrl().$completeUrl;
         $linkMsg = 'Olha%20o%20que%20eu%20vi%20no%20site%20'.\Solves\Solves::getSiteTitulo().':%20'.$titulo;
         $linkMsgComUrl = $linkMsg.'%20'.$completeUrl.'';
+        $linkMsgComUrlEncoded = $linkMsg.'%20'.urlencode($completeUrl).'';
         return '
         <div class="share_social_box"><span class="share_social_box_title">Compartilhar: </span>
-    <a rel="noopener" href="https://api.whatsapp.com/send?text='.$linkMsg.'" target="_blank" title="Compartilhar no Whatsapp">
+    <a rel="noopener" href="https://api.whatsapp.com/send?text='.$linkMsgComUrlEncoded.'" target="_blank" title="Compartilhar no Whatsapp">
         <i class="fab fa-lg fa-whatsapp"></i>
     </a>
     <a rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u='.$completeUrl.'" target="_blank" title="Compartilhar no Facebook">
