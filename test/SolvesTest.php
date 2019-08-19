@@ -48,4 +48,14 @@ class SolvesTest extends TestCase {
 		}
 	}
 
+	public function testGetUrlName(){
+		$params = array("/index?p=1","/index/p2?p=1","/index/p2#p=1","/index?p=1/p2","/index#p=1/p2","autonomos/ms/campo-grande/construcao/pedreiro");
+		$expected = array("index","index/p2","index/p2","index","index", "autonomos/ms/campo-grande/construcao/pedreiro");
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$s = \Solves\Solves::getUrlName('',$p, false);
+			$this->assertEquals($expected[$i], $s, 'URL ['.$p.'] ficou ['.$s.']. Url não ficou como esperada:'.$expected[$i]);
+		}
+	}
 }
