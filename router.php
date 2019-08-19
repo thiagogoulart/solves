@@ -117,7 +117,7 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
     $incluiTopo = false;
     $incluiTopoPublic = false;
     $ATUAL_URL = \Solves\Solves::getUrlName('',$requestedPage, false);
-    $p = 'views/'.$ATUAL_URL.'.php';
+    $p = \Solves\Solves::getUrlNameViewPath($ATUAL_URL);
     if(file_exists($p)) {
       $pagInclude= $p;
     }else{
@@ -139,7 +139,7 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
     $incluiTopo = false;
     $incluiTopoPublic = true;
     $ATUAL_URL = \Solves\Solves::getUrlName('',$requestedPage, false);
-    $p = 'views/'.$ATUAL_URL.'.php';
+    $p = \Solves\Solves::getUrlNameViewPath($ATUAL_URL);
     if(file_exists($p)) {
       $pagInclude= $p;
     }else{
@@ -159,7 +159,7 @@ if($MODO_SOON_ATIVADO && !$isPageController && !$IS_SOON_PAGE){
   $incluiTopoPublic = false;
   //TODO deixar parametrizado Quais URLS serão abertas durante SOON
   if($ATUAL_URL=='meu_perfil' || $ATUAL_URL=='termo_uso' || $ATUAL_URL=='termo_privacidade'){
-    $pagInclude= 'views/'.$ATUAL_URL.'.php';
+    $pagInclude = \Solves\Solves::getUrlNameViewPath($ATUAL_URL);
     if(!file_exists($pagInclude)) {
       $pagInclude= 'views/soon.php';
     }

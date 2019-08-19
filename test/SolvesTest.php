@@ -58,4 +58,27 @@ class SolvesTest extends TestCase {
 			$this->assertEquals($expected[$i], $s, 'URL ['.$p.'] ficou ['.$s.']. Url não ficou como esperada:'.$expected[$i]);
 		}
 	}
+
+	public function testGetUrlNameArray(){
+		$params = array("index","index/p2","index/p2","index","index", "autonomos/ms/campo-grande/construcao/pedreiro");
+		$expected = array(1,2,2,1,1,5);
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$arr = \Solves\Solves::getUrlNameArray($p);
+			$s = count($arr);
+			$this->assertEquals($expected[$i], $s, 'Quantidade esperada de posições no array para ['.$p.'] ficou ['.$s.']. Array não ficou com qtd esperada:'.$expected[$i]);
+		}
+	}
+
+	public function testGetUrlNameViewPath(){
+		$params = array("filea","tree/filea","filea/fileb","tree/filea/fileb");
+		$expected = array("views/filea.php","views/tree/filea.php","views/filea.php","views/tree/filea.php");
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$s = \Solves\Solves::getUrlNameViewPath($p);
+			$this->assertEquals($expected[$i], $s, 'URL ['.$p.'] ficou ['.$s.']. Url não ficou como esperada:'.$expected[$i]);
+		}
+	}
 }

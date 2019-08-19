@@ -44,24 +44,24 @@ class SolvesCabecalho {
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="'.SolvesCabecalho::getThemeColor().'">
 
-    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-60x60.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-152x152.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="167x167" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-167x167.png" />    
-    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="'.(\Solves\Solves::getImgPathLogo()).'apple-touch-icon-180x180.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="167x167" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'apple-touch-icon-167x167.png" />    
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'apple-touch-icon-180x180.png" />
     <meta name="msapplication-TileColor" content="'.SolvesCabecalho::getThemeColor().'" />
-    <meta name="msapplication-square70x70logo" content="'.(\Solves\Solves::getImgPathLogo()).'tile70x70.png" />
-    <meta name="msapplication-TileImage" content="'.(\Solves\Solves::getImgPathLogo()).'mstile-144x144.png" />
-    <meta name="msapplication-square150x150logo" content="'.(\Solves\Solves::getImgPathLogo()).'tile150x150.png" />
-    <meta name="msapplication-square310x310logo" content="'.(\Solves\Solves::getImgPathLogo()).'tile310x310.png" />
-    <meta name="msapplication-wide310x150logo" content="'.(\Solves\Solves::getImgPathLogo()).'tile310x150.png" />
+    <meta name="msapplication-square70x70logo" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'tile70x70.png" />
+    <meta name="msapplication-TileImage" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'mstile-144x144.png" />
+    <meta name="msapplication-square150x150logo" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'tile150x150.png" />
+    <meta name="msapplication-square310x310logo" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'tile310x310.png" />
+    <meta name="msapplication-wide310x150logo" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'tile310x150.png" />
     
-    <link rel="shortcut icon" href="'.(\Solves\Solves::getImgPathLogo()).'favicon.ico" type="image/x-icon">
-    <link rel="icon" href="'.(\Solves\Solves::getImgPathLogo()).'favicon.ico" type="image/x-icon">
-    <link rel="icon" href="'.(\Solves\Solves::getImgPathLogo()).'favicon-16x16.png" sizes="16x16">
-    <link rel="icon" href="'.(\Solves\Solves::getImgPathLogo()).'favicon-32x32.png" sizes="32x32">
-    <link rel="icon" href="'.(\Solves\Solves::getImgPathLogo()).'favicon-96x96.png" sizes="96x96">
+    <link rel="shortcut icon" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'favicon.ico" type="image/x-icon">
+    <link rel="icon" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'favicon.ico" type="image/x-icon">
+    <link rel="icon" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'favicon-16x16.png" sizes="16x16">
+    <link rel="icon" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'favicon-32x32.png" sizes="32x32">
+    <link rel="icon" href="'.(\Solves\Solves::getCompleteImgPathLogo()).'favicon-96x96.png" sizes="96x96">
 
     <link rel="canonical" href="'.$CANNONICAL.'" />
     <meta name="twitter:site" content="'.$SITE_TITULO.'">
@@ -69,10 +69,10 @@ class SolvesCabecalho {
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="'.$SITE_TITULO.'">
     <meta name="twitter:description" content="'.$SITE_DESCRIPTION.'">
-    <meta name="twitter:image" content="'.(\Solves\Solves::getImgPathLogo()).'pwa-192x192.png">
+    <meta name="twitter:image" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'pwa-192x192.png">
     <meta property="og:site_name" content="'.$SITE_TITULO.'" />
     <meta property="og:title" content="'.$SITE_TITULO.'">
-    <meta property="og:image" content="'.(\Solves\Solves::getImgPathLogo()).'pwa-192x192.png">
+    <meta property="og:image" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'pwa-192x192.png">
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="'.$CANNONICAL.'" />
@@ -141,5 +141,6 @@ class SolvesCabecalho {
 
 return $html;
     }
+
    
 }

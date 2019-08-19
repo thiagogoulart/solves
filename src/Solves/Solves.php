@@ -88,6 +88,10 @@ class Solves {
     public static function getImgPathLogo(){return Solves::$IMG_PATH_LOGO;}
     public static function getSiteIcone(){return Solves::$IMG_PATH_LOGO.'favicon-32x32.png';}
 
+    public static function getCompleteImgPathLogo(){
+        return Solves::getSiteUrl().Solves::removeBarraInicial(Solves::getImgPathLogo());
+    }
+
     public static function getGooglePlayStoreLink(){return Solves::$APP_GOOGLE_PLAY_STORE_LINK;}
     public static function setGooglePlayStoreLink($p){Solves::$APP_GOOGLE_PLAY_STORE_LINK = $p;}
     public static function getAppleStoreLink(){return Solves::$APP_APPLE_STORE_LINK;}
@@ -515,14 +519,36 @@ class Solves {
 	    $arr = explode('/',$url);
 	    return $arr[$ordem];
 	}
+	public static function removeBarraInicial($url){
+		if($url[0]=='/'){$url = substr($url,1,strlen($url));}
+		return $url;
+	}
 	public static function getUrlName($root,$url,$primeiraLetraMaiuscula=true){
 	    if(Solves::isNotBlank($root)){
 	        $url = substr($url, strlen($root), strlen($url));
 	    }
-	    if($url[0]=='/'){$url = substr($url,1,strlen($url));}
+	    $url = Solves::removeBarraInicial($url);
 	    if(strpos($url, '?') !== false){$url = strstr($url, '?', true);}
 	    if(strpos($url, '#') !== false){$url = strstr($url, '#', true);}
 	    if(strpos($url, '.') !== false){$url = strstr($url, '.', true);}
 	    return ($primeiraLetraMaiuscula ? ucfirst($url) : $url);
+	}
+	public static function getUrlNameArray($urlName){
+		return explode('/',$urlName);
+	}
+	public static function getUrlNameViewPath($urlName, $navInside=''){
+		$arrUrl = \Solves\Solves::getUrlNameArray($urlName);  
+		$u = '/'.$arrUrl[0];  
+	    $acumulado='';
+	    foreach($arrUrl as $arrItem){
+	      $acumulado .= '/'.$arrItem;
+	      $pTemp = $navInside.'views'.$acumulado;
+	      if(file_exists($pTemp.'.php')) {
+	        $u = $acumulado;
+	      }else if(!is_dir($pTemp)) {
+	        break;
+	      }
+	    }
+	    return $navInside.'views'.$u.'.php';
 	}
 }
