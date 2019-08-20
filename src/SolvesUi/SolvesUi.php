@@ -44,6 +44,27 @@ class SolvesUi {
     public static function getThemeColor(){return SolvesUi::$THEME_COLOR;}
     public static function setThemeColor($p){SolvesUi::$THEME_COLOR = $p;}
 
+    public static function getScriptsJS($INCLUDE_SCRIPTS_TAGS, $SCRIPTS, $SCRIPTS_ONLOAD, $ATUAL_URL){
+        $s = '';
+        $arrScripts = \SolvesUi\SolvesUi::getScriptFilePaths();
+        foreach($arrScripts as $scrSource){
+            $s .= '<script type="text/javascript" src="'.$scrSource.'" '.(strpos($scrSource, '/')==0 ?'':'crossorigin="anonymous"').'></script>
+';
+        }
+
+        $s .= $INCLUDE_SCRIPTS_TAGS; 
+
+        $s .= '<script type="text/javascript">';
+        $s .= $SCRIPTS; 
+        $s .= "$(function(){
+            'use strict';
+            $.Solves.url = '".$ATUAL_URL."';
+                ".$SCRIPTS_ONLOAD."
+            });
+        </script>";
+        return $s;
+    }
+
     public static function getScriptAjusteMetaTags($completeUrl, $titulo, $descr, $img){
         $completeUrl = \Solves\Solves::getSiteUrl().$completeUrl;
         return "

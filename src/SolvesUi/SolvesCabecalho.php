@@ -15,6 +15,10 @@ class SolvesCabecalho {
     private static $THEME_COLOR='#FFFFFF';
 
 
+    public static function getTwitterCreator(){return SolvesCabecalho::$TWITTER_CREATOR;}
+    public static function setTwitterCreator($p){SolvesCabecalho::$TWITTER_CREATOR=$p;}
+    public static function getAuthor(){return SolvesCabecalho::$AUTHOR;}
+    public static function setAuthor($p){SolvesCabecalho::$AUTHOR=$p;}
     public static function config($scriptAnalytics){SolvesCabecalho::setScriptAnalytics($scriptAnalytics);}
 
     public static function getScriptAnalytics(){return SolvesCabecalho::$SCRIPT_ANALYTICS;}
