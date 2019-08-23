@@ -20,7 +20,7 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
   if(substr_compare($requestedPage, 'processupload.php', -strlen('processupload.php')) === 0){
     $requestedPage = 'rest/upload';
   }
-  if (strpos($requestedPage, 'rest/')===0 || strpos($requestedPage, 'avatar/')===0 ||  strpos($requestedPage, 'thumb/')===0 || strpos($requestedPage, 'perfil/')===0 || strpos($requestedPage, 'file/')===0) {
+  if (strpos($requestedPage, 'rest/')===0 || strpos($requestedPage, 'avatar/')===0 ||  strpos($requestedPage, 'thumb/')===0 || strpos($requestedPage, 'perfil/')===0 || strpos($requestedPage, 'file/')===0 || strpos($requestedPage, 'foto/')===0) {
     $isPageController = true;
     try{ 
         /*************** REGRA DO CONTROLLER  ************************/
@@ -80,6 +80,14 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
               header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
               header('content-type: image/png');
               $pagInclude = 'rest/avatar.rest.php';
+            }else if(strpos($requestedPage, 'foto/')===0){                
+              header("Access-Control-Allow-Origin: *");
+              header("Access-Control-Allow-Methods: GET");
+              header("Access-Control-Allow-Headers: GET");
+              header("Cache-control: private, max-age=0, no-cache");
+              header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
+              header('content-type: image/jpg');
+              $pagInclude = 'rest/foto.rest.php';
             }else{
               $isPageController = false;
               $pagInclude= 'views/404.php';
