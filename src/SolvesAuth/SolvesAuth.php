@@ -40,7 +40,7 @@ class SolvesAuth {
             if(!SolvesAuth::$FIREBASE_CONFIG_JSON_FILE){
                 throw new \Exception('Configuração do Firebase não definida.');
             }
-            SolvesAuth::$firebaseServiceAccount = ServiceAccount::$fromJsonFile(SolvesAuth::getFirebaseConfigJsonFile());
+            SolvesAuth::$firebaseServiceAccount = ServiceAccount::fromJsonFile(SolvesAuth::getFirebaseConfigJsonFile());
             SolvesAuth::$firebaseFatory = (new Factory);
             SolvesAuth::$firebaseFatory = SolvesAuth::$firebaseFatory->withServiceAccount(SolvesAuth::$firebaseServiceAccount);
             if(SolvesAuth::getFirebaseConfigUser()){
