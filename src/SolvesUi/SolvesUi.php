@@ -32,6 +32,8 @@ class SolvesUi {
     public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
     public static function setCssFilePaths($arr){SolvesUi::$CSS_FILEPATHS = $arr;}
     public static function getScriptFilePaths(){return SolvesUi::$SCRIPT_FILEPATHS;}
+    public static function getSingleScriptFilePath($item){return (is_array($item) ? $item[0]: $item);}
+    public static function getSingleScriptFilePathProperties($item){return (is_array($item) ? $item[1]:  (strpos($item, '/')==0 ?'':'crossorigin="anonymous"'));}
     public static function getCssFilePaths(){return SolvesUi::$CSS_FILEPATHS;}
     public static function getUiVersion(){return SolvesUi::$UI_VERSION;}
     public static function setUiVersion($p){SolvesUi::$UI_VERSION = $p;}
@@ -48,7 +50,9 @@ class SolvesUi {
         $s = '';
         $arrScripts = \SolvesUi\SolvesUi::getScriptFilePaths();
         foreach($arrScripts as $scrSource){
-            $s .= '<script type="text/javascript" src="'.$scrSource.'" '.(strpos($scrSource, '/')==0 ?'':'crossorigin="anonymous"').'></script>
+            $jsFilePath = \SolvesUi\SolvesUi::getSingleScriptFilePath($scrSource);
+            $jsProps = \SolvesUi\SolvesUi::getSingleScriptFilePathProperties($scrSource);
+            $s .= '<script type="text/javascript" src="'.$jsFilePath.'" '.$jsProps.'></script>
 ';
         }
 

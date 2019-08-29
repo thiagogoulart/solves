@@ -25,7 +25,8 @@ const precacheFiles = [
 
 /*JS*/
     $jsFilePaths = \SolvesUi\SolvesUi::getScriptFilePaths();
-    foreach($jsFilePaths as $jsFilePath){
+    foreach($jsFilePaths as $js){
+        $jsFilePath = \SolvesUi\SolvesUi::getSingleScriptFilePath($js);
         if("/sw_register.js"==$jsFilePath || "/sw.js"==$jsFilePath){
             continue;
         }
