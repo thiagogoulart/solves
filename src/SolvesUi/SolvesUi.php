@@ -9,6 +9,8 @@ namespace SolvesUi;
 
 class SolvesUi {
 
+    private static $RESTRICTED_URLS = array();
+
     private static $SCRIPT_FILEPATHS = array();
     private static $CSS_FILEPATHS = array();
     
@@ -27,6 +29,12 @@ class SolvesUi {
         SolvesUi::setThemeBackgroundColor($themeBgColor);
         SolvesUi::setThemeColor($themeColor);
         SolvesUi::setUiVersion($uiVersion);
+    }
+
+    public static function setRestrictedUrls($arr){SolvesUi::$RESTRICTED_URLS = $arr;}
+    public static function getRestrictedUrls(){return SolvesUi::$RESTRICTED_URLS;}
+    public static function isRestrictedUrl($url){
+        return in_array($url, SolvesUi::$RESTRICTED_URLS);
     }
 
     public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
@@ -160,7 +168,7 @@ class SolvesUi {
     public static function getPublicLoadingContainerHtml(){
         return '<div id="public-loading" class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white" style="background-color: #ffffffa1;color: #000000;">
             <div class="signin-logo tx-center tx-24 tx-bold tx-inverse">
-              <div><img src="'.\Solves\Solves::getImgPathLogo().'" alt="'.\Solves\Solves::getSiteTitulo().'" title="'.\Solves\Solves::getSiteTitulo().'"/></div>
+              <div><img src="'.\Solves\Solves::getSiteIcone().'" alt="'.\Solves\Solves::getSiteTitulo().'" title="'.\Solves\Solves::getSiteTitulo().'"/></div>
               <div>'.SolvesUi::getLoadingElementHtml().'</div>
             </div>
             <div class="tx-center mg-b-60">Carregando...</div>

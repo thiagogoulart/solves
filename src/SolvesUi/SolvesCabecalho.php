@@ -13,6 +13,8 @@ class SolvesCabecalho {
     private static $TWITTER_CREATOR = '@solves';
     private static $SCRIPT_ANALYTICS='';
     private static $THEME_COLOR='#FFFFFF';
+    private static $SHOW_LOGO_ON_LOADING=false;
+    private static $LOGO_ON_LOADING=null;
 
 
     public static function getTwitterCreator(){return SolvesCabecalho::$TWITTER_CREATOR;}
@@ -25,6 +27,23 @@ class SolvesCabecalho {
     public static function setScriptAnalytics($p){SolvesCabecalho::$SCRIPT_ANALYTICS=$p;}
     public static function getThemeColor(){return SolvesCabecalho::$THEME_COLOR;}
     public static function setThemeColor($p){SolvesCabecalho::$THEME_COLOR=$p;}
+
+    public static function isShowLogoOnLoading(){return SolvesCabecalho::$SHOW_LOGO_ON_LOADING;}
+    public static function setShowLogoOnLoading($p){SolvesCabecalho::$SHOW_LOGO_ON_LOADING=$p;}
+    public static function showLogoOnLoading(){SolvesCabecalho::setShowLogoOnLoading(true);}
+    
+    public static function getLogoOnLoading(){return SolvesCabecalho::$LOGO_ON_LOADING;}
+    public static function setLogoOnLoading($p){
+        SolvesCabecalho::$LOGO_ON_LOADING=$p;
+        SolvesCabecalho::setShowLogoOnLoading(\Solves\Solves::isNotBlank(SolvesCabecalho::$LOGO_ON_LOADING));
+    }
+    public static function getHtmlTagImgLogoOnLoading($SITE_TITULO){
+        $logo = (\Solves\Solves::getCompleteImgPathLogo()).'favicon-96x96.png';
+        if(\Solves\Solves::isNotBlank(SolvesCabecalho::$LOGO_ON_LOADING)){
+            $logo = SolvesCabecalho::$LOGO_ON_LOADING;
+        }
+        return '<img  class="img-responsive" src="'.$logo.'" alt="'.$SITE_TITULO.'" title="'.$SITE_TITULO.'">';
+    }
 
     public static function getHtml($completeUrl, $pageTitle, $pageDescr, $themeColor=null){
         if(\Solves\Solves::isNotBlank($themeColor)){
@@ -122,9 +141,10 @@ class SolvesCabecalho {
 <div id="overlay_loaded" style="display:none;"></div>
 <div id="preloader" style="">
   <div class="preloader-container">
-    <h4 class="preload-logo" style="visibility: visible;">
-      <span class="navbar-brand">'.$SITE_TITULO.'</span>
-    </h4>
+    <h4 class="preload-logo" style="visibility: visible;">'.
+      (SolvesCabecalho::isShowLogoOnLoading() ? SolvesCabecalho::getHtmlTagImgLogoOnLoading($SITE_TITULO) : 
+            '<span class="navbar-brand">'.$SITE_TITULO.'</span>')
+    .'</h4>
     <img src="'.\Solves\Solves::getImgPath().'preload.gif" alt="Loading" style="visibility: visible;">
   </div>
 </div>

@@ -98,9 +98,10 @@ class SolvesAuth {
         $token_CLIENTE_IP = \Solves\Solves::descriptografa($arrUserData->CLIENTE_IP);
         $token_REQUEST_TIME = \Solves\Solves::descriptografa($arrUserData->REQUEST_TIME);
 
+        $isSameUserAgentOnRequest = ($_SERVER['HTTP_USER_AGENT']==$token_HTTP_USER_AGENT);
+
         if(isset($tipo) && isset($creationTimeToken) && isset($userIdToken) && isset($senhaToken)){
-            if(\Solves\Solves::isNotBlank($token_HTTP_USER_AGENT) && \Solves\Solves::isNotBlank($token_CLIENTE_IP) && 
-                $_SERVER['HTTP_USER_AGENT']==$token_HTTP_USER_AGENT){ 
+            if(\Solves\Solves::isNotBlank($token_HTTP_USER_AGENT) && \Solves\Solves::isNotBlank($token_CLIENTE_IP)){ 
                 $classe = ucwords($tipo);
                 $obj = new $classe($CONNECTION); 
                 $user = $obj->findByIdAndSenha($userIdToken, $senhaToken);

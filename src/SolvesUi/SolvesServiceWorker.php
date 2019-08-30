@@ -27,7 +27,7 @@ const precacheFiles = [
     $jsFilePaths = \SolvesUi\SolvesUi::getScriptFilePaths();
     foreach($jsFilePaths as $js){
         $jsFilePath = \SolvesUi\SolvesUi::getSingleScriptFilePath($js);
-        if("/sw_register.js"==$jsFilePath || "/sw.js"==$jsFilePath){
+        if("/sw_register.js"==$jsFilePath || "/sw.js"==$jsFilePath || "https://www.youtube.com/iframe_api"==$jsFilePath){
             continue;
         }
         $script .= ', "'.$jsFilePath.'"';

@@ -143,11 +143,17 @@ if(isset($requestedPage) && strlen($requestedPage)>1 && strlen($requestedPage)<1
     }else{
       $pagInclude= 'views/soon.php';
     }
-  }else{
-    $incluiTopo = false;
-    $incluiTopoPublic = true;
+  }else{    
     $ATUAL_URL = \Solves\Solves::getUrlName('',$requestedPage, false);
     $p = \Solves\Solves::getUrlNameViewPath($ATUAL_URL);
+    $isRestricted = \SolvesUi\SolvesUi::isRestrictedUrl($ATUAL_URL);
+    if($isRestricted){
+      $incluiTopo = true;
+      $incluiTopoPublic = false;
+    }else{
+      $incluiTopo = false;
+      $incluiTopoPublic = true;
+    }
     if(file_exists($p)) {
       $pagInclude= $p;
     }else{
