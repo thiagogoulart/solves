@@ -13,16 +13,15 @@ class SolvesPayPagseguro extends SolvesPay{
 	private $initialized=false;
 	private $paymentRegister;
 
-	public function __construct() {
-		$this->setEnvironmentProduction();
+	public function __construct(\SolvesPay\SolvesPayCompra $solvesCompra) {
+		parent::__construct($solvesCompra);
+	}
+	public function init($forceInitialization=false){
+		if(!$this->initialized || $forceInitialization){			
+			$this->initialized= true;
+		}
 	}
 
-	public function setEnvironmentProduction(){
-		$this->environment = 'production';
-	}
-	public function setEnvironmentSandbox(){
-		$this->environment = 'sandbox';
-	}
 	public function getSession(){
 		return $this->session;
 	}
@@ -81,7 +80,7 @@ class SolvesPayPagseguro extends SolvesPay{
 	}
 
 
-	public function doPay($cliente, $compra, $compraProdutos){
+	public function solicitarPagamento(){
 		$this->init();
 		$payment = new \PagSeguro\Domains\Requests\Payment();
 
