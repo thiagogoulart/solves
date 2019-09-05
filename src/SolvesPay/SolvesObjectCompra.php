@@ -48,7 +48,7 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
 	//IMPLEMENT
 	public abstract function findOneByToken($token, $payerId, $correlationId);
 	//IMPLEMENT
-	public abstract function atualizaCompra($compraId, $transactionId, $situacao, $paid_first_name=null, $paid_last_name=null, $paid_business=null, $paid_payer_email=null, $paid_ipn_track_id=null, $paid_transaction_subject=null, $paid_receiver_id): bool;
+	public abstract function atualizaCompra($compraId, $transactionId, $situacao): bool;
 	//IMPLEMENT
 	public abstract function atualizaNotificacaoSucesso($token, $payerId, $correlationId): bool;
 	//IMPLEMENT
@@ -156,24 +156,37 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
     }
 
 
-	public function atualizaSePagoPorSituacao($situacao){
+	public function atualizaSePagoPorSituacao($situacao, $paid_first_name, $paid_last_name, $paid_business, $paid_payer_email, $paid_ipn_track_id, $paid_transaction_subject, $paid_receiver_id){
         $creditar = false;
         $success = false;
         $this->pago = $aprovado;
         $this->updated_at = \Solves\SolvesTime::getTimestampAtual();
+
+		$this->updatePaidAttrs($paid_first_name, $paid_last_name, $paid_business, $paid_payer_email, $paid_ipn_track_id, $paid_transaction_subject, $paid_receiver_id);
         if($situacao == "Completed"){
             $creditar = ($this->isPago() ? false : true);
             $this->aprovado = true;
             $this->situacao = self::$S_APROVADO;
         	$this->pago =true;
-        	$this->valor_total_pago = $this->valor_total_final;        	
-	        try{
-	        	$success = $this->update();
-	        } catch (Exception $e) {
-	        	$success = false;
-	        }
+        	$this->valor_total_pago = $this->valor_total_final;   
+        	$this->data_aprovacao = $this->updated_at;   
+        }          	
+        try{
+        	$success = $this->update();
+        } catch (Exception $e) {
+        	$success = false;
         }
         return ($success && $creditar);
+	}
+
+	public function updatePaidAttrs($paid_first_name, $paid_last_name, $paid_business, $paid_payer_email, $paid_ipn_track_id, $paid_transaction_subject, $paid_receiver_id){
+		$this->setPaidFirstName($paid_first_name);
+		$this->setPaidLastName($paid_last_name);
+		$this->setPaidBusiness($paid_business);
+		$this->setPaidPayerEmail($paid_payer_email);
+		$this->setPaidIpnTrackId($paid_ipn_track_id);
+		$this->setPaidTransactionSubject($paid_transaction_subject);
+		$this->setPaidReceiverId($paid_receiver_id);
 	}
 }	
 ?>

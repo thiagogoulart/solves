@@ -6,6 +6,7 @@
  */ 
 namespace SolvesMail;
 
+use PHPMailer\PHPMailer\PHPMailer;
 
 class SolvesMail {
 

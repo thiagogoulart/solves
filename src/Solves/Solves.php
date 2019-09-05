@@ -88,6 +88,9 @@ class Solves {
     public static function getImgPathLogo(){return Solves::$IMG_PATH_LOGO;}
     public static function getSiteIcone(){return Solves::$IMG_PATH_LOGO.'favicon-32x32.png';}
 
+    public static function getCompleteImgPath(){
+        return Solves::getSiteUrl().Solves::removeBarraInicial(Solves::getImgPath());
+    }
     public static function getCompleteImgPathLogo(){
         return Solves::getSiteUrl().Solves::removeBarraInicial(Solves::getImgPathLogo());
     }

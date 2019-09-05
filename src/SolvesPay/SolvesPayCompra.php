@@ -30,8 +30,8 @@ class SolvesPayCompra {
 		$this->solvesCompraItens=$itens;
 	}
 	public function atualizaCompra($compraId, $transactionId, $situacao, $paid_first_name=null, $paid_last_name=null, $paid_business=null, $paid_payer_email=null, $paid_ipn_track_id=null, $paid_transaction_subject=null, $paid_receiver_id=null){
-		if($this->solvesObjectCompra->atualizaSePagoPorSituacao($situacao)){
-			return $this->solvesObjectCompra->atualizaCompra($compraId, $transactionId, $situacao, $paid_first_name, $paid_last_name, $paid_business, $paid_payer_email, $paid_ipn_track_id, $paid_transaction_subject, $paid_receiver_id);
+		if($this->solvesObjectCompra->atualizaSePagoPorSituacao($situacao,$paid_first_name, $paid_last_name, $paid_business, $paid_payer_email, $paid_ipn_track_id, $paid_transaction_subject, $paid_receiver_id)){
+			return $this->solvesObjectCompra->atualizaCompra($compraId, $transactionId, $situacao);
 		}
 		return false;
 	}
