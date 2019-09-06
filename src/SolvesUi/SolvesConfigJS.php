@@ -26,10 +26,10 @@ class SolvesConfigJS {
     private static $AUTH_URL_TERMO_PRIVACIDADE = "/termo_privacidade";
     private static $AUTH_FUNCTION_SUCESSO = "loginSuccess";
 
-    public static function getScript(){
+    public static function getScript($IS_APP){
         $script = SolvesConfigJS::getFacebookMessenger();
         $script .= SolvesConfigJS::getNotificationsSettings();
-        $script .= SolvesConfigJS::getSolvesInit();
+        $script .= SolvesConfigJS::getSolvesInit($IS_APP);
         $script .= SolvesConfigJS::getFirebaseInitSettings();
         $script .= SolvesConfigJS::getAuthSettings();
         $script .= SolvesConfigJS::getFirebaseNotificationsSettings();
@@ -64,10 +64,10 @@ $.SolvesNotifications.setFireBaseMessagesDivId("messages");
 */
 ';
     }
-    private static function getSolvesInit(){
+    private static function getSolvesInit($IS_APP){
       return '
 //Solves init
-$.Solves.init("'.\Solves\Solves::getSiteUrl().'", "'.\Solves\Solves::getSiteTitulo().'", "'.\Solves\Solves::getSystemName().'", "'.\Solves\Solves::getSiteIcone().'");';
+$.Solves.init("'.\Solves\Solves::getSiteUrl().'", "'.\Solves\Solves::getSiteTitulo().'", "'.\Solves\Solves::getSystemName().'", "'.\Solves\Solves::getSiteIcone().'");'.($IS_APP ? '$.Solves.app=true;' : '');
     }
     private static function getFirebaseInitSettings(){
       return '

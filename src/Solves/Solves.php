@@ -14,6 +14,8 @@ use SolvesNotification\SolvesNotification;
 use SolvesUi\SolvesUi;
 
 class Solves {
+	const VENDOR_INSIDE_NAVS = '../../../../';
+	const VENDOR_PATH = 'vendor/thiagogoulart/solves/';
 	const SYSTEM_MODE_DEV = 'DEV';
 	const SYSTEM_MODE_PROD = 'PROD';
 	const SOLVES_CDN = 'https://cdn.solves.com.br/';
@@ -93,6 +95,13 @@ class Solves {
     }
     public static function getCompleteImgPathLogo(){
         return Solves::getSiteUrl().Solves::removeBarraInicial(Solves::getImgPathLogo());
+    }
+
+    public static function getVendorInsideNavs(){
+    	return self::VENDOR_INSIDE_NAVS;
+    }
+    public static function getVendorPath(){
+    	return self::VENDOR_PATH;
     }
 
     public static function getGooglePlayStoreLink(){return Solves::$APP_GOOGLE_PLAY_STORE_LINK;}
@@ -243,7 +252,7 @@ class Solves {
 	    if(empty($boundary)){
 	        parse_str($raw_data,$data);
 	        $GLOBALS[ '_PUT' ] = $data;
-	        return;
+	        return $GLOBALS[ '_PUT' ];
 	    }
 
 	    // Fetch each part
@@ -314,7 +323,7 @@ class Solves {
 
 	    }
 	    $GLOBALS[ '_PUT' ] = $data;
-	    return;
+	    return $GLOBALS[ '_PUT' ];
 	}
 
 	public static function getParamValueFromUrl($url, $paramName) {
@@ -507,7 +516,7 @@ class Solves {
 	    return Solves::getPublicUrl($IS_APP, 'index');
 	}
 	public static function getPublicUrl($IS_APP, $url){
-	    return (Solves::checkBoolean($IS_APP) ? '/app_' :'/').$url;
+	    return (Solves::checkBoolean($IS_APP) ? '/app/' :'/').$url;
 	}
 	public static function isPageActive($urlAtual, $urlMenu){
 	    if(!Solves::isNotBlank($urlAtual)){

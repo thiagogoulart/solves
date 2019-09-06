@@ -81,12 +81,18 @@ class SolvesAuth {
         return $object;
     }
     public static function checkToken($CONNECTION, $receivedToken, $receivedData){
+        if(!\Solves\Solves::isNotBlank($receivedToken) || !\Solves\Solves::isNotBlank($receivedData)){
+            return null;
+        }
         $token = SolvesAuth::createToken($receivedData);
         // We check if token is ok !
        //    echo 'wrong data !['.$receivedData.']';
            //echo 'wrong Token !['.$receivedToken.'] != ['.$token.']';
         if ($receivedToken != $token){
             return null;
+        }
+        if(substr($receivedData, 0, 1)=='"' && substr($receivedData, -1)=='"'){
+            $receivedData = substr($receivedData, 1, strlen($receivedData)-1);
         }
         $receivedData = \Solves\Solves::descriptografa($receivedData);
         $arrUserData = json_decode($receivedData);
