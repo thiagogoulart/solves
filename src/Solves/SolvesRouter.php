@@ -204,6 +204,9 @@ class SolvesRouter {
                 $p = \Solves\Solves::getUrlNameViewPath($p);
                 $this->p = 'app/'.$p;
             }
+            if(!\Solves\Solves::isNotBlank($this->p)){
+                $this->p= 'index';
+            }
             if($this->checkIfFileExists($this->p)) {
                 $this->pagInclude = $this->p;
                 $defined = true;
@@ -212,6 +215,9 @@ class SolvesRouter {
             }
         }
         if(!$defined){
+            if(!\Solves\Solves::isNotBlank($this->p)){
+                $this->p= 'index';
+            }
             if($this->checkIfFileExists($this->p)) {
               $this->pagInclude = $this->p;
             }else{
@@ -402,7 +408,7 @@ class SolvesRouter {
         }else if($this->isServiceWorkerRegisterFile){ 
             echo \SolvesUi\SolvesServiceWorkerRegister::getScript();
         }else if($this->isConfigJsFile){ 
-            echo \SolvesUi\SolvesConfigJS::getScript($this->IS_APP);
+            echo \SolvesUi\SolvesConfigJS::getScript();
         }else{
             header ("HTTP/1.0 404 Not Found");
             return;

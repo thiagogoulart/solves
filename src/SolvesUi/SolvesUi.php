@@ -31,7 +31,13 @@ class SolvesUi {
         SolvesUi::setUiVersion($uiVersion);
     }
 
-    public static function setRestrictedUrls($arr){SolvesUi::$RESTRICTED_URLS = $arr;}
+    public static function setRestrictedUrls($arr){
+        $newArr = $arr;
+        foreach($arr as $url){
+            array_push($newArr, 'app/'.$url);
+        }
+        SolvesUi::$RESTRICTED_URLS = $newArr;
+    }
     public static function getRestrictedUrls(){return SolvesUi::$RESTRICTED_URLS;}
     public static function isRestrictedUrl($url){
         return in_array($url, SolvesUi::$RESTRICTED_URLS);
@@ -54,7 +60,7 @@ class SolvesUi {
     public static function getThemeColor(){return SolvesUi::$THEME_COLOR;}
     public static function setThemeColor($p){SolvesUi::$THEME_COLOR = $p;}
 
-    public static function getScriptsJS($INCLUDE_SCRIPTS_TAGS, $SCRIPTS, $SCRIPTS_ONLOAD, $ATUAL_URL){
+    public static function getScriptsJS($INCLUDE_SCRIPTS_TAGS, $SCRIPTS, $SCRIPTS_ONLOAD, $ATUAL_URL, $IS_APP=false){
         $s = '';
         $arrScripts = \SolvesUi\SolvesUi::getScriptFilePaths();
         foreach($arrScripts as $scrSource){
@@ -69,8 +75,9 @@ class SolvesUi {
         $s .= '<script type="text/javascript">';
         $s .= $SCRIPTS; 
         $s .= "$(function(){
-            'use strict';
-            $.Solves.url = '".$ATUAL_URL."';
+            'use strict';".
+            ($IS_APP ? "$.Solves.app = true;" : "").
+            "$.Solves.url = '".$ATUAL_URL."';
                 ".$SCRIPTS_ONLOAD."
             });
         </script>";
