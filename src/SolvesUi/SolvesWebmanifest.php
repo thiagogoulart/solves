@@ -15,7 +15,7 @@ class SolvesWebmanifest {
         $result = '{
       "name": "'.\Solves\Solves::getSiteTitulo().'",
       "short_name": "'.\Solves\Solves::getSystemName().'",
-      "start_url": "'.\Solves\Solves::getSiteUrl().'?utm_source=homescreen",
+      "start_url": "'.\Solves\Solves::getAppUrl().'?utm_source=homescreen",
       "display": "standalone",
       "background_color": "'.\SolvesUi\SolvesUi::getThemeBackgroundColor().'",
       "theme_color": "'.\SolvesUi\SolvesUi::getThemeColor().'",

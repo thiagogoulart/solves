@@ -29,6 +29,7 @@ class Solves {
 
 	private static $SITE_TITULO = 'Solves';
 	private static $SITE_URL = 'http://localhost/';
+	private static $APP_URL = 'http://localhost/';
 	private static $SITE_DESCR = '';
 	private static $SITE_KEYS = '';
 
@@ -45,11 +46,12 @@ class Solves {
 	private static $IMG_PATH;
 	private static $IMG_PATH_LOGO;
 
-    public static function config($systemName, $systemVersion, $siteTitulo, $siteUrl, $siteDescr, $sitekeys, $imgPath, $imgPathLogo){
+    public static function config($systemName, $systemVersion, $siteTitulo, $siteUrl, $siteDescr, $sitekeys, $imgPath, $imgPathLogo, $appUrl=null){
     	Solves::setSystemName($systemName);
     	Solves::setSystemVersion($systemVersion);
     	Solves::setSiteTitulo($siteTitulo);
     	Solves::setSiteUrl($siteUrl);
+    	Solves::setAppUrl($appUrl);
     	Solves::setSiteDescr($siteDescr);
     	Solves::setSiteKeys($sitekeys);
     	Solves::setImgPath($imgPath);
@@ -75,6 +77,7 @@ class Solves {
     public static function setSystemVersion($p){Solves::$SYSTEM_VERSION = $p;}
     public static function setSiteTitulo($p){Solves::$SITE_TITULO = $p;}
     public static function setSiteUrl($p){Solves::$SITE_URL = $p;}
+    public static function setAppUrl($p){Solves::$APP_URL = (Solves::isNotBlank($p)?$p:Solves::$SITE_URL);}
     public static function setSiteDescr($p){Solves::$SITE_DESCR = $p;}
     public static function setSiteKeys($p){Solves::$SITE_KEYS = $p;}
     public static function setImgPath($p){Solves::$IMG_PATH = $p;}
@@ -84,6 +87,7 @@ class Solves {
     public static function getSystemVersion(){return Solves::$SYSTEM_VERSION;}
     public static function getSiteTitulo(){return Solves::$SITE_TITULO;}
     public static function getSiteUrl(){return Solves::$SITE_URL;}
+    public static function getAppUrl(){return Solves::$APP_URL;}
     public static function getSiteDescr(){return Solves::$SITE_DESCR;}
     public static function getSiteKeys(){return Solves::$SITE_KEYS;}
     public static function getImgPath(){return Solves::$IMG_PATH;}
