@@ -25,43 +25,43 @@ class SolvesWebmanifest {
           '"gcm_sender_id": "'.\SolvesNotification\SolvesNotification::getSenderId().'",':
       '').
       '"icons": [{
-        "src": "'.\Solves\Solves::getImgPathLogo().'favicon-48x48.png", 
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'favicon-48x48.png", 
         "sizes": "48x48",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'android-72x72.png",
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'android-72x72.png",
         "sizes": "72x72",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'favicon-96x96.png",
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'favicon-96x96.png",
         "sizes": "96x96",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'favicon-128x128.png",
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'favicon-128x128.png",
         "sizes": "128x128",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'mstile-144x144.png",
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'mstile-144x144.png",
         "sizes": "144x144",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'apple-touch-icon-152x152.png", 
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'apple-touch-icon-152x152.png", 
         "sizes": "152x152",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'apple-touch-icon-167x167.png", 
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'apple-touch-icon-167x167.png", 
         "sizes": "168x168",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'pwa-192x192.png",
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'pwa-192x192.png",
         "sizes": "192x192",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'logo-384x384.png",
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'logo-384x384.png",
         "sizes": "384x384",
         "type": "image/png"
       }, {
-        "src": "'.\Solves\Solves::getImgPathLogo().'pwa-512x512.png",
+        "src": "'.\Solves\Solves::getCompleteImgPathLogo().'pwa-512x512.png",
         "sizes": "512x512",
         "type": "image/png"
       }],
