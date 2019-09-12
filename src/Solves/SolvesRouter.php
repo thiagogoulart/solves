@@ -244,6 +244,7 @@ class SolvesRouter {
 
         $pos_startDetails=strlen($this->restService)+1;
         $this->restDetails = substr($requisicaoRest, $pos_startDetails, strlen($requisicaoRest)-$pos_startDetails-(substr($requisicaoRest, -1)=='/'?1:0));
+        $this->restDetails = \Solves\Solves::removeEspacos($this->restDetails);
 
         $this->preencheVariaveisDeDados();
         
@@ -318,6 +319,28 @@ class SolvesRouter {
     }
 
 
+    public function getToken(){
+        return $this->token;
+    }
+    public function getUserData(){
+        return $this->userData;
+    }
+    public function getUsuario(){
+        return $this->usuario;
+    }
+    public function getDados(){
+        return $this->dados;
+    }
+    public function getPerfil(){
+        return $this->perfil;
+    }
+    public function getRestDetails(){
+        return $this->restDetails;
+    }
+    public function getRestService(){
+        return $this->restService;
+    }
+
     public function getPagInclude(){
         return $this->pagInclude;
     }
@@ -331,7 +354,7 @@ class SolvesRouter {
             }else{
                 //WILL BE PROCESSED BY PHP FILES
 
-                //TURNING INTO ACESSIBLE VARIABLES - EXPLICT WAY
+                //TURNING INTO ACESSIBLE VARIABLES - EXPLICT WAY //TODO remover este trecho pois já está em SolvesRest
                     $ATUAL_URL = $this->ATUAL_URL;
                     $CANNONICAL = $this->CANNONICAL;
                     $MODO_SOON_ATIVADO = $this->MODO_SOON_ATIVADO;
@@ -350,6 +373,13 @@ class SolvesRouter {
                 if($this->isPageController){
                   if($this->checkIfFileExists($this->getPagInclude())) {
                     include $this->getPagInclude();
+                    if($this->isRest){
+                        $classe = ucwords($this->restService).'Rest';
+                        if(class_exists($classe)){
+                            $obj = new $classe($this); 
+                            $obj->execute();
+                        }
+                    }
                   }else{
                     header ("HTTP/1.0 404 Not Found");
                     echo '{"router":"Página ['.$this->getPagInclude().'] não encontrada. Requisição ['.$this->requestedPage.']!"}';
@@ -427,5 +457,25 @@ class SolvesRouter {
     }
     private function doReadFile($f){
         return $this->readfile($f);
+    }
+
+
+    public function getHttpMethod(){
+        return $this->HTTP_METHOD;
+    }
+    public function getHttpRequestServer(){
+        return $this->_HTTPREQUEST_SERVER;
+    }
+    public function getHttpRequestPost(){
+        return $this->_HTTPREQUEST_POST;
+    }
+    public function getHttpRequestGet(){
+        return $this->_HTTPREQUEST_GET;
+    }
+    public function getHttpRequestPut(){
+        return $this->_HTTPREQUEST_PUT;
+    }
+    public function getHttpRequestDelete(){
+        return $this->_HTTPREQUEST_DELETE;
     }
 }
