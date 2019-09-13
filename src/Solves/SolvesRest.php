@@ -77,7 +77,7 @@ abstract class SolvesRest {
 	}
 	protected function getDado($property){
 		$dados = $this->router->getDados();
-		if(property_exists($dados, $property)){
+		if($dados!=null && property_exists($dados, $property)){
 			return @\Solves\SolvesJson::getJsonFieldValue($dados->{$property});
 		}
 		return null;
@@ -109,36 +109,43 @@ abstract class SolvesRest {
 			return @\Solves\Solves::checkBoolean($dado);
 		}
 		return false;
+	} 
+	protected function getDadoEmail($property){
+		$dado = $this->getDado($property);
+		if($dado!=null){
+			return strtolower(\Solves\Solves::removeEspacos($dado));
+		}
+		return null;
 	}
 	protected function setError($msg){
+		$this->setResultDados('',$msg);
 		$this->erro = true;
 		$this->msg = $msg;
-		$this->setResultDados('');
 	}
 	protected function setSalvoComSucesso($msg="Salvo com sucesso!"){
+		$this->setResultDados('',$msg);
 		$this->erro = false;
 		$this->msg = $msg;
-		$this->setResultDados('');
 	}
 	protected function setAlteradoComSucesso($msg="Alterado com sucesso!"){
+		$this->setResultDados('',$msg);
 		$this->erro = false;
 		$this->msg = $msg;
-		$this->setResultDados('');
 	}
 	protected function setExcluidoComSucesso($msg="Excluído com sucesso!"){
+		$this->setResultDados('',$msg);
 		$this->erro = false;
 		$this->msg = $msg;
-		$this->setResultDados('');
 	}
 	protected function setResultadoNaoEncontrado($msg="Nenhum resultado encontrado."){
+		$this->setResultDados('',$msg);
 		$this->erro = false;
 		$this->msg = $msg;
-		$this->setResultDados('');
 	}
 	protected function setObjetoNaoEncontrado($msg="Nenhum resultado encontrado."){
-		$this->setResultadoNaoEncontrado($msg);
 		$this->setResultDados('');
 		$this->setResultObjeto('');		
+		$this->setResultadoNaoEncontrado($msg);
 	}
 	protected function setResultDados($json, $msg='Resultado da busca encontrado com sucesso!'){
 		$this->jsonDados = $json;
@@ -245,7 +252,7 @@ abstract class SolvesRest {
                 $this->preAction();
 
 	            //Metodo solicitado
-	            if(method_exists($this, $restDetails)){
+	            if(\Solves\Solves::isNotBlank($restDetails) && method_exists($this, $restDetails)){
 	            	eval('$this->'.$restDetails.'();');
 	            }else{
 	            	$this->index();
