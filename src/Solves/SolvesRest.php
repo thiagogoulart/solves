@@ -206,7 +206,7 @@ abstract class SolvesRest {
 			$this->json .= ',"error":"'.($this->erro ? 'true':'false').'"';
 			$this->json .= ', "dados":'.((isset($this->jsonDados) && strlen($this->jsonDados)>0) ? $this->jsonDados : "[]");
 			if(\Solves\Solves::isNotBlank($this->token)){
-				$this->json .= ',"token":"'.$this->token.'"';
+				$this->json .= ',"token":'.$this->token.'';
 			}
 			$this->json .='}';
 			return $this->json;
