@@ -28,6 +28,7 @@ class SolvesRouter {
     private $isServiceWorkerRegisterFile = false;
     private $isWebManifest = false;
     private $isConfigJsFile = false;
+    private $isRestricted = false;
 
     //RESULT OF PROCESSMENT
     private $requestedPage = ''; 

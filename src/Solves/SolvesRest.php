@@ -72,45 +72,52 @@ abstract class SolvesRest {
 	public abstract function update();
 	public abstract function delete();
 
-	protected function getDados(){
+	public function getDados(){
 		return $this->router->getDados();
 	}
-	protected function getDado($property){
+	public function getDado($property){
 		$dados = $this->router->getDados();
 		if($dados!=null && property_exists($dados, $property)){
 			return @\Solves\SolvesJson::getJsonFieldValue($dados->{$property});
 		}
 		return null;
 	}
-	protected function getDadoInt($property){
+	public function getDadoInt($property){
 		$dado = $this->getDado($property);
 		if($dado!=null){
 			return @\Solves\Solves::getIntValue($dado);
 		}
 		return null;
 	}
-	protected function getDadoDouble($property){
+	public function getDadoDouble($property){
 		$dado = $this->getDado($property);
 		if($dado!=null){
 			return @\Solves\Solves::getDoubleValue($dado);
 		}
 		return null;
 	}
-	protected function getDadoDate($property){
+	public function getDadoDate($property){
 		$dado = $this->getDado($property);
 		if($dado!=null){
 			return @\Solves\SolvesTime::getDateFormated($dado);
 		}
 		return null;
 	}
-	protected function getDadoBoolean($property){
+	public function getDadoBoolean($property){
 		$dado = $this->getDado($property);
 		if($dado!=null){
 			return @\Solves\Solves::checkBoolean($dado);
 		}
 		return false;
 	} 
-	protected function getDadoEmail($property){
+	public function getDadoEmail($property){
+		$dado = $this->getDado($property);
+		if($dado!=null){
+			return strtolower(\Solves\Solves::removeEspacos($dado));
+		}
+		return null;
+	}
+	public function getDadoUrl($property){
 		$dado = $this->getDado($property);
 		if($dado!=null){
 			return strtolower(\Solves\Solves::removeEspacos($dado));
