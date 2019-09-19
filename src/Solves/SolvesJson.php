@@ -68,7 +68,7 @@ class SolvesJson {
         $str .= '}]';
         return $str;
     }
-    public static function array_to_json($array, $pkName, $duplaContraBarra) {
+    public static function array_to_json($array, $pkName, bool $duplaContraBarra=true) {
         if (!is_array($array)) {
             return false;
         }
@@ -109,7 +109,7 @@ class SolvesJson {
     }
 
 
-    public static function getJsonByArrayItemFromDao($array, $pkName, $duplaContraBarra){
+    public static function getJsonByArrayItemFromDao(array $array=null, string $pkName=null, bool $duplaContraBarra){
          if (!is_array($array)) {
             return false;
         }
@@ -192,7 +192,7 @@ class SolvesJson {
     public static function getJsonFieldValue($v){
         return urldecode($v);
     }
-    public static function escape_query($str, $duplaContraBarra) {
+    public static function escape_query(string $str=null, bool $duplaContraBarra) {
         return strtr($str, array(
             "\0" => "",
             "'" => "&#39;",
@@ -206,7 +206,7 @@ class SolvesJson {
             "\t" => " "
         ));
     }
-    public static function escape_query_com_aspas($str, $duplaContraBarra) {
+    public static function escape_query_com_aspas(string $str=null, bool $duplaContraBarra) {
         return '"' . SolvesJson::escape_query($str, @$duplaContraBarra) . '"';
     }
 

@@ -139,11 +139,12 @@ abstract class SolvesObject {
  	 }
 
  	 public function toArray() {
+ 	 	$this->addValores();
   		 $arr = array(); 
   		 $cols = $this->dao->getColunas();
 		
 		foreach($cols as $col){
-			$arr[$col->getNome()] = $this->dao->getValorColunaByOrder($col->getColumnOrder());
+			$arr[$col->getNome()] = $this->dao->getValorColunaByOrder($col->getColumnOrder())->getValor();
 		}
   		 return $arr; 
   	}
