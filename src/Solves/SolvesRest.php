@@ -30,6 +30,7 @@ abstract class SolvesRest {
     protected $id;
     protected $hasId;
     protected $object;
+    protected $pkName = '';
 
     //HTTP 
     public $HTTP_METHOD;
@@ -70,7 +71,35 @@ abstract class SolvesRest {
 	public abstract function index();
 	public abstract function save();
 	public abstract function update();
-	public abstract function delete();
+
+    public function delete(){
+        if($this->hasId){
+            if($this->object->remove()){
+                $this->setExcluidoComSucesso();
+            }else{
+                $this->setError('Não foi possível excluir o registro.');
+            }
+        }else{
+            $this->setError('Não foi possível excluir o registro. Falta identificador.');
+        }
+    }
+
+    public function findById(){
+       if($this->hasId){ 
+            $arr = $this->object->toArray();
+            if(isset($arr) && count($arr)>0){
+                $jsonObj = \Solves\SolvesJson::getJsonByArrayItemFromDao($arr, $this->getPkName(), true);
+                $this->setResultObjeto($jsonObj);
+            }else{
+               $this->setObjetoNaoEncontrado();
+            }
+        }else{
+            $this->setObjetoNaoEncontrado("Nenhum resultado encontrado. Faltam parâmetros para a busca.");
+        }
+    }
+
+	public function getPkName(){return $this->pkName;}
+	public function setPkName($p){$this->pkName = $p;}
 
 	public function getDados(){
 		return $this->router->getDados();

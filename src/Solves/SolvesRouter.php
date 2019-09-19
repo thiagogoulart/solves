@@ -375,8 +375,8 @@ class SolvesRouter {
                   if($this->checkIfFileExists($this->getPagInclude())) {
                     include $this->getPagInclude();
                     if($this->isRest){
-                        $classe = ucwords($this->restService).'Rest';
-                        if(class_exists($classe)){
+                        $classe =$this->getRestClassName();
+                        if(null!=$classe){
                             $obj = new $classe($this); 
                             $obj->execute();
                         }
@@ -429,6 +429,22 @@ class SolvesRouter {
             \SolvesDAO\SolvesDAO::closeConnection($CONNECTION);            
             header("HTTP/1.1 500 Internal Server Error");
         }
+    }
+    private function getRestClassName(){
+        $classe = $this->getExistentClass($this->restService.'Rest');
+        if(null==$classe){
+            $classe = $this->getExistentClass(ucwords($this->restService, " _|\n\r\t\f\v").'Rest');
+            if(null==$classe){
+                $classe = $this->getExistentClass(ucwords($this->restService).'Rest');
+            }
+        }
+        return $classe;
+    }
+    private function getExistentClass($classe){
+        if(null!=$classe && class_exists($classe)){
+            return $classe;
+        }
+        return null;
     }
     private function printJS(){
         header("Content-Type: text/javascript");
