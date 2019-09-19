@@ -36,7 +36,7 @@ abstract class SolvesObject {
 		$this->connection = $con;
 		$this->parentDao = $parentDao;
 
-		$this->dao = new DAO;
+		$this->dao = new DAO();
 		$this->dao->setConnection($con);
 		$this->dao->setTabela($tabela);
 		$this->dao->setPk($pk);
@@ -147,5 +147,7 @@ abstract class SolvesObject {
 		}
   		 return $arr; 
   	}
+
+
 }
 ?>

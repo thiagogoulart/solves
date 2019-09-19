@@ -120,7 +120,7 @@ abstract class SolvesRest {
 	public function getDadoUrl($property){
 		$dado = $this->getDado($property);
 		if($dado!=null){
-			return strtolower(\Solves\Solves::removeEspacos($dado));
+			return (\Solves\Solves::removeEspacos($dado));
 		}
 		return null;
 	}
@@ -268,10 +268,14 @@ abstract class SolvesRest {
                 $this->posAction();
 
 			}
+			if($this->isPendenteCommit()){
+				$this->commitTransaction();
+			}
 		 	//Fecha conexão com a base
 		    $this->closeConnection();
 		} catch (Exception $e) {
 			//FECHA A CONEXãO COM O BANCO
+			$this->rollbackTransaction();
 		    $this->closeConnection();
 		    $this->setError($e->getMessage());
 		}
@@ -279,7 +283,27 @@ abstract class SolvesRest {
 			echo $this->getJson();
 		}
 	}
-
-
+	protected function setCommitManual(){
+		if($this->connection!=null){
+			$this->connection->setCommitManual();
+		}
+	}
+	protected function rollbackTransaction(){
+		if($this->connection!=null){
+			$this->connection->rollbackTransaction();
+		}
+	}
+	protected function commitTransaction(){
+		if($this->connection!=null){
+			return $this->connection->commit();
+		}
+		return false;
+	}
+	protected function isPendenteCommit(){
+		if($this->connection!=null){
+			return $this->connection->isTransactionOpened();
+		}
+		return false;
+	}
 }
 ?>

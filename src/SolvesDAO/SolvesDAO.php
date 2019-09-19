@@ -87,72 +87,14 @@ class SolvesDAO {
     public static function getBdProdDatabase(){return SolvesDAO::$BD_PROD_DATABASE;}
 		
 	public static function openConnection() {
-	    $CONNECTION = null;
-	    $bd_host = '';
-	    $bd_port = '';
-	    $bd_url = '';
-	    $bd_user = '';
-	    $bd_passwd = '';
-	    $bd_database = '';
-	    if (\Solves\Solves::isDevMode()) {
-	        $bd_host = SolvesDAO::getBdDevHost();
-	        $bd_port = SolvesDAO::getBdDevPort();
-	        $bd_url = SolvesDAO::getBdDevUrl();
-	        $bd_user = SolvesDAO::getBdDevUser();
-	        $bd_passwd = SolvesDAO::getBdDevPassword();
-	        $bd_database = SolvesDAO::getBdDevDatabase();
-	    } else if (\Solves\Solves::isProdMode()) {
-            $bd_host = SolvesDAO::getBdProdHost();
-            $bd_port = SolvesDAO::getBdProdPort();
-            $bd_url = SolvesDAO::getBdProdUrl();
-            $bd_user = SolvesDAO::getBdProdUser();
-            $bd_passwd = SolvesDAO::getBdProdPassword();
-            $bd_database = SolvesDAO::getBdProdDatabase();
-	    }
-	    $CONNECTION = SolvesDAO::connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database);
-	    if(SolvesDAO::isDebug()){
-	    	echo '[$bd_host:'.$bd_host.'], [$bd_port:'.$bd_port.'], [$bd_url:'.$bd_url.'], [$bd_user:'.$bd_user.'], [$bd_passwd:'.$bd_passwd.'], [$bd_database:'.$bd_database.']';
-	    	var_dump( $CONNECTION);
-	    }
-	    return $CONNECTION;
+	    return new SolvesDAOConnection();
 	}
 
-	private static function connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database) {
-	    $CONNECTION = null;
-	    if (SolvesDAO::isSystemDbTypeMySql()) {
-	        $CONNECTION = new \mysqli($bd_host, $bd_user, $bd_passwd, $bd_database);
-	        /* check connection */
-	        if (mysqli_connect_errno()) {
-	            printf("Erro na conexão: %s\n", mysqli_connect_error());
-	            $CONNECTION = null;
-	            return $CONNECTION;
-	        }
-
-	        /* change character set to utf8 */
-	        if (!$CONNECTION->set_charset("utf8")) {
-	            printf("Erro ao alterar charset para UTF-8: %s\n", $CONNECTION->error);
-	            $CONNECTION = null;
-	            return $CONNECTION;
-	        } 
-
-	    } else if (SolvesDAO::isSystemDbTypePostgresql()) {
-	        $CONNECTION = pg_connect('host=' . $bd_host . ' port=' . $bd_port . ' dbname=' . $bd_database . ' user=' . $bd_user . ' password=' . $bd_passwd) or die("Erro na conexão com o Database PostgreSQL --> " . pg_last_error($CONNECTION));
-	        pg_set_client_encoding($CONNECTION, 'utf8');
-	    }
-	    return $CONNECTION;
-	}
-
-	public static function closeConnection($con) {
+	public static function closeConnection(SolvesDAOConnection $con) {
 	    if (isset($con)) {
-	        if (SolvesDAO::isSystemDbTypeMySql()) {
-	            @$con->close();
-	            @mysqli_close($con);
-	        } else if (SolvesDAO::isSystemDbTypePostgresql()) {
-	            @pg_close($con);
-	        }
-	        $con = null;
-	        return $con;
+	        return $con->close();
 	    }
+	    return null;
 	}
 
 }

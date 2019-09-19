@@ -2,8 +2,9 @@
 /*
 Autor:  Thiago Goulart.
 Data de criação: 01/01/2010.
-Penúltima alteração: 28/03/2014.
-Última alteração: 19/07/2019.
+ alteração: 28/03/2014.
+ alteração: 19/07/2019.
+Última alteração: 18/09/2019.
 */
 
 namespace SolvesDAO;
@@ -32,6 +33,7 @@ class DAO {
 	private $msgError;
 	private $charset;
 
+
 	public static $NULL_TIMESTAMP = '0000-00-00 00:00:00';
 	
 	public function __construct(){
@@ -48,10 +50,10 @@ class DAO {
 	
 	
 /*START getters e setters*/	
-	public function getConnection(){
+	public function getConnection() : SolvesDAOConnection{
 		return $this->connection;
 	}
-	public function setConnection($p){
+	public function setConnection(SolvesDAOConnection $p){
 		$this->connection = $p;
 	}
 	public function setOrderByEspecifico($p){
@@ -226,10 +228,13 @@ class DAO {
 		
 		$this->setQtdColunas(count($this->colunas));
 	}
+	private function getBdConnection(){
+		return $this->connection->getBdConnection();
+	}
 /*END getters e setters*/	
 	public function getSequencePkValue(){
 		$sqlSeq = "SELECT nextval('".$this->sequencePk."'::regclass);";
-		$resSequence = $this->sqlToResultArray($sqlSeq, $this->connection);	
+		$resSequence = $this->sqlToResultArray($sqlSeq);	
 				
 		$this->pkValue = $resSequence[0][0];	
 		return $this->pkValue;
@@ -757,7 +762,7 @@ class DAO {
             if($tipo=="string" || $tipo=="date" || $tipo=="text" || $tipo=="timestamp" || $tipo=="time"){
                  if($hasValue){
                  	if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
-                 		$value = mysqli_real_escape_string($this->getConnection(), $value);
+                 		$value = mysqli_real_escape_string($this->getBdConnection(), $value);
                  	}else{
                  		$value = addslashes($value);
                  	}
@@ -971,23 +976,53 @@ class DAO {
 		}
 		return $in;
 	}
+
+	private function openTransaction(){
+		if($this->connection!=null){
+			$this->connection->openTransaction();
+		}
+	}
+	private function rollbackTransaction(){
+		if($this->connection!=null){
+			$this->connection->rollbackTransaction();
+		}
+	}
+	private function commitTransaction(){
+		if($this->connection!=null){
+			return $this->connection->commitTransaction();
+		}
+		return false;
+	}
 	public function executeQuery($sql, $op){
 		$this->msgError .= '['.$op.']';
 		if($sql && $sql!=""){
+			$result = false;
 		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$op." | ".$sql.". </div>";
-			if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
-				$result = $this->connection->query($sql) or die($this->msgError.
-                                        (true ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->connection->error."</div>". $this->connection->errno : ""));
-				if($op=='insert'){
-					return $this->connection->insert_id;
-				}else{
-					return true;
+			try{						
+				$this->openTransaction();
+				if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
+					$result = $this->getBdConnection()->query($sql);
+					if($op=='insert'){
+						$id = $this->getBdConnection()->insert_id;
+						$result = $id;
+					}else{
+						$result = true;
+					}
+				}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
+					$result = pg_query($this->getBdConnection(), $sql);
 				}
-			}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
-				$result = pg_query($this->connection, $sql) or die($this->msgError.
-                                        (\Solves\Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
-				return true;
+
+				if(!$this->commitTransaction()){
+					$this->rollbackTransaction();
+					$result = false;
+				}
+			}catch (Exception $e) {
+				$result = false;
+				$this->rollbackTransaction();
+				$erro = $this->msgError.(true ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->getBdConnection()->error."<div>".$e->getMessage()."</div></div>". $this->getBdConnection()->errno : "");
+				throw new Exception($erro);
 			}
+			return $result;
 		}
 		else{
 		//	echo 'Erro ao executar Operação:'.$this->msgError.' ['.$sql.']';
@@ -1001,8 +1036,8 @@ class DAO {
 		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>";
 			$resultado = array();
 			if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
-				$result = $this->connection->query($sql, MYSQLI_USE_RESULT) or die($this->msgError.
-                                        (false ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->connection->error."</div>"));
+				$result = $this->getBdConnection()->query($sql, MYSQLI_USE_RESULT) or die($this->msgError.
+                                        (false ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->getBdConnection()->error."</div>"));
 				while($dados=$result->fetch_array(MYSQLI_ASSOC)){ 
 					$resultado[] = $dados;	
 				}
@@ -1012,7 +1047,7 @@ class DAO {
    				@mysqli_free_result($result);
 				$result = null;
 			}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
-				$result = pg_query($this->connection, $sql) or die($this->msgError.
+				$result = pg_query($this->getBdConnection(), $sql) or die($this->msgError.
                                         (\Solves\Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
 					
 				while($dados=pg_fetch_array($result)){
