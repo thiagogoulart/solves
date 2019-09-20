@@ -176,7 +176,7 @@ class SolvesGoogleApi {
                 }else if(property_exists($jsonDados, 'error') && count($jsonDados->error->errors) > 0){
                     SolvesGoogleApi::logError('Resposta  de ERRO da URL ['.$URL.']:'.$jsonDados->error->errors);
                 }else{
-                    SolvesGoogleApi::logError('Não recebemos resposta da URL ['.$URL.'], $jsonDados:['.$jsonDados.']');
+                    SolvesGoogleApi::logError('Não recebemos resposta da URL ['.$URL.'], $jsonDados:['.json_encode($jsonDados).']');
                 }
             }else{
                 SolvesGoogleApi::logError('Não recebemos resposta da URL ['.$URL.'], $responseDados:['.$responseDados.']');

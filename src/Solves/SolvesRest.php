@@ -98,60 +98,122 @@ abstract class SolvesRest {
         }
     }
 
+    public function findMain(){
+    	$classe = $this->classeObject;
+        $p = new $classe($this->getConnection());
+        $arr = $p->findArrayAll($this->getUser()->getUserId());
+        if(isset($arr) && count($arr)>0){
+            $json = \Solves\SolvesJson::arrayFromDaoToJson($arr, $this->getPkName()); 
+            $this->setResultDados($json);
+        }else{
+            $this->setResultadoNaoEncontrado();
+        }
+    }
+    public function findByFiltros(){
+    	$classe = $this->classeObject;
+        $p = new $classe($this->getConnection());
+        $arr = $p->findArrayByFiltros($this->getUser()->getUserId(), $dados);
+        if(isset($arr) && count($arr)>0){
+            $json = \Solves\SolvesJson::arrayFromDaoToJson($arr, $this->getPkName()); 
+            $this->setResultDados($json);
+        }else{
+            $this->setResultadoNaoEncontrado();
+        }
+    }
+
 	public function getPkName(){return $this->pkName;}
 	public function setPkName($p){$this->pkName = $p;}
 
 	public function getDados(){
 		return $this->router->getDados();
 	}
-	public function getDado($property){
+	public function getDado(string $property, bool $obrigatorio=false, string $label=''){
+		$value = null;
 		$dados = $this->router->getDados();
 		if($dados!=null && property_exists($dados, $property)){
-			return @\Solves\SolvesJson::getJsonFieldValue($dados->{$property});
+			$value = @\Solves\SolvesJson::getJsonFieldValue($dados->{$property});
 		}
-		return null;
+		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
+			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
+			throw new Exception("Informe o campo obrigatório '".$label."'.");
+		}
+		return $value;
 	}
-	public function getDadoInt($property){
-		$dado = $this->getDado($property);
+	public function getDadoInt(string $property, bool $obrigatorio=false, string $label=''){
+		$value = null;
+		$dado = $this->getDado($property, $obrigatorio, $label);
 		if($dado!=null){
-			return @\Solves\Solves::getIntValue($dado);
+			$value = @\Solves\Solves::getIntValue($dado);
 		}
-		return null;
+		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
+			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
+			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+		}
+		return $value;
 	}
-	public function getDadoDouble($property){
-		$dado = $this->getDado($property);
+	public function getDadoDouble(string $property, bool $obrigatorio=false, string $label=''){
+		$value = null;
+		$dado = $this->getDado($property, $obrigatorio, $label);
 		if($dado!=null){
-			return @\Solves\Solves::getDoubleValue($dado);
+			$value = @\Solves\Solves::getDoubleValue($dado);
 		}
-		return null;
+		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
+			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
+			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+		}
+		return $value;
 	}
-	public function getDadoDate($property){
-		$dado = $this->getDado($property);
+	public function getDadoDate(string $property, bool $obrigatorio=false, string $label=''){
+		$value = null;
+		$dado = $this->getDado($property, $obrigatorio, $label);
 		if($dado!=null){
-			return @\Solves\SolvesTime::getDateFormated($dado);
+			$value = @\Solves\SolvesTime::getDateFormated($dado);
 		}
-		return null;
+		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
+			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
+			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+		}
+		return $value;
 	}
-	public function getDadoBoolean($property){
-		$dado = $this->getDado($property);
+	public function getDadoBoolean(string $property, bool $obrigatorio=false, string $label='', $defaultValue=null){
+		$value = null;
+		$dado = $this->getDado($property, $obrigatorio, $label);
 		if($dado!=null){
-			return @\Solves\Solves::checkBoolean($dado);
+			$value = @\Solves\Solves::checkBoolean($dado);
 		}
-		return false;
+		if(!\Solves\Solves::isNotBlank($value)){
+			if(null!=$defaultValue){
+				$value = $defaultValue;
+			}else if($obrigatorio){
+				$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
+				throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+			}
+		}
+		return $value;
 	} 
-	public function getDadoEmail($property){
-		$dado = $this->getDado($property);
+	public function getDadoEmail(string $property, bool $obrigatorio=false, string $label=''){
+		$value = null;
+		$dado = $this->getDado($property, $obrigatorio, $label);
 		if($dado!=null){
-			return strtolower(\Solves\Solves::removeEspacos($dado));
+			$value = strtolower(\Solves\Solves::removeEspacos($dado));
 		}
-		return null;
+		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
+			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
+			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+		}
+		return $value;
 	}
-	public function getDadoUrl($property){
-		$dado = $this->getDado($property);
+	public function getDadoUrl(string $property, bool $obrigatorio=false, string $label=''){
+		$value = null;
+		$dado = $this->getDado($property, $obrigatorio, $label);
 		if($dado!=null){
-			return (\Solves\Solves::removeEspacos($dado));
+			$value = (\Solves\Solves::removeEspacos($dado));
 		}
-		return null;
+		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
+			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
+			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+		}
+		return $value;
 	}
 	protected function setError($msg){
 		$this->setResultDados('',$msg);
