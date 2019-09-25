@@ -67,7 +67,8 @@ $.SolvesNotifications.setFireBaseMessagesDivId("messages");
     private static function getSolvesInit(){
       return '
 //Solves init
-$.Solves.init("'.\Solves\Solves::getSiteUrl().'", "'.\Solves\Solves::getSiteTitulo().'", "'.\Solves\Solves::getSystemName().'", "'.\Solves\Solves::getSiteIcone().'");';
+$.Solves.init("'.\Solves\Solves::getSiteUrl().'", "'.\Solves\Solves::getSiteTitulo().'", "'.\Solves\Solves::getSystemName().'", "'.\Solves\Solves::getSiteIcone().'");'.
+'$.Solves.setRestUrl("'.\Solves\Solves::getRestUrl().'");';
     }
     private static function getFirebaseInitSettings(){
       return '
