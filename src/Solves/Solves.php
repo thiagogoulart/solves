@@ -32,7 +32,10 @@ class Solves {
 	private static $APP_URL = 'http://localhost/';
 	private static $SITE_DESCR = '';
 	private static $SITE_KEYS = '';
-	private static $REST_URL = 'http://localhost/'
+	private static $REST_URL = 'http://localhost/';
+
+	private static $PATH_ROOT = '';
+	private static $PATH_RAIZ= '';
 
 	private static $SYSTEM_NAME = '';
 	private static $SYSTEM_VERSION = '';
@@ -109,8 +112,14 @@ class Solves {
     	return self::VENDOR_INSIDE_NAVS;
     }
     public static function getVendorPath(){
-    	return self::VENDOR_PATH;
+    	return Solves::$PATH_RAIZ.self::VENDOR_PATH;
     }
+
+    public static function getPathRoot(){return Solves::$PATH_ROOT;}
+    public static function setPathRoot($p){Solves::$PATH_ROOT = $p;}
+
+    public static function getPathRaiz(){return Solves::$PATH_RAIZ;}
+    public static function setPathRaiz($p){Solves::$PATH_RAIZ = $p;}
 
     public static function getGooglePlayStoreLink(){return Solves::$APP_GOOGLE_PLAY_STORE_LINK;}
     public static function setGooglePlayStoreLink($p){Solves::$APP_GOOGLE_PLAY_STORE_LINK = $p;}

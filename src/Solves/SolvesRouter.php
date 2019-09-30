@@ -15,6 +15,10 @@ class SolvesRouter {
     public $IS_APP = false;
     public $p;
 
+    private $isVendorInclude=false;
+
+    private $navInside;
+
     //Flags to VIEWS identification
     private $incluiTopo = true;
     private $incluiTopoPublic = false;
@@ -48,19 +52,23 @@ class SolvesRouter {
     private $_HTTPREQUEST_GET;   
     private $_HTTPREQUEST_PUT;   
     private $_HTTPREQUEST_DELETE;
+    private $_HTTPREQUEST_FILES;
 
     //REST
     private $restService;
     private $restDetails;
+    private $restDetailsArr;
 
 
-    public function __construct($_HTTPREQUEST_SERVER, $_HTTPREQUEST_POST, $_HTTPREQUEST_GET, $_HTTPREQUEST_PUT, $_HTTPREQUEST_DELETE) {
+    public function __construct($_HTTPREQUEST_SERVER, $_HTTPREQUEST_POST, $_HTTPREQUEST_GET, $_HTTPREQUEST_PUT, $_HTTPREQUEST_DELETE, $_HTTPREQUEST_FILES, $navInside='') {
         $this->_HTTPREQUEST_SERVER = $_HTTPREQUEST_SERVER;
         $this->_HTTPREQUEST_POST = $_HTTPREQUEST_POST;
         $this->_HTTPREQUEST_GET = $_HTTPREQUEST_GET;
         $this->_HTTPREQUEST_PUT = $_HTTPREQUEST_PUT;
         $this->_HTTPREQUEST_DELETE = $_HTTPREQUEST_DELETE;
+        $this->_HTTPREQUEST_FILES = $_HTTPREQUEST_FILES;
 
+        $this->navInside = $navInside;
         $this->MODO_SOON_ATIVADO = \Solves\Solves::isModoSoon();
         $this->requestedPage = $this->_HTTPREQUEST_GET['p'];
 
@@ -231,21 +239,26 @@ class SolvesRouter {
         if($this->checkIfFileExists($p)) {
             $this->pagInclude = $p;
         }else{
+            $this->isVendorInclude = true;
             $this->pagInclude = \Solves\Solves::getVendorPath().$p;
         }
     }
-    private function processaRest(){
-        $this->isRest = true;
+    private function preencheRestDetails(){
         $requisicaoRest = substr($this->requestedPage, 5, strlen($this->requestedPage)-5);
         $this->restService =  ((strpos($requisicaoRest, '/')>0)?substr($requisicaoRest, 0, strpos($requisicaoRest, '/')):$requisicaoRest);
 
         if(strpos($this->restService, 'app/')===0){
             $this->restService = str_replace('app/', '', $this->restService);
         }
-
-        $pos_startDetails=strlen($this->restService)+1;
+         $pos_startDetails=strlen($this->restService)+1;
         $this->restDetails = substr($requisicaoRest, $pos_startDetails, strlen($requisicaoRest)-$pos_startDetails-(substr($requisicaoRest, -1)=='/'?1:0));
+        $this->restDetailsArr = explode('/', $this->restDetails);
+        $this->restDetails =  $this->restDetailsArr[0];
         $this->restDetails = \Solves\Solves::removeEspacos($this->restDetails);
+    }
+    private function processaRest(){
+        $this->isRest = true;
+        $this->preencheRestDetails();
 
         $this->preencheVariaveisDeDados();
         
@@ -297,6 +310,8 @@ class SolvesRouter {
         $this->usuario = json_decode(utf8_encode($this->usuario), false);
     }
     private function processaAvatar(){
+        $this->isRest = true;
+        $this->preencheRestDetails();
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET");
         header("Access-Control-Allow-Headers: GET");
@@ -308,6 +323,8 @@ class SolvesRouter {
         $this->pagInclude = 'rest/'.$this->restService.'.rest.php';
     }
     private function processaFoto(){
+        $this->isRest = true;
+        $this->preencheRestDetails();
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET");
         header("Access-Control-Allow-Headers: GET");
@@ -338,12 +355,15 @@ class SolvesRouter {
     public function getRestDetails(){
         return $this->restDetails;
     }
+    public function getRestDetailsArr(){
+        return $this->restDetailsArr;
+    }
     public function getRestService(){
         return $this->restService;
     }
 
     public function getPagInclude(){
-        return $this->pagInclude;
+        return ($this->isVendorInclude ? '' : $this->navInside).$this->pagInclude;
     }
     public function doIncludePage(){
         $CONNECTION = null;
@@ -368,6 +388,7 @@ class SolvesRouter {
                     $usuario = $this->usuario;
                     $restService = $this->restService;
                     $restDetails = $this->restDetails;
+                    $restDetailsArr = $this->restDetailsArr;
                     $ROUTER = $this;
                 //END TURNING INTO ACESSIBLE VARIABLES
 
@@ -390,34 +411,34 @@ class SolvesRouter {
                   $CONNECTION = \SolvesDAO\SolvesDAO::openConnection();  
 
                   if($this->incluiTopo){
-                    include "includes/topo.php";
+                    include $this->navInside."includes/topo.php";
                   }else if($this->incluiTopoPublic){
-                    include "includes/topoPublic.php";
+                    include $this->navInside."includes/topoPublic.php";
                   }else if($this->incluiTopoApp){
-                    include "includes/topoApp.php";
+                    include $this->navInside."includes/topoApp.php";
                   }else if($this->incluiTopoAppPublic){
-                    include "includes/topoAppPublic.php";
+                    include $this->navInside."includes/topoAppPublic.php";
                   }else if($this->IS_SOON_PAGE){
-                    include "includes/topo_soon.php";
+                    include $this->navInside."includes/topo_soon.php";
                   }else{
-                    include "includes/cabecalho.php";
+                    include $this->navInside."includes/cabecalho.php";
                   }
 
                   //MAIN INCLUSION
                   include $this->getPagInclude();
 
                   if($this->incluiTopo){
-                    include "includes/rodape.php";
+                    include $this->navInside."includes/rodape.php";
                   }else if($this->incluiTopoPublic){
-                    include "includes/rodapePublic.php";
+                    include $this->navInside."includes/rodapePublic.php";
                   }else if($this->incluiTopoApp){
-                    include "includes/rodapeApp.php";
+                    include $this->navInside."includes/rodapeApp.php";
                   }else if($this->incluiTopoAppPublic){
-                    include "includes/rodapeAppPublic.php";
+                    include $this->navInside."includes/rodapeAppPublic.php";
                   }else if($this->IS_SOON_PAGE){
-                    include "includes/rodape_soon.php";
+                    include $this->navInside."includes/rodape_soon.php";
                   }else{
-                    include "includes/includes_js.php";
+                    include $this->navInside."includes/includes_js.php";
                   }
 
                   //FECHA A CONEXãO COM O BANCO
@@ -494,5 +515,8 @@ class SolvesRouter {
     }
     public function getHttpRequestDelete(){
         return $this->_HTTPREQUEST_DELETE;
+    }
+    public function getHttpRequestFiles(){
+        return $this->_HTTPREQUEST_FILES;
     }
 }

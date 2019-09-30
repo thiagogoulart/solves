@@ -8,7 +8,8 @@ namespace SolvesUi;
 
 
 class SolvesUi {
-
+    private static $ALL_RESTRICTED=false;
+    private static $PUBLIC_URLS = array();
     private static $RESTRICTED_URLS = array();
 
     private static $SCRIPT_FILEPATHS = array();
@@ -32,6 +33,7 @@ class SolvesUi {
     }
 
     public static function setRestrictedUrls($arr){
+        SolvesUi::$ALL_RESTRICTED=false;
         $newArr = $arr;
         foreach($arr as $url){
             array_push($newArr, 'app/'.$url);
@@ -40,7 +42,24 @@ class SolvesUi {
     }
     public static function getRestrictedUrls(){return SolvesUi::$RESTRICTED_URLS;}
     public static function isRestrictedUrl($url){
-        return in_array($url, SolvesUi::$RESTRICTED_URLS);
+        if(SolvesUi::$ALL_RESTRICTED){
+            return !in_array($url, SolvesUi::$PUBLIC_URLS);
+        }else{
+            return in_array($url, SolvesUi::$RESTRICTED_URLS);
+        }
+    }
+
+    public static function setPublicUrls($arr){
+        SolvesUi::$ALL_RESTRICTED=true;
+        $newArr = $arr;
+        foreach($arr as $url){
+            array_push($newArr, 'app/'.$url);
+        }
+        SolvesUi::$PUBLIC_URLS = $newArr;
+    }
+    public static function getPublicUrls(){return SolvesUi::$PUBLIC_URLS;}
+    public static function isPublicUrl($url){
+        return in_array($url, SolvesUi::$PUBLIC_URLS);
     }
 
     public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}

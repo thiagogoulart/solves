@@ -53,6 +53,7 @@ abstract class SolvesRest {
 	    $this->GET = $this->router->getHttpRequestGet();   
 	    $this->PUT = $this->router->getHttpRequestPut();   
 	    $this->DELETE = $this->router->getHttpRequestDelete();
+	    $this->FILES = $this->router->getHttpRequestFiles();
 	}
 	protected function fillObject(){
 		if(\Solves\Solves::isNotBlank($this->classeObject)){
