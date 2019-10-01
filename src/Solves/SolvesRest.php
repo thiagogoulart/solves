@@ -11,6 +11,7 @@ abstract class SolvesRest {
 	protected $CONNECTION;
 	protected $router;
 	protected $restrito=false;
+	protected $restritoTipo=null;
 	protected $publicMethods=array();
 
 	protected $msg;
@@ -40,9 +41,10 @@ abstract class SolvesRest {
     public $PUT;   
     public $DELETE;
 
-	public function __construct($router, $mainClass, $restrito=false) {
+	public function __construct($router, $mainClass, $restrito=false, $restritoTipo=null) {
 		$this->router = $router;
 		$this->restrito = $restrito;
+		$this->restritoTipo = $restritoTipo;
 		$this->classeObject = $mainClass;
 
 		$this->fillObject();
@@ -102,7 +104,7 @@ abstract class SolvesRest {
     public function findMain(){
     	$classe = $this->classeObject;
         $p = new $classe($this->getConnection());
-        $arr = $p->findArrayAll($this->getUser()->getUserId());
+        $arr = $p->findArrayAll($this->getUser()->getId());
         if(isset($arr) && count($arr)>0){
             $json = \Solves\SolvesJson::arrayFromDaoToJson($arr, $this->getPkName()); 
             $this->setResultDados($json);
@@ -113,7 +115,7 @@ abstract class SolvesRest {
     public function findByFiltros(){
     	$classe = $this->classeObject;
         $p = new $classe($this->getConnection());
-        $arr = $p->findArrayByFiltros($this->getUser()->getUserId(), $dados);
+        $arr = $p->findArrayByFiltros($this->getUser()->getId(), $dados);
         if(isset($arr) && count($arr)>0){
             $json = \Solves\SolvesJson::arrayFromDaoToJson($arr, $this->getPkName()); 
             $this->setResultDados($json);
@@ -286,6 +288,12 @@ abstract class SolvesRest {
 		}
     	return (isset($this->user) && $this->user->getId()>0);
 	}
+	protected function isRestritoTipo(){	
+		if($this->restritoTipo!=null && $this->user!=null){
+			return (strtolower($this->user->getClassName())==strtolower($this->restritoTipo));
+		}
+    	return true;
+	}
 	private function getJsonUserLogado(){
 		$clss = get_class ($this->user);
 		return \Solves\SolvesJson::getJsonByArrayItemFromDao($this->user->toArray(), $clss::$PK, true);
@@ -325,7 +333,7 @@ abstract class SolvesRest {
 		return in_array($this->router->getRestDetails(), $this->publicMethods);
 	}
 	protected function isAutorizado(){
-		return (!$this->restrito || $this->isLogado() || $this->isPublicMethod());
+		return (!$this->restrito || $this->isPublicMethod() || ($this->isLogado() && $this->isRestritoTipo()));
 	}
 	public function execute(){
 		try {  

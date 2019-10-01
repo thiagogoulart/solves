@@ -219,6 +219,12 @@ class Solves {
 	public static function substituiEspacos($string, $replaceFor) {
 	    return preg_replace("/\\s\\s+/", $replaceFor, (isset($string)?$string:""));
 	}
+	public static function getNomeClasse($string) {
+		$string = (ucwords($string, " _|\n\r\t\f\v"));
+	    $string = Solves::removeEspacos($string);
+	    $string = preg_replace("/_+/", '', $string);
+	    return $string;
+	}
 	public static function descriptografaNumero($p) {
 	    if (isset($p)) {
 	        $p = Solves::descriptografa($p);

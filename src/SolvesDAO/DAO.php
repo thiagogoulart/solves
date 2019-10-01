@@ -33,6 +33,8 @@ class DAO {
 	private $msgError;
 	private $charset;
 
+	/*Colunas que não devem estar presentes no retorno da consulta */
+	private $arrIdsColunasSensiveis = array();
 
 	public static $NULL_TIMESTAMP = '0000-00-00 00:00:00';
 	
@@ -50,6 +52,9 @@ class DAO {
 	
 	
 /*START getters e setters*/	
+    public function setArrIdsColunasSensiveis($p) {
+       $this->arrIdsColunasSensiveis = $p;
+    }
 	public function getConnection() : SolvesDAOConnection{
 		return $this->connection;
 	}
@@ -152,7 +157,14 @@ class DAO {
 		return $this->colunas[$order];
 	}
 	public function getColunas(){
-		return $this->colunas;
+		$cols = $this->colunas;
+		if(!$this->connection->isExibeColunasSensiveis() && isset($this->arrIdsColunasSensiveis) && count($this->arrIdsColunasSensiveis)>0){
+			foreach($this->arrIdsColunasSensiveis as $idColuna){ 
+				unset($cols[$idColuna]);
+				unset($cols[$idColuna."_label"]);
+			}
+		}
+		return $cols;
 	}
 	public function getColunaNome($order){
 		$coluna = $this->colunas[$order];

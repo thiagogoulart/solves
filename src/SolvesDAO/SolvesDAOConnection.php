@@ -12,6 +12,10 @@ class SolvesDAOConnection {
 	private $commitManual=false;
 	private $transactionOpened=false;
 
+
+	/*Colunas que não devem estar presentes no retorno da consulta */
+	private $exibeColunasSensiveis = true;
+
 	public function __construct() {
 	    $this->BD_CONNECTION = null;
 	    $bd_host = '';
@@ -89,6 +93,12 @@ class SolvesDAOConnection {
 
   	public function setCommitManual(){
   		$this->commitManual = true;
+  	}
+	public function isExibeColunasSensiveis(){
+		return $this->exibeColunasSensiveis;
+	}
+  	public function setNaoExibeColunasSensiveis(){
+  		$this->exibeColunasSensiveis = false;
   	}
 
 	public function openTransaction(){

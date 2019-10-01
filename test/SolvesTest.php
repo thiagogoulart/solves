@@ -36,6 +36,17 @@ class SolvesTest extends TestCase {
 			$this->assertEquals($expected[$i], $s, 'String ['.$p.'] String ['.$s.']. String não ficou como esperada:'.$expected[$i]);
 		}
 	}
+	public function testGetNomeClasse(){
+		$params = array('prato_chef','prato_chef_categoria','prato', 'PratoChef');
+		$expected = array('PratoChef','PratoChefCategoria','Prato', 'PratoChef');
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$s = \Solves\Solves::getNomeClasse($p);
+			$this->assertEquals($expected[$i], $s, 'String ['.$p.'] String ['.$s.']. String não ficou como esperada:'.$expected[$i]);
+		}
+
+	}
 
 	public function testGetUrlNormalizada(){
 		$params = array("/index","/index_teste","/index_teste/1/2/3","/index _teste/1/2/3 ",'coração de cachorro','CORAÇÃO de cachorro');

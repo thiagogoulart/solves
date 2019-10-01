@@ -454,7 +454,7 @@ class SolvesRouter {
     private function getRestClassName(){
         $classe = $this->getExistentClass($this->restService.'Rest');
         if(null==$classe){
-            $classe = $this->getExistentClass(ucwords($this->restService, " _|\n\r\t\f\v").'Rest');
+            $classe = $this->getExistentClass(\Solves\Solves::getNomeClasse($this->restService).'Rest');
             if(null==$classe){
                 $classe = $this->getExistentClass(ucwords($this->restService).'Rest');
             }

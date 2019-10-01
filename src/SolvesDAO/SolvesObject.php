@@ -32,6 +32,8 @@ abstract class SolvesObject {
 	protected $removed_at= '0000-00-00 00:00:00';
 	protected $removed_atLabel;
 
+	protected $arrIdsColunasSensiveis = array();
+
 	public function __construct($con, $tabela, $pk, $sequencia=null, $parentDao=null) {
 		$this->connection = $con;
 		$this->parentDao = $parentDao;
@@ -53,6 +55,10 @@ abstract class SolvesObject {
 	public abstract function afterDelete();
 
 
+    public function setArrIdsColunasSensiveis($p) {
+       $this->arrIdsColunasSensiveis = $p;
+       $this->dao->setArrIdsColunasSensiveis($this->arrIdsColunasSensiveis);
+    }
     public function getConnection() {
         return $this->connection;
     }
@@ -103,13 +109,24 @@ abstract class SolvesObject {
 	public function getRemovedAtLabel() {return $this->removed_atLabel;}
 	public function setRemovedAtLabel($p) {$this->removed_atLabel = $p;}
 
+
+ 	protected function getSearchTag($value){
+ 		return (\Solves\Solves::isNotBlank(\Solves\Solves::removeEspacos($value)) ? $value.', ': '');
+ 	}
+ 	protected function getGeneratedShortName($value){
+ 		return \Solves\Solves::getUrlNormalizada(strtolower($value));
+ 	}
+ 	public static function getClassName() {
+        return get_called_class();
+    }
+
   	public function saveReturningId() {return $this->save();}
 
  	public function getDao() {return $this->dao;}
 
   	public function getNextIdValue() {return $this->dao->getNextIdValue();}
 
- 	 public function findByCondition($empresaId, $condition) {$list = $this->dao->findByCondition($condition);return $this->toObjectArray($list);}
+ 	public function findByCondition($empresaId, $condition) {$list = $this->dao->findByCondition($condition);return $this->toObjectArray($list);}
 
     public function findBySearch($search) {
         $list = $this->dao->findBySearch($search);
