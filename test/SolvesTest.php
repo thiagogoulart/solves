@@ -83,8 +83,8 @@ class SolvesTest extends TestCase {
 	}
 
 	public function testGetUrlNameViewPath(){
-		$params = array("filea","tree/filea","filea/fileb","tree/filea/fileb");
-		$expected = array("views/filea.php","views/tree/filea.php","views/filea.php","views/tree/filea.php");
+		$params = array('app','app/','app/home','app/home/', 'app/pratos',"filea","tree/filea","filea/fileb","tree/filea/fileb");
+		$expected = array('views/app/home.php','views/app/home.php','views/app/home.php','views/app/home.php', 'views/app/pratos.php',  "views/filea.php","views/tree/filea.php","views/filea.php","views/tree/filea.php");
 		$qtd = count($params);
 		for($i=0;$i!=$qtd;$i++){ 
 			$p = $params[$i];

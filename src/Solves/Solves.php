@@ -573,7 +573,7 @@ class Solves {
 	}
 	public static function getUrlNameViewPath($urlName, $navInside=''){
 		$arrUrl = \Solves\Solves::getUrlNameArray($urlName);  
-		$u = '/'.$arrUrl[0];  
+		$u = '/'.('app'==$arrUrl[0] ? 'app'.(count($arrUrl)>1 && Solves::isNotBlank($arrUrl[1]) ?'/'.$arrUrl[1].'':'') : $arrUrl[0]);  
 	    $acumulado='';
 	    foreach($arrUrl as $arrItem){
 	      $acumulado .= '/'.$arrItem;
@@ -582,7 +582,17 @@ class Solves {
 	        $u = $acumulado;
 	      }else if(!is_dir($pTemp)) {
 	        break;
+	      }else{
+	      	$pTemp = str_replace('app', '', $pTemp);
+	      	if(file_exists($pTemp.'.php')) {
+		        $u = $acumulado;
+		     }else if(!is_dir($pTemp)) {
+		        break;
+		    }
 	      }
+	    }
+	    if('/app'==$u){
+	    	$u = $u.'/home';
 	    }
 	    return $navInside.'views'.$u.'.php';
 	}

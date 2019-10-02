@@ -152,7 +152,7 @@ class SolvesRouter {
         return (strpos($this->requestedPage, 'rest/')===0 || strpos($this->requestedPage, 'avatar/')===0 ||  strpos($this->requestedPage, 'thumb/')===0 || strpos($this->requestedPage, 'perfil/')===0 || strpos($this->requestedPage, 'file/')===0 || strpos($this->requestedPage, 'foto/')===0);
     }
     private function verifyIfIsApp(){
-        $this->IS_APP = (!$this->isPageController && (strpos($this->requestedPage, 'app/')===0 || strpos($this->requestedPage, 'app_')===0));
+        $this->IS_APP = (!$this->isPageController && ('app'==$this->requestedPage || strpos($this->requestedPage, 'app/')===0 || strpos($this->requestedPage, 'app_')===0));
         if($this->IS_APP && strpos($this->requestedPage, 'app_')===0){
             $this->requestedPage = str_replace('app_', 'app/', $this->requestedPage);
         }
