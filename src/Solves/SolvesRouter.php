@@ -266,7 +266,23 @@ class SolvesRouter {
         header("Access-Control-Allow-Methods: GET, POST");
         header("Access-Control-Allow-Headers: GET, POST");
         header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
+        
         $this->pagInclude = 'rest/'.$this->restService.'.rest.php';
+        if(!$this->checkIfFileExists($this->pagInclude)){
+            $r = \Solves\Solves::getNomeClasse($this->restService);
+            $this->pagInclude = 'rest/'.$r.'.rest.php';
+            if(!$this->checkIfFileExists($this->pagInclude)){
+                $r = ucwords($this->restService);
+                $this->pagInclude = 'rest/'.$r.'.rest.php';
+                if($this->checkIfFileExists($this->pagInclude)){
+                    $this->restService = $r;
+                }else{
+                    $this->pagInclude = 'rest/'.$this->restService.'.rest.php';
+                }
+            }else{
+                $this->restService = $r;
+            }
+        }
     }
     private function preencheVariaveisDeDados(){
         $this->dados = $this->_HTTPREQUEST_POST["dados"];

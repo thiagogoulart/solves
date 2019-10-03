@@ -71,6 +71,9 @@ abstract class SolvesObject {
     }
 
 
+  	public function retiraAtributosSensiveisArray($arrItem) {
+		return $this->dao->removeAtributosSensiveisDeArray($arrItem, $this->arrIdsColunasSensiveis);
+ 	}
 
 	public function getCreatedAt() {return $this->created_at;}
 	public function setCreatedAt($p) {$this->created_at = $p;}
