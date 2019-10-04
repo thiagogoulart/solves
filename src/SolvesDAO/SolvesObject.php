@@ -92,7 +92,17 @@ abstract class SolvesObject {
 
 	public function isAtivo() {return \Solves\Solves::checkBoolean($this->ativo);}
 	public function getAtivo() {return $this->ativo;}
-	public function setAtivo($p) {$this->ativo = $p;}
+	public function setAtivo($p, $createdAt=null) {
+		$this->ativo = $p;
+		$this->setAtivoLabel($this->ativo?'Sim':'Não');
+		if(null!=$createdAt){
+			if($this->ativo){
+				$this->setAtivoAt($createdAt);
+			}else{
+				$this->setInativoAt($createdAt);
+			}
+		}
+	}
 	public function getAtivoLabel() {return $this->ativoLabel;}
 	public function setAtivoLabel($p) {$this->ativoLabel = $p;}
 
