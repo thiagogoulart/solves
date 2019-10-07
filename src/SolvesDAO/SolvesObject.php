@@ -16,6 +16,8 @@ abstract class SolvesObject {
     protected $old;
     protected $oldArray;
 
+    public static $PAGINACAO_QTD = 20;
+
     /**Common atributes */
 	protected $created_at= '0000-00-00 00:00:00';
 	protected $created_atLabel;
