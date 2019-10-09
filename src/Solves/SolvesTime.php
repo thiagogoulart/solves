@@ -6,6 +6,8 @@
  */ 
 namespace Solves;
 
+use \Datetime;
+use \DateInterval;
 
 class SolvesTime {
     
@@ -132,7 +134,15 @@ class SolvesTime {
             return "";
         }
     }
-
+    public static function addDiasToTimestamp($timestamp, $dias){
+        $newTimestampStr = "";
+        if (\Solves\Solves::isNotBlank($timestamp)) {
+            $data = DateTime::createFromFormat("Y-m-d H:i:s", $timestamp);
+            $data->add(new DateInterval('P'.$dias.'D')); // QTD dias
+            $newTimestampStr = $data->format("Y-m-d H:i:s");
+        }
+        return $newTimestampStr;
+    }
     public static function getDataFormatada($timestamp) {
         $dia = substr($timestamp, 8, 2);
         $mes = substr($timestamp, 5, 2);

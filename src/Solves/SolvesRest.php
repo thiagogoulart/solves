@@ -257,6 +257,20 @@ abstract class SolvesRest {
 		$this->jsonDados = '{"objeto":'.((isset($this->jsonObjeto) && strlen($this->jsonObjeto)>0) ? $this->jsonObjeto : "{}").'}';
 		$this->msg = $msg;
 	}
+	protected function setResultMultiplos($arrJson, $msg='Resultado da busca encontrado com sucesso!'){
+		$this->jsonObjeto = $json;
+		$i=0;
+		$this->jsonDados = '{';
+		foreach($arrJson as $key=>$valueJson){
+			if($i>0){
+				$this->jsonDados.=', ';
+			}
+			$this->jsonDados.= '"'.$key.'":'.((isset($valueJson) && strlen($valueJson)>0) ? $valueJson : "{}");
+			$i++;
+		}
+		$this->jsonDados .= '}';
+		$this->msg = $msg;
+	}
 	protected function setJson($json){
 		$this->json = $json;
 		$this->predefinedJson = true;

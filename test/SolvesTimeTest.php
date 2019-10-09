@@ -27,5 +27,17 @@ class SolvesTimeTest extends TestCase {
 	public function tearDown()  : void{
 	  
 	}
+	public function testAddDiasToTimestamp(){
+		$params = array('2019-10-09 07:38:00','2019-10-09 07:38:00', '2019-10-09 07:38:00','2019-10-09 07:38:00','2019-10-09 07:38:00');
+		$paramsDays = array(2,4,10,6,24);
+		$expected = array('2019-10-11 07:38:00','2019-10-13 07:38:00','2019-10-19 07:38:00', '2019-10-15 07:38:00', '2019-11-02 07:38:00');
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$d = $paramsDays[$i];
+			$s = \Solves\SolvesTime::addDiasToTimestamp($p, $d);
+			$this->assertEquals($expected[$i], $s, 'Timestamp ['.$p.'], adicionando ['.$d.'] dias, resultou em Timestamp ['.$s.']. Timestamp não ficou como esperada:'.$expected[$i]);
+		}
+	}
 
 }
