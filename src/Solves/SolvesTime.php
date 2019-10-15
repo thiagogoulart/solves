@@ -21,6 +21,13 @@ class SolvesTime {
             return 'Até ' . $dtFim;
         }
     }
+    public static function diffDatasEmDias($dataInicial, $dataFinal) {
+        // Calcula a diferença em segundos entre as datas
+         $diferenca = strtotime($dataFinal) - strtotime($dataInicial);
+
+         //Calcula a diferença em dias
+         return floor($diferenca / (60 * 60 * 24));
+    }
 
     public static function subtraiMes($dataBR, $qtdMeses) {
         $dia = substr($dataBR, 0, 2);

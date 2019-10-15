@@ -39,5 +39,17 @@ class SolvesTimeTest extends TestCase {
 			$this->assertEquals($expected[$i], $s, 'Timestamp ['.$p.'], adicionando ['.$d.'] dias, resultou em Timestamp ['.$s.']. Timestamp não ficou como esperada:'.$expected[$i]);
 		}
 	}
+	public function testDiffDatasEmDias(){
+		$params = array('2019-10-09 07:38:00','2019-10-09 07:38:00', '2019-10-09 07:38:00','2019-10-09 07:38:00','2019-10-09 07:38:00');
+		$paramsDays = array('2019-10-11 07:38:00','2019-10-13 07:38:00','2019-10-19 07:38:00', '2019-10-15 07:38:00', '2019-11-02 07:38:00');
+		$expected = array(2,4,10,6,24);
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$d = $paramsDays[$i];
+			$s = \Solves\SolvesTime::diffDatasEmDias($p, $d);
+			$this->assertEquals($expected[$i], $s, 'inicial ['.$p.'], final ['.$d.'], resultou em qtd dias ['.$s.']. Qtd de dias não ficou como esperada:'.$expected[$i]);
+		}
+	}
 
 }
