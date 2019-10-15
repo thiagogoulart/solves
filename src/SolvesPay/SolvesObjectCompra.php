@@ -9,9 +9,13 @@ namespace SolvesPay;
 abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
 
 	protected $valor_total;
+	protected $valor_total_label;
 	protected $valor_total_desconto;
+	protected $valor_total_desconto_label;
 	protected $valor_total_final;
+	protected $valor_total_final_label;
 	protected $valor_total_pago;
+	protected $valor_total_pago_label;
 	protected $pago;
 	protected $pagoLabel;
 	protected $payerid;
@@ -56,15 +60,23 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
 	
 	public function getValorTotal() {return $this->valor_total;}
 	public function setValorTotal($p) {$this->valor_total = $p;}
+	public function getValorTotalLabel() {return $this->valor_total_label;}
+	public function setValorTotalLabel($p) {$this->valor_total_label = $p;}
 
 	public function getValorTotalDesconto() {return $this->valor_total_desconto;}
 	public function setValorTotalDesconto($p) {$this->valor_total_desconto = $p;}
+	public function getValorTotalDescontoLabel() {return $this->valor_total_desconto_label;}
+	public function setValorTotalDescontoLabel($p) {$this->valor_total_desconto_label = $p;}
 
 	public function getValorTotalFinal() {return $this->valor_total_final;}
 	public function setValorTotalFinal($p) {$this->valor_total_final = $p;}
+	public function getValorTotalFinalLabel() {return $this->valor_total_final_label;}
+	public function setValorTotalFinalLabel($p) {$this->valor_total_final_label = $p;}
 
 	public function getValorTotalPago() {return $this->valor_total_pago;}
 	public function setValorTotalPago($p) {$this->valor_total_pago = $p;}
+	public function getValorTotalPagoLabel() {return $this->valor_total_pago_label;}
+	public function setValorTotalPagoLabel($p) {$this->valor_total_pago_label = $p;}
 
 	public function isPago() {return \Solves\Solves::checkBoolean($this->pago);}
 	public function getPago() {return $this->pago;}
