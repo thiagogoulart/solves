@@ -92,4 +92,15 @@ class SolvesTest extends TestCase {
 			$this->assertEquals($expected[$i], $s, 'URL ['.$p.'] ficou ['.$s.']. Url não ficou como esperada:'.$expected[$i]);
 		}
 	}
+	public function testGetDoubleValue(){
+		$params = array('29.9',29.9,29.99,'10', 10);
+		$expected = array('29.9','29.9','29.99','10', 10);
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$s = \Solves\Solves::getDoubleValue($p);
+			$this->assertEquals($expected[$i], $s, 'Valor ['.$p.'] obteve resposta ['.$s.']. Resosta não ficou como esperada:'.$expected[$i]);
+		}
+
+	}
 }

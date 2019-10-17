@@ -58,7 +58,7 @@ class DAO {
 	public function getConnection() : SolvesDAOConnection{
 		return $this->connection;
 	}
-	public function setConnection(SolvesDAOConnection $p){
+	public function setConnection(SolvesDAOConnection $p=null){
 		$this->connection = $p;
 	}
 	public function setOrderByEspecifico($p){
@@ -156,9 +156,9 @@ class DAO {
 	public function getColuna($order){
 		return $this->colunas[$order];
 	}
-	public function getColunas(){
+	public function getColunas($isSelect=true){
 		$cols = $this->colunas;
-		if(!$this->connection->isExibeColunasSensiveis() && isset($this->arrIdsColunasSensiveis) && count($this->arrIdsColunasSensiveis)>0){
+		if($isSelect && !$this->connection->isExibeColunasSensiveis() && isset($this->arrIdsColunasSensiveis) && count($this->arrIdsColunasSensiveis)>0){
 			foreach($this->arrIdsColunasSensiveis as $idColuna){ 
 				unset($cols[$idColuna]);
 				unset($cols[$idColuna."_label"]);
@@ -365,18 +365,18 @@ class DAO {
 		if($this->tabela && $id){			
 			$sql = "SELECT DISTINCT ";
 			$joins_sql = '';
-			$qtd = count($this->getColunas());
+			$cols = $this->getColunas();
+			$qtd = count($cols);
 			$i=0;
 
 			$sql .= $this->tabela.".".$this->pk;
 			
-			if(count($this->getColunas())>0){
+			if($qtd>0){
 				$sql .= ", ";
 			}
 			
 			$ordenation = " ORDER BY ";
-			
-			foreach($this->getColunas() as $coluna){
+			foreach($cols as $coluna){
 				$i++;
 
                                 $arr = $this->getSqlFormSelectColNameAndLabel($coluna);
@@ -444,17 +444,17 @@ class DAO {
 			
 			$sql = "SELECT DISTINCT ";
 			$joins_sql = '';
-			$qtd = count($this->getColunas());
+			$cols = $this->getColunas();
+			$qtd = count($cols);
 			$i=0;
 			
 			$sql .= " ".$this->tabela.".".$this->pk;
 			
-			if(count($this->getColunas())>0){
+			if($qtd>0){
 				$sql .= ", ";
 			}
 			
 			$ordenation = " ORDER BY ";
-			$cols = $this->getColunas();
 			foreach($cols as $coluna){
 				$i++;
                 $arr = $this->getSqlFormSelectColNameAndLabel($coluna);
@@ -665,7 +665,7 @@ class DAO {
 			}
 											
 			$entrou = false;
-			$colunas = $this->getColunas();
+			$colunas = $this->getColunas(false);
 			$this->qtdColunas = count($colunas);
 			$qtdCols = $this->qtdColunas;
 
@@ -831,7 +831,7 @@ class DAO {
 				$colWithValueParent = "";
 			}
 
-			$colunas = $this->getColunas();
+			$colunas = $this->getColunas(false);
 			$this->qtdColunas = count($colunas);
 
 			$col=''; $vcol='';		
@@ -841,16 +841,15 @@ class DAO {
 				$tipo = $coluna->getTipo();
 				$entrouParent = false;
 				$entrou = false;
-				
 				$valor = $this->getValorColunaParaScript($coluna, $valorColuna->getValor());
 				if($coluna->getDao()->getTabela()==$this->tabela){
-                                    $colWithValue .= $coluna->getNome().'='.$valor;
-                                    $entrou = true;
-                                }
-                                else if($hasParent && $coluna->getDao()->getTabela()==$this->extendsDao->getTabela()){
-                                    $colWithValueParent .= $coluna->getNome().'='.$valor;
-                                    $entrouParent = true;
-                                }
+                    $colWithValue .= $coluna->getNome().'='.$valor;
+                    $entrou = true;
+                }
+                else if($hasParent && $coluna->getDao()->getTabela()==$this->extendsDao->getTabela()){
+                    $colWithValueParent .= $coluna->getNome().'='.$valor;
+                    $entrouParent = true;
+                }
 				if($i!=($this->qtdColunas)){
 					if($entrou){
 						$colWithValue .= ', ';
@@ -1009,7 +1008,7 @@ class DAO {
 		$this->msgError .= '['.$op.']';
 		if($sql && $sql!=""){
 			$result = false;
-		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$op." | ".$sql.". </div>";
+			//echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$op." | ".$sql.". </div>";exit;
 			try{						
 				$this->openTransaction();
 				if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
@@ -1017,8 +1016,6 @@ class DAO {
 					if($op=='insert'){
 						$id = $this->getBdConnection()->insert_id;
 						$result = $id;
-					}else{
-						$result = true;
 					}
 				}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
 					$result = pg_query($this->getBdConnection(), $sql);

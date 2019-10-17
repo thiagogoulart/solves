@@ -14,6 +14,7 @@
 include_once 'src/Solves/Solves.php';
 include_once 'src/SolvesDAO/DAO.php';
 include_once 'src/SolvesDAO/SolvesDAO.php';
+include_once 'src/SolvesDAO/SolvesDAOConnection.php';
 include_once 'src/SolvesDAO/SolvesObject.php';
 include_once 'src/SolvesPay/SolvesPay.php';
 include_once 'src/SolvesPay/SolvesPayCompra.php';
@@ -29,17 +30,18 @@ class SolvesPayCompraTest extends TestCase {
 	public static function tearDownAfterClass() : void{
 	 
 	}
-	protected function setUp() : void{
+	protected function setUp() : void{ 
 	  
 	}
 	public function tearDown()  : void{
 	  
 	}
 	public function testAddCompraItem(){
-		//adicionar 1 item com qtd=1 e valor=10
+		$CONNECTION = null;// new SolvesDAOConnection();
+
 		$label = '1 Produto de 10 Pontos ';
-		$obj = new SolvesObjectCompraMock(null);
-		$compraItem = new \SolvesPay\SolvesPayCompraItem($label, 1, 10);
+		$obj = new SolvesObjectCompraMock($CONNECTION);
+		$compraItem = new \SolvesPay\SolvesPayCompraItem($label, 1, 29.9);
         $solvesCompra = new \SolvesPay\SolvesPayCompra(1, $obj);
         $solvesCompra->addCompraItem($compraItem);
 		$itens = $solvesCompra->getCompraItens();
@@ -55,7 +57,7 @@ class SolvesPayCompraTest extends TestCase {
 
 		$paramsNames = array('Qtd no array', 'Item 1[QTD]', 'Item 1[VALOR]');
 		$params = array($res_qtdItens,$res_item_qtd,$res_item_valor);
-		$expected = array(1,'1','10');
+		$expected = array(1,'1','29.9');
 		$qtd = count($params);
 		for($i=0;$i!=$qtd;$i++){ 
 			$p = $params[$i];

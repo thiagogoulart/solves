@@ -23,7 +23,9 @@ class SolvesPayCompraItem {
 	public function getValorFinal() {return $this->valorFinal;}
 
 	public function getLabelPay() {return substr($this->label, 0,99);}
-	public function getValorFinalPay() {return \Solves\Solves::getDoubleValue($this->valorFinal);}
+	public function getValorFinalPay() {
+		return \Solves\Solves::getDoubleValue($this->valorFinal);
+	}
 
 }
 ?>

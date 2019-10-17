@@ -11,11 +11,15 @@ class SolvesPayCompra {
 	
 	protected $id=null;
 	protected $solvesObjectCompra=null;
+	protected $connectionDao=null;
 
 	public function __construct($id, \SolvesPay\SolvesObjectCompra $solvesObjectCompra) {
 		$this->id = $id;
 		$this->solvesObjectCompra = $solvesObjectCompra;
 		$this->solvesCompraItens=array();
+		if(isset($this->solvesObjectCompra)){
+			$this->connectionDao = $this->solvesObjectCompra->getDao()->getConnection();
+		}
 	}
 	public function addCompraItem(\SolvesPay\SolvesPayCompraItem $compraItem){
 		array_push($this->solvesCompraItens, $compraItem);
@@ -28,6 +32,9 @@ class SolvesPayCompra {
 	}
 	public function setCompraItens(array $itens){
 		$this->solvesCompraItens=$itens;
+	}
+	public function getConnectionDao(){
+		return $this->connectionDao;
 	}
 	public function atualizaCompra($compraId, $transactionId, $situacao, $paid_first_name=null, $paid_last_name=null, $paid_business=null, $paid_payer_email=null, $paid_ipn_track_id=null, $paid_transaction_subject=null, $paid_receiver_id=null){
 		if($this->solvesObjectCompra->atualizaSePagoPorSituacao($situacao,$paid_first_name, $paid_last_name, $paid_business, $paid_payer_email, $paid_ipn_track_id, $paid_transaction_subject, $paid_receiver_id)){

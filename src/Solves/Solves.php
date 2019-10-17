@@ -382,10 +382,15 @@ class Solves {
 
 	public static function getDoubleValue($valor) {
 	    if (Solves::isNotBlank($valor)) {
-	        $valor = str_replace("R$", "", $valor);
-	        $valor = str_replace(" ", "", $valor);
-	        $valor = str_replace(".", "", $valor);
-	        $valor = str_replace(",", ".", $valor);
+	    	if (!is_float($valor)) {
+		        $valor = str_replace("R$", "", $valor);
+		        $valor = str_replace(" ", "", $valor);
+	        	$valor = preg_replace("/[^0-9,.]/", "", $valor);
+				if(strpos($valor, '.')>0 && strpos($valor, ',')>0){
+		        	$valor = str_replace(".", "", $valor);
+				}
+		        $valor = str_replace(",", ".", $valor);
+		    }
 	    } else {
 	        $valor = "";
 	    }
@@ -415,7 +420,6 @@ class Solves {
 	}
 
 	/* * Retorna o valor no formato correto e tipo FLOAT. */
-
 	public static function getFloatValue($valor) {
 	    $valor = Solves::getDoubleValue($valor);
 	    return floatval($valor);
@@ -539,7 +543,10 @@ class Solves {
 	    return Solves::getPublicUrl($IS_APP, 'index');
 	}
 	public static function getPublicUrl($IS_APP, $url){
-	    return (Solves::checkBoolean($IS_APP) ? '/app/' :'/').$url;
+	    return Solves::getCompleteUrl(true, $IS_APP, $url);
+	}
+	public static function getCompleteUrl($root, $IS_APP, $url){
+	    return (Solves::checkBoolean($root) ? '/' : Solves::getSiteUrl()).(Solves::checkBoolean($IS_APP) ? 'app/' :'').$url;
 	}
 	public static function isPageActive($urlAtual, $urlMenu){
 	    if(!Solves::isNotBlank($urlAtual)){

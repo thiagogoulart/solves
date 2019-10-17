@@ -105,9 +105,9 @@ class SolvesPayPaypal extends SolvesPay{
             'BRANDNAME' => SolvesPayPaypal::$PAYPAL_BRANDNAME,
             'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
             'PAYMENTREQUEST_0_CURRENCYCODE' => 'BRL',
-            'PAYMENTREQUEST_0_NOTIFYURL' => SolvesPayPaypal::$PAYPAL_NOTIFYURL,
-            'RETURNURL' => SolvesPayPaypal::$PAYPAL_RETURNURL,
-            'CANCELURL' => SolvesPayPaypal::$PAYPAL_CANCELURL,
+            'PAYMENTREQUEST_0_NOTIFYURL' => self::getCompleteNotifyUrl(),
+            'RETURNURL' => self::getCompleteReturnUrl(),
+            'CANCELURL' => self::getCompleteCancelUrl(),
             'BUTTONSOURCE' => 'BR_EC_EMPRESA',
             'PAYMENTREQUEST_0_INVNUM' => $this->getSolvesCompra()->getId()
         );
@@ -128,7 +128,7 @@ class SolvesPayPaypal extends SolvesPay{
             'PAYERID'=> $payerid,                
             'TOKEN'=> $token,
             'SUBJECT' => SolvesPayPaypal::$PAYPAL_EMAIL,                
-            'NOTIFYURL'=> SolvesPayPaypal::$PAYPAL_NOTIFYURL,          
+            'NOTIFYURL'=> self::getCompleteNotifyUrl(),     
             'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
             'PAYMENTREQUEST_0_CURRENCYCODE'=>'BRL'
         );
@@ -172,8 +172,15 @@ class SolvesPayPaypal extends SolvesPay{
             return null;
         }
     }
-
-    
+    private function getCompleteNotifyUrl(){
+    	return \Solves\Solves::getCompleteUrl(false, false, self::$PAYPAL_NOTIFYURL);
+    }
+    private function getCompleteReturnUrl(){
+    	return \Solves\Solves::getCompleteUrl(false, $this->isApp(), self::$PAYPAL_RETURNURL);
+    }
+    private function getCompleteCancelUrl(){
+    	return \Solves\Solves::getCompleteUrl(false, $this->isApp(), self::$PAYPAL_CANCELURL);
+    }
     private function log($log){        
         if(\Solves\Solves::isNotBlank(SolvesPayPaypal::$PAYPAL_PATH_LOG)){
         	file_put_contents(SolvesPayPaypal::$PAYPAL_PATH_LOG, "[".date('Y-m-d H:i:s')."]LOG:".$log.PHP_EOL , FILE_APPEND | LOCK_EX);        

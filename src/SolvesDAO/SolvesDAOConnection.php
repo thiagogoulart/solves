@@ -12,6 +12,8 @@ class SolvesDAOConnection {
 	private $commitManual=false;
 	private $transactionOpened=false;
 
+	private $isApp=false;
+
 
 	/*Colunas que não devem estar presentes no retorno da consulta */
 	private $exibeColunasSensiveis = true;
@@ -90,6 +92,9 @@ class SolvesDAOConnection {
 	public function isTransactionOpened(){
 		return $this->transactionOpened;
 	}
+	public function isApp(){
+		return $this->isApp;
+	}
 
   	public function setCommitManual(){
   		$this->commitManual = true;
@@ -99,6 +104,9 @@ class SolvesDAOConnection {
 	}
   	public function setNaoExibeColunasSensiveis(){
   		$this->exibeColunasSensiveis = false;
+  	}
+  	public function setIsApp(){
+  		$this->isApp = true;
   	}
 
 	public function openTransaction(){

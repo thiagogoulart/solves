@@ -141,9 +141,13 @@ class SolvesTime {
     public static function addDiasToTimestamp($timestamp, $dias){
         $newTimestampStr = "";
         if (\Solves\Solves::isNotBlank($timestamp)) {
-            $data = DateTime::createFromFormat("Y-m-d H:i:s", $timestamp);
+            $format = "Y-m-d H:i:s";
+            if(strlen($timestamp)==10){
+                $format = "Y-m-d";
+            }
+            $data = DateTime::createFromFormat($format, $timestamp);
             $data->add(new DateInterval('P'.$dias.'D')); // QTD dias
-            $newTimestampStr = $data->format("Y-m-d H:i:s");
+            $newTimestampStr = $data->format($format);
         }
         return $newTimestampStr;
     }

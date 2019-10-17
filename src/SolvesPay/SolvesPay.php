@@ -28,6 +28,9 @@ abstract class SolvesPay {
 	public function isSandbox(){
 		return ($this->environment == 'sandbox');
 	}
+	public function isApp(){
+		return ($this->solvesCompra->getConnectionDao()->isApp());
+	}
 	public abstract function init($forceInitialization=false);
 	public abstract function solicitarPagamento();
 	//public abstract function trataNotificacaoSucesso($token, $payerId);

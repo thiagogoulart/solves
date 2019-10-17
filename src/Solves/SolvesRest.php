@@ -287,6 +287,9 @@ abstract class SolvesRest {
 	protected function getConnection(){
 		if($this->CONNECTION==null){
 			$this->CONNECTION = \SolvesDAO\SolvesDAO::openConnection();
+			if($this->router->IS_APP){
+				$this->CONNECTION->setIsApp();
+			}
 		}
 		return $this->CONNECTION;
 	}
