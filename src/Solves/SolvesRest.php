@@ -138,7 +138,7 @@ abstract class SolvesRest {
 		}
 		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
 			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
-			throw new Exception("Informe o campo obrigatório '".$label."'.");
+			throw new \Exception("Informe o campo obrigatório '".$label."'.");
 		}
 		return $value;
 	}
@@ -150,7 +150,7 @@ abstract class SolvesRest {
 		}
 		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
 			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
-			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+			throw new \Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
 		}
 		return $value;
 	}
@@ -162,7 +162,7 @@ abstract class SolvesRest {
 		}
 		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
 			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
-			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+			throw new \Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
 		}
 		return $value;
 	}
@@ -174,7 +174,7 @@ abstract class SolvesRest {
 		}
 		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
 			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
-			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+			throw new \Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
 		}
 		return $value;
 	}
@@ -189,7 +189,7 @@ abstract class SolvesRest {
 				$value = $defaultValue;
 			}else if($obrigatorio){
 				$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
-				throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+				throw new \Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
 			}
 		}
 		return $value;
@@ -202,7 +202,7 @@ abstract class SolvesRest {
 		}
 		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
 			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
-			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+			throw new \Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
 		}
 		return $value;
 	}
@@ -214,7 +214,7 @@ abstract class SolvesRest {
 		}
 		if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
 			$label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
-			throw new Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
+			throw new \Exception("Informe o campo obrigatório '".$label."'. Valor está em branco ou fora do padrão.");
 		}
 		return $value;
 	}
@@ -390,7 +390,7 @@ abstract class SolvesRest {
 			}
 		 	//Fecha conexão com a base
 		    $this->closeConnection();
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			//FECHA A CONEXãO COM O BANCO
 			$this->rollbackTransaction();
 		    $this->closeConnection();
