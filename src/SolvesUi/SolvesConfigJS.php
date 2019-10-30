@@ -37,7 +37,7 @@ class SolvesConfigJS {
     }
 
 
-    private static function getFacebookMessenger(){
+    public static function getFacebookMessenger(){
       if(SolvesConfigJS::$FACEBOOK_MESSENGER_SHOW){ 
           return '//Ui - before Solvesinit
                 $.SolvesUi.configFacebookMessenger("'.SolvesConfigJS::$FACEBOOK_PAGE_ID.'", 
