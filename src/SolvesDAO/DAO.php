@@ -11,6 +11,7 @@ namespace SolvesDAO;
 
 class DAO {
 	
+	private static $DEBUG=false;
 	private $connection;
 	
 	private $tabela;
@@ -750,7 +751,7 @@ class DAO {
 				$sql = "";
 			}
 			
-		//   	echo '<br>SQL: '.$sql.'<br><br>PARENT: '.$sqlParent;
+		//  	echo '<br>SQL: '.$sql.'<br><br>PARENT: '.$sqlParent;
 			
 			if($hasParent){
 				$result = $this->executeQuery($sqlParent,'insert');	
@@ -1013,9 +1014,16 @@ class DAO {
 				$this->openTransaction();
 				if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
 					$result = $this->getBdConnection()->query($sql);
-					if($op=='insert'){
-						$id = $this->getBdConnection()->insert_id;
-						$result = $id;
+					if($result){
+						if($op=='insert'){
+							$id = $this->getBdConnection()->insert_id;
+							$result = $id;
+						}
+					}else{
+						$this->msgError .= $this->getBdConnection()->error;
+						$erro = $this->msgError.(self::$DEBUG ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.".</div>" : "");
+						$this->rollbackTransaction();
+						throw new \Exception($erro);
 					}
 				}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
 					$result = pg_query($this->getBdConnection(), $sql);
@@ -1025,11 +1033,12 @@ class DAO {
 					$this->rollbackTransaction();
 					$result = false;
 				}
-			}catch (Exception $e) {
+			}catch (\Exception $e) {
 				$result = false;
+				$this->msgError .= $this->getBdConnection()->error;
+				$erro = $this->msgError.(self::$DEBUG ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.".</div>" : "");
 				$this->rollbackTransaction();
-				$erro = $this->msgError.(true ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->getBdConnection()->error."<div>".$e->getMessage()."</div></div>". $this->getBdConnection()->errno : "");
-				throw new Exception($erro);
+				throw new \Exception($erro);
 			}
 			return $result;
 		}

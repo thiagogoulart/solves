@@ -98,6 +98,9 @@ class SolvesDAOConnection {
 
   	public function setCommitManual(){
   		$this->commitManual = true;
+  		if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
+			$this->BD_CONNECTION->autocommit(FALSE);
+  		}
   	}
 	public function isExibeColunasSensiveis(){
 		return $this->exibeColunasSensiveis;

@@ -331,9 +331,11 @@ abstract class SolvesRest {
 				$this->json .= '"usuario_logado":'.$this->getJsonUserLogado().'';
 			}
 			if(!\Solves\Solves::isNotBlank($this->msg)){
-				$this->msg = '';
+				$this->msg = '""';
+			}else{
+				$this->msg = \Solves\SolvesJson::escape_query_com_aspas($this->msg, true);
 			}
-			$this->json .= ($hasItem?',':'').'"msg":"'.$this->msg.'"';
+			$this->json .= ($hasItem?',':'').'"msg":'.$this->msg.'';
 			$this->json .= ',"error":"'.($this->erro ? 'true':'false').'"';
 			$this->json .= ', "dados":'.((isset($this->jsonDados) && strlen($this->jsonDados)>0) ? $this->jsonDados : "[]");
 			if(\Solves\Solves::isNotBlank($this->token)){
@@ -401,26 +403,29 @@ abstract class SolvesRest {
 		}
 	}
 	protected function setCommitManual(){
-		if($this->connection!=null){
-			$this->connection->setCommitManual();
+		if($this->CONNECTION!=null){
+			$this->CONNECTION->setCommitManual();
 		}
 	}
 	protected function rollbackTransaction(){
-		if($this->connection!=null){
-			$this->connection->rollbackTransaction();
+		if($this->CONNECTION!=null){
+			$this->CONNECTION->rollbackTransaction();
 		}
 	}
 	protected function commitTransaction(){
-		if($this->connection!=null){
-			return $this->connection->commit();
+		if($this->CONNECTION!=null){
+			return $this->CONNECTION->commit();
 		}
 		return false;
 	}
 	protected function isPendenteCommit(){
-		if($this->connection!=null){
-			return $this->connection->isTransactionOpened();
+		if($this->CONNECTION!=null){
+			return $this->CONNECTION->isTransactionOpened();
 		}
 		return false;
+	}
+	protected function getErrorMsg(){
+		return $this->CONNECTION->error;
 	}
 }
 ?>
