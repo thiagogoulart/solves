@@ -104,7 +104,7 @@ class SolvesUi {
     }
 
     public static function getScriptAjusteMetaTags($completeUrl, $titulo, $descr, $img){
-        $completeUrl = \Solves\Solves::getSiteUrl().$completeUrl;
+        $completeUrl = (\Solves\Solves::getSiteUrl()).$completeUrl;
         return "
         $('link[rel=\"canonical\"]').attr('href', '".$completeUrl."');
         $('meta[property=\"og:url\"]').attr('content', '".$completeUrl."');

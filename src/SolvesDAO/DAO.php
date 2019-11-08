@@ -108,8 +108,17 @@ class DAO {
 	public function addOutroFieldSelectSqlPuro($sql){
             $this->outrosFieldsSelectSqlPuro[] = $sql;
     }
-    public function getSqlColNumRows($sqlCondition){
-        return "(SELECT COUNT(*) FROM ".$this->getTabela()." ".$sqlCondition.") as num_rows";
+    public function getSqlColNumRows($sqlCondition){    	
+		$joins_sql = '';
+		$cols = $this->getColunas();
+		$this->qtdColunas = count($cols);
+    	foreach($cols as $coluna){
+			$arr = $this->getSqlFormSelectColNameAndLabel($coluna);
+            if(\Solves\Solves::isNotBlank($arr[2])){
+            	$joins_sql .= $arr[2];
+            }
+		}	
+        return "(SELECT COUNT(*) FROM ".$this->getTabela()." ".$joins_sql." ".$sqlCondition.") as num_rows";
     }
 	public function setColunaLabelOrder($order){
 		$this->colunas[$order]->setColunaLabel(true);
@@ -298,10 +307,10 @@ class DAO {
 				$i++;
                                 
 				$arr = $this->getSqlFormSelectColNameAndLabel($coluna);
-                                $colName = $arr[0];
-                                $colLabel = $arr[1];     
-                                $joins_sql .= $arr[2];
-                                $sql.= $arr[3];
+                $colName = $arr[0];
+                $colLabel = $arr[1];     
+                $joins_sql .= $arr[2];
+                $sql.= $arr[3];
 				
 				if($i!=$qtd){
 					$sql .= ", ";
