@@ -79,4 +79,17 @@ class SolvesFile {
         }
         return null;
     }
+    public static function getExtension($file){
+        if(\Solves\Solves::isNotBlank($file) && strpos($file, '.')>1){
+            return substr($file, strrpos($file, '.')+1, strlen($file));
+        }
+        return null;
+    }
+    public static function getContentType($file){
+        $contentType = null;
+        if(\Solves\Solves::isNotBlank($file)){
+            $contentType = mime_content_type($file);
+        }
+        return $contentType;
+    }
 }

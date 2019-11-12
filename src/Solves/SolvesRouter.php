@@ -72,6 +72,16 @@ class SolvesRouter {
         $this->MODO_SOON_ATIVADO = \Solves\Solves::isModoSoon();
         $this->requestedPage = $this->_HTTPREQUEST_GET['p'];
 
+        //Remove da URL o endereço de ROOT /home/...
+        if(\Solves\Solves::isNotBlank($this->requestedPage) && strpos('/'.$this->requestedPage, \Solves\Solves::getPathRaiz())>=0){
+          //  echo '['.strpos('/'.$this->requestedPage, \Solves\Solves::getPathRaiz()).']';
+         //   echo '$this->requestedPage['.$this->requestedPage.']';
+            $new = str_replace(\Solves\Solves::getPathRaiz(), '', '/'.$this->requestedPage);
+            if($new!='/'.$this->requestedPage){
+                $this->requestedPage = $new;
+            }
+         //   echo '$this->requestedPage['.$this->requestedPage.']';
+        }
         $this->processa();
     } 
     private function processa(){
@@ -82,7 +92,6 @@ class SolvesRouter {
           }
           $this->isPageController = $this->verifyIfIsPageController();
           $this->IS_APP = $this->verifyIfIsApp();
-
           if($this->isPageController) {
             $this->processaController();
           }else if(substr($this->requestedPage, 0, 5)=='sw.js'){
@@ -149,7 +158,7 @@ class SolvesRouter {
         $this->configUseOfTopos();
     }
     private function verifyIfIsPageController(){
-        return (strpos($this->requestedPage, 'rest/')===0 || strpos($this->requestedPage, 'avatar/')===0 ||  strpos($this->requestedPage, 'thumb/')===0 || strpos($this->requestedPage, 'perfil/')===0 || strpos($this->requestedPage, 'file/')===0 || strpos($this->requestedPage, 'foto/')===0);
+        return (strpos($this->requestedPage, 'rest/')===0 || strpos($this->requestedPage, 'avatar/')===0 ||  strpos($this->requestedPage, 'thumb/')===0 || strpos($this->requestedPage, 'perfil/')===0 || strpos($this->requestedPage, 'file/')===0 || strpos($this->requestedPage, 'foto/')===0 || strpos($this->requestedPage, 'public/')===0 || strpos($this->requestedPage, 'thumbs/')===0);
     }
     private function verifyIfIsApp(){
         $this->IS_APP = (!$this->isPageController && ('app'==$this->requestedPage || strpos($this->requestedPage, 'app/')===0 || strpos($this->requestedPage, 'app_')===0));
@@ -191,6 +200,8 @@ class SolvesRouter {
                     $this->processaRest();
                 }else if(strpos($this->requestedPage, 'avatar/')===0){                
                   $this->processaAvatar();
+                }else if(strpos($this->requestedPage, 'public/')===0 || strpos($this->requestedPage, 'thumbs/')===0){
+                  $this->processaArquivo();
                 }else if(strpos($this->requestedPage, 'foto/')===0){                
                   $this->processaFoto();
                 }else{
@@ -337,6 +348,27 @@ class SolvesRouter {
 
         $this->restService = 'avatar';
         $this->pagInclude = 'rest/'.$this->restService.'.rest.php';
+    }
+    private function processaArquivo(){
+        $file = str_replace('../', '', $this->requestedPage);
+        if(preg_match('/^public/', $file) || preg_match('/^\/public/', $file) ||
+            preg_match('/^thumbs/', $file) || preg_match('/^\/thumbs/', $file)) {
+
+            $this->isRest = true;
+            $this->preencheRestDetails();
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Methods: GET");
+            header("Access-Control-Allow-Headers: GET");
+            header("Cache-control: private, max-age=0, no-cache");
+            header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
+
+            $contentType = \Solves\SolvesFile::getContentType($file);
+            header('content-type: '.$contentType);
+
+            readfile($file);
+        }else{
+            header ("HTTP/1.0 404 Not Found");
+        }
     }
     private function processaFoto(){
         $this->isRest = true;
