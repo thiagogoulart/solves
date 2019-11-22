@@ -36,6 +36,7 @@ class Solves {
 
 	private static $PATH_ROOT = '';
 	private static $PATH_RAIZ= '';
+	private static $ROOT_PATH_OR_MODULE ='/';
 
 	private static $SYSTEM_NAME = '';
 	private static $SYSTEM_VERSION = '';
@@ -102,10 +103,20 @@ class Solves {
     public static function getSiteIcone(){return Solves::$IMG_PATH_LOGO.'favicon-32x32.png';}
 
     public static function getCompleteImgPath(){
-        return Solves::getSiteUrl().Solves::removeBarraInicial(Solves::getImgPath());
+        return self::getCompleteUrlPath(Solves::getImgPath());
     }
     public static function getCompleteImgPathLogo(){
-        return Solves::getSiteUrl().Solves::removeBarraInicial(Solves::getImgPathLogo());
+        return self::getCompleteUrlPath(Solves::getImgPathLogo());
+    }
+    public static function getCompleteUrlPath($p){
+        return Solves::getSiteUrl().Solves::removeBarraInicial($p);
+    }
+    public static function getRelativePath($path){
+    	if(\Solves\Solves::stringComecaCom($path, 'http')){
+            return $path;
+        }else{
+            return (\Solves\Solves::getRootPathOrModule()).Solves::removeBarraInicial($path);
+        }
     }
 
     public static function getVendorInsideNavs(){
@@ -516,7 +527,9 @@ class Solves {
 	    return $arr;
 	}
 
-
+	public static function stringComecaCom($string, $startPart){
+	    return (preg_match("/^".$startPart."/", $string));
+	}
 	public static function validaEmail($mail){
 	    if(preg_match("/^([[:alnum:]_.-]){3,}@([[:lower:][:digit:]_.-]{3,})(.[[:lower:]]{2,3})(.[[:lower:]]{2})?$/", $mail)) {
 	        return true;
@@ -545,8 +558,14 @@ class Solves {
 	public static function getPublicUrl($IS_APP, $url){
 	    return Solves::getCompleteUrl(true, $IS_APP, $url);
 	}
+	public static function getRootPathOrModule(){
+	    return Solves::$ROOT_PATH_OR_MODULE;
+	}
+	public static function setRootPathOrModule($p){
+	    Solves::$ROOT_PATH_OR_MODULE = $p;
+	}
 	public static function getCompleteUrl($root, $IS_APP, $url){
-	    return (Solves::checkBoolean($root) ? '/' : Solves::getSiteUrl()).(Solves::checkBoolean($IS_APP) ? 'app/' :'').$url;
+	    return (Solves::checkBoolean($root) ? self::getRootPathOrModule() : Solves::getSiteUrl()).(Solves::checkBoolean($IS_APP) ? 'app/' :'').$url;
 	}
 	public static function isPageActive($urlAtual, $urlMenu){
 	    if(!Solves::isNotBlank($urlAtual)){

@@ -64,10 +64,18 @@ class SolvesUi {
 
     public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
     public static function setCssFilePaths($arr){SolvesUi::$CSS_FILEPATHS = $arr;}
-    public static function getScriptFilePaths(){return SolvesUi::$SCRIPT_FILEPATHS;}
-    public static function getSingleScriptFilePath($item){return (is_array($item) ? $item[0]: $item);}
-    public static function getSingleScriptFilePathProperties($item){return (is_array($item) ? $item[1]:  (strpos($item, '/')==0 ?'':'crossorigin="anonymous"'));}
     public static function getCssFilePaths(){return SolvesUi::$CSS_FILEPATHS;}
+    public static function getSingleCssFilePath($item){return self::getSingleFilePath($item); }
+
+    public static function getScriptFilePaths(){return SolvesUi::$SCRIPT_FILEPATHS;}
+    public static function getSingleScriptFilePath($item){return self::getSingleFilePath($item); }
+    public static function getSingleScriptFilePathProperties($item){return (is_array($item) ? $item[1]:  (strpos($item, '/')==0 ?'':'crossorigin="anonymous"'));}
+
+    public static function getSingleFilePath($item){
+        $path = (is_array($item) ? $item[0]: $item);
+        return \Solves\Solves::getRelativePath($path);
+    }
+
     public static function getUiVersion(){return SolvesUi::$UI_VERSION;}
     public static function setUiVersion($p){SolvesUi::$UI_VERSION = $p;}
     public static function getCacheUiVersion(){

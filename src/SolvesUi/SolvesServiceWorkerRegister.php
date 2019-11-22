@@ -25,7 +25,7 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", function() {
     // Registra um service worker hospeadado na raiz do
     // site usando o escopo padrão
-    navigator.serviceWorker.register("/sw.js").then(function(reg ) {
+    navigator.serviceWorker.register("'.\Solves\Solves::getRelativePath('sw.js').'").then(function(reg ) {
       console.log("Service worker  registrado com sucesso:", reg );
       try {
         $.SolvesNotifications.push_updateSubscription();

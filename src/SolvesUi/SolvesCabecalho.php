@@ -40,7 +40,7 @@ class SolvesCabecalho {
     public static function getHtmlTagImgLogoOnLoading($SITE_TITULO){
         $logo = (\Solves\Solves::getCompleteImgPathLogo()).'favicon-96x96.png';
         if(\Solves\Solves::isNotBlank(SolvesCabecalho::$LOGO_ON_LOADING)){
-            $logo = SolvesCabecalho::$LOGO_ON_LOADING;
+            $logo = (\Solves\Solves::getCompleteImgPathLogo()).SolvesCabecalho::$LOGO_ON_LOADING;
         }
         return '<img  class="img-responsive" src="'.$logo.'" alt="'.$SITE_TITULO.'" title="'.$SITE_TITULO.'">';
     }
@@ -61,7 +61,7 @@ class SolvesCabecalho {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>'.$SITE_TITULO.'</title>
     <meta name="application-name" content="'.$SITE_TITULO.'">
-    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="manifest" href="'.\Solves\Solves::getRelativePath('manifest.webmanifest').'">
     <meta name="theme-color" content="'.SolvesCabecalho::getThemeColor().'"/>
     <meta name="msapplication-navbutton-color" content="'.SolvesCabecalho::getThemeColor().'">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -106,6 +106,7 @@ class SolvesCabecalho {
 /*CSS*/
     $cssFilePaths = \SolvesUi\SolvesUi::getCssFilePaths();
     foreach($cssFilePaths as $cssFilePath){
+        $cssFilePath = \SolvesUi\SolvesUi::getSingleCssFilePath($cssFilePath);
         $html .='<link rel="stylesheet" href="'.$cssFilePath.'">';
     }
 
@@ -145,7 +146,7 @@ class SolvesCabecalho {
       (SolvesCabecalho::isShowLogoOnLoading() ? SolvesCabecalho::getHtmlTagImgLogoOnLoading($SITE_TITULO) : 
             '<span class="navbar-brand">'.$SITE_TITULO.'</span>')
     .'</h4>
-    <img src="'.\Solves\Solves::getImgPath().'preload.gif" alt="Loading" style="visibility: visible;">
+    <img src="'.\Solves\Solves::getCompleteImgPath().'preload.gif" alt="Loading" style="visibility: visible;">
   </div>
 </div>
 
@@ -155,7 +156,7 @@ class SolvesCabecalho {
       <span class="navbar-brand">'.$SITE_TITULO.'</span>
     </h4>
     <div class="p-2">
-        <button class="btn btn-md" id="reload_new_version"><img src="'.\Solves\Solves::getImgPath().'preload.gif" alt="Loading" style="visibility: visible;">
+        <button class="btn btn-md" id="reload_new_version"><img src="'.\Solves\Solves::getCompleteImgPath().'preload.gif" alt="Loading" style="visibility: visible;">
         <br>Nova versão disponível.<br>Atualizando...<br>São apenas alguns instantes.</button>
     </div>
   </div>
