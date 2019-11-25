@@ -28,6 +28,8 @@ class SolvesDAO {
 	private static $BD_PROD_PASSWORD;
 	private static $BD_PROD_DATABASE;
 
+    private static $MODEL_CLASSES= array();
+
 
 	public static function isDebug(){return SolvesDAO::$DEBUG;}
 	public static function config($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase,
@@ -64,6 +66,7 @@ class SolvesDAO {
     public static function setBdDevUser($p){SolvesDAO::$BD_DEV_USER = $p;}
     public static function setBdDevPassword($p){SolvesDAO::$BD_DEV_PASSWORD = $p;}
     public static function setBdDevDatabase($p){SolvesDAO::$BD_DEV_DATABASE = $p;}
+    public static function setModelClasses($p){SolvesDAO::$MODEL_CLASSES = $p;}
     
     public static function getBdDevHost(){return SolvesDAO::$BD_DEV_HOST;}
     public static function getBdDevPort(){return SolvesDAO::$BD_DEV_PORT;}
@@ -71,6 +74,7 @@ class SolvesDAO {
     public static function getBdDevUser(){return SolvesDAO::$BD_DEV_USER;}
     public static function getBdDevPassword(){return SolvesDAO::$BD_DEV_PASSWORD;}
     public static function getBdDevDatabase(){return SolvesDAO::$BD_DEV_DATABASE;}
+    public static function getModelClasses(){return SolvesDAO::$MODEL_CLASSES;}
 
     public static function setBdProdHost($p){SolvesDAO::$BD_PROD_HOST = $p;}
     public static function setBdProdPort($p){SolvesDAO::$BD_PROD_PORT = $p;}

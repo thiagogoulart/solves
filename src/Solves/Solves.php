@@ -33,6 +33,8 @@ class Solves {
 	private static $SITE_DESCR = '';
 	private static $SITE_KEYS = '';
 	private static $REST_URL = 'http://localhost/';
+	private static $SITE_CONTEXT = '/';
+	private static $SITE_DIR = '/';
 
 	private static $PATH_ROOT = '';
 	private static $PATH_RAIZ= '';
@@ -89,6 +91,8 @@ class Solves {
     public static function setSiteKeys($p){Solves::$SITE_KEYS = $p;}
     public static function setImgPath($p){Solves::$IMG_PATH = $p;}
     public static function setImgPathLogo($p){Solves::$IMG_PATH_LOGO = $p;}
+    public static function setSiteContext($p){Solves::$SITE_CONTEXT = $p;}
+    public static function setSiteDir($p){Solves::$SITE_DIR = $p;}
 
     public static function getSystemName(){return Solves::$SYSTEM_NAME;}
     public static function getSystemVersion(){return Solves::$SYSTEM_VERSION;}
@@ -101,6 +105,8 @@ class Solves {
     public static function getImgPath(){return Solves::$IMG_PATH;}
     public static function getImgPathLogo(){return Solves::$IMG_PATH_LOGO;}
     public static function getSiteIcone(){return Solves::$IMG_PATH_LOGO.'favicon-32x32.png';}
+    public static function getSiteContext(){return Solves::$SITE_CONTEXT;}
+    public static function getSiteDir(){return Solves::$SITE_DIR;}
 
     public static function getCompleteImgPath(){
         return self::getCompleteUrlPath(Solves::getImgPath());
@@ -531,11 +537,11 @@ class Solves {
 	    return (preg_match("/^".$startPart."/", $string));
 	}
 	public static function validaEmail($mail){
-	    if(preg_match("/^([[:alnum:]_.-]){3,}@([[:lower:][:digit:]_.-]{3,})(.[[:lower:]]{2,3})(.[[:lower:]]{2})?$/", $mail)) {
-	        return true;
-	    }else{
-	        return false;
-	    }
+	    //if(preg_match("/^([[:alnum:]_.-]){3,}@([[:lower:][:digit:]_.-]{3,})(.[[:lower:]]{2,3})(.[[:lower:]]{2})?$/", $mail)) 
+		if(filter_var($mail, FILTER_VALIDATE_EMAIL)){
+			return true;
+		}
+		return false;
 	}
 	public static function getUrlNormalizada($string) {
 	    $string = Solves::removeAcentos($string);

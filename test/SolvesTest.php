@@ -103,4 +103,18 @@ class SolvesTest extends TestCase {
 		}
 
 	}
+	public function testValidaEmail(){
+		$params = array('dev@compartilhatube.com.br','dev@compartilhatube.com', 'dev@compartilhatube','dev-compartilhatube.com.br');
+		$expected = array(true, true, false, false);
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$s = \Solves\Solves::validaEmail($p);
+			if($expected[$i]){
+				$this->assertTrue($s, 'E-mail ['.$p.'] esperava ser considerado VÁLIDO. ['.($expected[$i]?'S':'N').']['.($s?'S':'N').']');
+			}else{
+				$this->assertFalse($s, 'E-mail ['.$p.'] esperava ser considerado INVÁLIDO. ['.($expected[$i]?'S':'N').']['.($s?'S':'N').']');
+			}
+		}
+	}
 }
