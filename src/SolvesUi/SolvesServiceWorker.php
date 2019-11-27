@@ -13,8 +13,8 @@ class SolvesServiceWorker {
         $script = '
 const CACHE = "'.\SolvesUi\SolvesUi::getCacheUiVersion().'";
 const precacheFiles = [
-    "/offline",
-    "/manifest.webmanifest"';
+    "'.\Solves\Solves::getRelativePath('offline').'",
+    "'.\Solves\Solves::getRelativePath('manifest.webmanifest').'"';
 
 /*CSS*/
     $cssFilePaths = \SolvesUi\SolvesUi::getCssFilePaths();
@@ -27,7 +27,7 @@ const precacheFiles = [
     $jsFilePaths = \SolvesUi\SolvesUi::getScriptFilePaths();
     foreach($jsFilePaths as $js){
         $jsFilePath = \SolvesUi\SolvesUi::getSingleScriptFilePath($js);
-        if("/sw_register.js"==$jsFilePath || "/sw.js"==$jsFilePath || "https://www.youtube.com/iframe_api"==$jsFilePath){
+        if(\Solves\Solves::getRelativePath('sw_register.js')==$jsFilePath || \Solves\Solves::getRelativePath('sw.js')==$jsFilePath || "https://www.youtube.com/iframe_api"==$jsFilePath){
             continue;
         }
         $script .= ', "'.$jsFilePath.'"';
@@ -35,9 +35,21 @@ const precacheFiles = [
 
 $script .= '
 ];
-const offlineFallbackPage = "/offline";
-const networkFirstPaths = ["/admin","/rest","/controller","/sw.js","/sw_register.js"];
-const avoidCachingPaths = ["/admin","/rest","/controller","/sw.js","/sw_register.js"];
+const offlineFallbackPage = "'.\Solves\Solves::getRelativePath('offline').'";
+const networkFirstPaths = [
+            "'.\Solves\Solves::getRelativePath('admin').'",
+            "'.\Solves\Solves::getRelativePath('rest').'",
+            "'.\Solves\Solves::getRelativePath('controller').'",
+            "'.\Solves\Solves::getRelativePath('sw.js').'",
+            "'.\Solves\Solves::getRelativePath('sw_register.js').'"
+            ];
+const avoidCachingPaths = [
+            "'.\Solves\Solves::getRelativePath('admin').'",
+            "'.\Solves\Solves::getRelativePath('rest').'",
+            "'.\Solves\Solves::getRelativePath('controller').'",
+            "'.\Solves\Solves::getRelativePath('sw.js').'",
+            "'.\Solves\Solves::getRelativePath('sw_register.js').'"
+            ];
 let newWorker;
 
 function pathComparer(requestUrl, pathRegEx) {

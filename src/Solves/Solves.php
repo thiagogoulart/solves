@@ -45,6 +45,7 @@ class Solves {
 	private static $SYSTEM_MODE = 'DEV';
 	private static $DEFAULT_CHARSET = '';
 	private static $MODO_SOON_ATIVADO = false;
+	private static $MODO_DEBUG = false;
 
 	private static $APP_GOOGLE_PLAY_STORE_LINK = '';
 	private static $APP_APPLE_STORE_LINK = '';
@@ -151,6 +152,9 @@ class Solves {
 	public static function setProdMode() {Solves::$SYSTEM_MODE=SYSTEM_MODE_PROD;}
 	public static function isModoSoon() {return Solves::$MODO_SOON_ATIVADO;}
 	public static function setModoSoon() {Solves::$MODO_SOON_ATIVADO=true;}
+
+	public static function isDebugMode() {return Solves::$MODO_DEBUG;}
+	public static function setDebugMode() {Solves::$MODO_DEBUG=true;}
 
 	public static function isNotBlank($n) {
 	    return (isset($n) && $n !== 'null' && $n !== null && $n !== "" && $n !== " ");

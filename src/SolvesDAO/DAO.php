@@ -11,7 +11,6 @@ namespace SolvesDAO;
 
 class DAO {
 	
-	private static $DEBUG=false;
 	private $connection;
 	
 	private $tabela;
@@ -37,7 +36,7 @@ class DAO {
 	/*Colunas que não devem estar presentes no retorno da consulta */
 	private $arrIdsColunasSensiveis = array();
 
-	public static $NULL_TIMESTAMP = '0000-00-00 00:00:00';
+	public static $NULL_TIMESTAMP = null;
 	
 	public function __construct(){
 		$this->colunas = array();
@@ -1030,7 +1029,7 @@ class DAO {
 						}
 					}else{
 						$this->msgError .= $this->getBdConnection()->error;
-						$erro = $this->msgError.(self::$DEBUG ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.".</div>" : "");
+						$erro = $this->msgError.(\Solves\Solves::isDebugMode() ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.".</div>" : "");
 						$this->rollbackTransaction();
 						throw new \Exception($erro);
 					}
@@ -1045,7 +1044,7 @@ class DAO {
 			}catch (\Exception $e) {
 				$result = false;
 				$this->msgError .= $this->getBdConnection()->error;
-				$erro = $this->msgError.(self::$DEBUG ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.".</div>" : "");
+				$erro = $this->msgError.(\Solves\Solves::isDebugMode() ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.".</div>" : "");
 				$this->rollbackTransaction();
 				throw new \Exception($erro);
 			}

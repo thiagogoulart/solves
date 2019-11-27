@@ -19,19 +19,19 @@ abstract class SolvesObject {
     public static $PAGINACAO_QTD = 20;
 
     /**Common atributes */
-	protected $created_at= '0000-00-00 00:00:00';
+	protected $created_at= null;
 	protected $created_atLabel;
-	protected $updated_at= '0000-00-00 00:00:00';
+	protected $updated_at= null;
 	protected $updated_atLabel;
 	protected $ativo;
 	protected $ativoLabel;
-	protected $ativo_at= '0000-00-00 00:00:00';
+	protected $ativo_at= null;
 	protected $ativo_atLabel;
-	protected $inativo_at= '0000-00-00 00:00:00';
+	protected $inativo_at= null;
 	protected $inativo_atLabel;
 	protected $removed;
 	protected $removedLabel;
-	protected $removed_at= '0000-00-00 00:00:00';
+	protected $removed_at= null;
 	protected $removed_atLabel;
 
 	protected $arrIdsColunasSensiveis = array();
