@@ -53,5 +53,17 @@ class SolvesTimeTest extends TestCase {
 			$this->assertEquals($expected[$i], $s, 'inicial ['.$p.'], final ['.$d.'], resultou em qtd dias ['.$s.']. Qtd de dias não ficou como esperada:'.$expected[$i]);
 		}
 	}
+	public function testAddGetTimestampFormated(){
+		$params = array('2019-11-18T21:53:23.000Z','09/10/2019 07:38:00','09/10/2019 07:38:05','2019-10-09 07:38','09/10/2019 07:38');
+		$expected = array('2019-11-18 21:53:23','2019-10-09 07:38:00','2019-10-09 07:38:05','2019-10-09 07:38','2019-10-09 07:38');
+
+		//Solves\SolvesTime::addDiasToTimestamp('2019-11-08', '30')
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$s = \Solves\SolvesTime::getTimestampFormated($p);
+			$this->assertEquals($expected[$i], $s, 'String ['.$p.'], resultou em Timestamp ['.$s.']. Timestamp não ficou como esperada:'.$expected[$i]);
+		}
+	}
 
 }

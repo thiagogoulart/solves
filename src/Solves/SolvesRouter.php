@@ -325,10 +325,10 @@ class SolvesRouter {
             $query_params[$key] = urldecode($val);
         }
         $this->dados = $query_params["dados"];
-        $this->token = $query_params["token"];
-        $this->userData = $query_params["userData"];
-        $this->perfil = $query_params["perfil"];
-        $this->usuario = $query_params["usuario"];
+        $this->token = (array_key_exists("token", $query_params)? $query_params["token"] : null);
+        $this->userData = (array_key_exists("userData", $query_params)? $query_params["userData"] : null);
+        $this->perfil = (array_key_exists("perfil", $query_params)? $query_params["perfil"] : null);
+        $this->usuario = (array_key_exists("usuario", $query_params)? $query_params["usuario"] : null);
     }
     private function extractData(){
         $this->dados = json_decode(utf8_encode($this->dados), false);

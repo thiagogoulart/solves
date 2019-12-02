@@ -184,10 +184,18 @@ class SolvesTime {
     }
     public static function getTimestampFormated($data) {
         if (\Solves\Solves::isNotBlank($data)) {
-            $dia = substr($data, 0, 2);
-            $mes = substr($data, 3, 2);
-            $ano = substr($data, 6, 4);
-            $horas = (strlen($data)>10 ? ' '.substr($data, 11, (strlen($data)>16 ? 5:8)) : '');
+            $padraoUsa = (\Solves\Solves::isNumerico($data[2]));
+            if($padraoUsa){
+                $dia = substr($data, 8, 2);
+                $mes = substr($data, 5, 2);
+                $ano = substr($data, 0, 4);
+                $horas = (strlen($data)>10 ? ' '.substr($data, 11, 8) : '');
+            }else{
+                $dia = substr($data, 0, 2);
+                $mes = substr($data, 3, 2);
+                $ano = substr($data, 6, 4);
+                $horas = (strlen($data)>10 ? ' '.substr($data, 11, 8) : '');
+            }
 
             $str = $ano . "-" . $mes . "-" . $dia.$horas;
         } else {
