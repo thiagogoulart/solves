@@ -38,17 +38,24 @@ class SolvesGoogleApi {
         return SolvesGoogleApi::$YOUTUBE_API_KEYS;
     }
     public static function getAvailableKey(){
-        if(isset(SolvesGoogleApi::$YOUTUBE_API_KEYS)){
-            $key = SolvesGoogleApi::$YOUTUBE_API_KEYS[SolvesGoogleApi::$YOUTUBE_API_KEY_LAST_USED];
+        if(isset(self::$YOUTUBE_API_KEYS)){
+            $key = self::$YOUTUBE_API_KEYS[self::$YOUTUBE_API_KEY_LAST_USED];
             $key->addQuota();
-            SolvesGoogleApi::$YOUTUBE_API_KEYS[SolvesGoogleApi::$YOUTUBE_API_KEY_LAST_USED] = $key;
-            SolvesGoogleApi::$YOUTUBE_API_KEY_LAST_USED++;
-            if(SolvesGoogleApi::$YOUTUBE_API_KEY_LAST_USED>SolvesGoogleApi::$YOUTUBE_API_KEY_MAX_INDEX){
-                SolvesGoogleApi::$YOUTUBE_API_KEY_LAST_USED = 0;
+            self::$YOUTUBE_API_KEYS[self::$YOUTUBE_API_KEY_LAST_USED] = $key;
+            self::$YOUTUBE_API_KEY_LAST_USED++;
+            if(self::$YOUTUBE_API_KEY_LAST_USED>self::$YOUTUBE_API_KEY_MAX_INDEX){
+                self::$YOUTUBE_API_KEY_LAST_USED = 0;
+            }
+            if($key->isExceeded()){
+                return null;
             }
             return $key;
         }
         return null;
+    }
+    public static function setErroQuotaKey($keyName){
+        $key = self::$YOUTUBE_API_KEYS[$keyName];
+        $key->setQuotaExceeded();
     }
 
 
@@ -144,7 +151,7 @@ class SolvesGoogleApi {
                     foreach ($jsonDados->items as $item){
                         if(@$item->snippet->channelId != null){
                             
-                            $avatar = @$item->snippet->thumbnails->medium->url;
+                            $avatar = @$item->snippet->thumbnails->high->url;
                             $youtube_id = @$item->snippet->channelId;
                             $nome = @$item->snippet->title;
                             
@@ -159,7 +166,7 @@ class SolvesGoogleApi {
                             
                         } else if(@$item->id != null){
                             //print_r($item);
-                            $avatar = @$item->snippet->thumbnails->medium->url;
+                            $avatar = @$item->snippet->thumbnails->high->url;
                             $youtube_id = @$item->id;
                             $nome = @$item->snippet->title;
                             
@@ -175,6 +182,9 @@ class SolvesGoogleApi {
                     }
                 }else if(property_exists($jsonDados, 'error') && count($jsonDados->error->errors) > 0){
                     SolvesGoogleApi::logError('Resposta  de ERRO da URL ['.$URL.']:'.$jsonDados->error->errors);
+                    if($jsonDados->error->errors[0]->reason== "dailyLimitExceeded"){
+                        self::setErroQuotaKey($key);
+                    }
                 }else{
                     SolvesGoogleApi::logError('Não recebemos resposta da URL ['.$URL.'], $jsonDados:['.json_encode($jsonDados).']');
                 }
@@ -209,6 +219,7 @@ class SolvesGoogleApi {
                         $lDadosVideo["title"] = $item->snippet->title;
                         $lDadosVideo["description"] = $item->snippet->description;
                         $lDadosVideo["thumbnail"] = $item->snippet->thumbnails->medium->url;
+                        $lDadosVideo["thumbnail_high"] = $item->snippet->thumbnails->high->url;
                         $dadosVideo[] = $lDadosVideo;
                     } 
                 }
@@ -324,11 +335,17 @@ class SolvesYoutubeApiKey{
     public function getYoutubeApiUrlSearchVideo($canal, $limit){return $this->YOUTUBE_API_URL_SEARCH_VIDEO. urlencode($canal) . '&maxResults='.$limit; }
 
     public function addQuota(){
-        if($this->quotaDay==null || \Solves\SolvesTime::getDataAtual()!=$this->quotaDay){
+        if($this->quotaDay==null ||  $this->quotaUsed || \Solves\SolvesTime::getDataAtual()!=$this->quotaDay){
             $this->quotaDay = \Solves\SolvesTime::getDataAtual();
             $this->quotaUsed=0;
         }
         $this->quotaUsed++;
+    }
+    public function setQuotaExceded(){
+        $this->quotaUsed = self::LIMIT_QUOTA_PER_DAY;
+    }
+    public function isExceeded(){
+        return self::LIMIT_QUOTA_PER_DAY<=$this->quotaUsed;
     }
 
     public function __toString(){
