@@ -94,6 +94,17 @@ class SolvesConf {
     }
 
 
+    /** Configuração dados de ResponsiveFileManager */
+    /** @var \Solves\SolvesConfResponsiveFileManager */
+    private static $SOLVES_CONF_RESPONSIVE_FILEMANAGER;
+    public static function setSolvesConfResponsiveFileManager(\Solves\SolvesConfResponsiveFileManager $confresponsiveFilemanager){
+        self::$SOLVES_CONF_RESPONSIVE_FILEMANAGER = $confresponsiveFilemanager;
+    }
+    public static function getSolvesConfResponsiveFileManager() :\Solves\SolvesConfNotifications {
+        return self::$SOLVES_CONF_RESPONSIVE_FILEMANAGER;
+    }
+
+
     public static function build(){
         \Solves\Solves::config(self::$SOLVES_CONF_IDENTIFICACAO->getSystemName(),
             self::$SOLVES_CONF_IDENTIFICACAO->getVersao(),
@@ -103,6 +114,7 @@ class SolvesConf {
             self::$SOLVES_CONF_IDENTIFICACAO->getSiteKeys(),
             self::$SOLVES_CONF_URLS::IMG,
             self::$SOLVES_CONF_URLS::IMG_LOGO);
+        \Solves\Solves::setRootPathOrModule(self::$SOLVES_CONF_URLS->getSolvesConfUrl()->getSiteContext());
         if(\Solves\Solves::isNotBlank(self::$SOLVES_CONF_IDENTIFICACAO->getSiteAuthor())) {
             \SolvesUi\SolvesCabecalho::setAuthor(self::$SOLVES_CONF_IDENTIFICACAO->getSiteAuthor());
         }
@@ -748,6 +760,158 @@ class SolvesConfUrls{
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getHost(): string
+    {
+        return $this->host;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAcessoRestritoTipo(): string
+    {
+        return $this->acessoRestritoTipo;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isModoSoonAtivado(): bool
+    {
+        return $this->modoSoonAtivado;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnix(): bool
+    {
+        return $this->unix;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPathRoot()
+    {
+        return $this->pathRoot;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPathRootRelative()
+    {
+        return $this->pathRootRelative;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublicFolderRelative(): string
+    {
+        return $this->publicFolderRelative;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicFolder()
+    {
+        return $this->publicFolder;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublicFolderImagesName(): string
+    {
+        return $this->publicFolderImagesName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicFolderImagesRelative()
+    {
+        return $this->publicFolderImagesRelative;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicFolderImages()
+    {
+        return $this->publicFolderImages;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublicFolderThumbsName(): string
+    {
+        return $this->publicFolderThumbsName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicFolderThumbsRelative()
+    {
+        return $this->publicFolderThumbsRelative;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicFolderThumbs()
+    {
+        return $this->publicFolderThumbs;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublicFolderDocsName(): string
+    {
+        return $this->publicFolderDocsName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicFolderDocsRelative()
+    {
+        return $this->publicFolderDocsRelative;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicFolderDocs()
+    {
+        return $this->publicFolderDocs;
+    }
+
+    /**
+     * @return SolvesConfIdentificacao
+     */
+    public function getSolvesConfIdentificacao(): SolvesConfIdentificacao
+    {
+        return $this->solvesConfIdentificacao;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolvesConfUrlAtivo()
+    {
+        return $this->solvesConfUrlAtivo;
+    }
+    
 }
 class SolvesConfBD{
 
@@ -1328,3 +1492,40 @@ class SolvesConfNotifications{
     }
 
 }
+class SolvesConfResponsiveFileManager{
+
+    private $dir;
+    private $url;
+    private $privateKey;
+
+    /** @type \Solves\SolvesConfUrls */
+    private $solvesConfUrls;
+
+     /**
+     * SolvesConfNotifications constructor.
+     * @param \Solves\SolvesConfUrls $solvesConfUrls
+     * @param $dir
+     * @param $url
+     * @param $privateKey
+     */
+    public function __construct(\Solves\SolvesConfUrls $solvesConfUrls, $dir, $url, $privateKey)
+    {
+        $this->solvesConfUrls = $solvesConfUrls;
+        $this->dir = $solvesConfUrls->getPathRaiz().$dir;
+        $this->url = $solvesConfUrls->getUrlRaiz().$url;
+        $this->privateKey = $privateKey;
+    }
+
+        
+    function getUrlSelectImage($fieldElmId, $isMultiple=true){
+      return $this->url.'dialog.php?crossdomain=1&amp;type=1&amp;fldr='.$this->solvesConfUrls->getPublicFolderImagesName().'&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
+    }
+    function getUrlSelectFile($fieldElmId, $isMultiple=true){
+      return $this->url.'dialog.php?crossdomain=1&amp;type=2&amp;fldr='.$this->solvesConfUrls->getPublicFolderDocsName().'&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
+    }
+    function getUrlSelectAll($fieldElmId, $isMultiple=true){
+      return $this->url.'dialog.php?crossdomain=1&amp;type=2&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
+    }
+
+}
+?>

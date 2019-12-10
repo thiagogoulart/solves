@@ -106,6 +106,7 @@ class Solves {
     public static function getImgPath(){return Solves::$IMG_PATH;}
     public static function getImgPathLogo(){return Solves::$IMG_PATH_LOGO;}
     public static function getSiteIcone(){return Solves::$IMG_PATH_LOGO.'favicon-32x32.png';}
+    public static function getCompleteSiteIcone(){return self::getCompleteUrlPath(Solves::$IMG_PATH_LOGO.'favicon-32x32.png');}
     public static function getSiteContext(){return Solves::$SITE_CONTEXT;}
     public static function getSiteDir(){return Solves::$SITE_DIR;}
 
@@ -146,11 +147,11 @@ class Solves {
     public static function getWindowsStoreLink(){return Solves::$APP_WINDOWS_STORE_LINK;}
     public static function setWindowsStoreLink($p){Solves::$APP_WINDOWS_STORE_LINK = $p;}
 
-	public static function isDevMode() {return (self::SYSTEM_MODE_DEV==Solves::$SYSTEM_MODE);}
-	public static function isProdMode() {return (self::SYSTEM_MODE_PROD==Solves::$SYSTEM_MODE);}
+	public static function isDevMode() :bool {return (self::SYSTEM_MODE_DEV==Solves::$SYSTEM_MODE);}
+	public static function isProdMode() :bool {return (self::SYSTEM_MODE_PROD==Solves::$SYSTEM_MODE);}
 	public static function setDevMode() {Solves::$SYSTEM_MODE=self::SYSTEM_MODE_DEV;}
 	public static function setProdMode() {Solves::$SYSTEM_MODE=self::SYSTEM_MODE_PROD;}
-	public static function isModoSoon() {return Solves::$MODO_SOON_ATIVADO;}
+	public static function isModoSoon() :bool {return Solves::$MODO_SOON_ATIVADO;}
 	public static function setModoSoon() {Solves::$MODO_SOON_ATIVADO=true;}
 
 	public static function isDebugMode() {return Solves::$MODO_DEBUG;}
