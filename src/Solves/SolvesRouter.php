@@ -458,36 +458,34 @@ class SolvesRouter {
                 }else{ 
                   $CONNECTION = \SolvesDAO\SolvesDAO::openConnection();  
 
+                  include $this->navInside."includes/cabecalho.php";
                   if($this->incluiTopo){
-                    include $this->navInside."includes/topo.php";
+                    include $this->navInside."includes/web/restrito/topo.php";
                   }else if($this->incluiTopoPublic){
-                    include $this->navInside."includes/topoPublic.php";
+                    include $this->navInside."includes/web/topo.php";
                   }else if($this->incluiTopoApp){
-                    include $this->navInside."includes/topoApp.php";
+                    include $this->navInside."includes/app/restrito/topo.php";
                   }else if($this->incluiTopoAppPublic){
-                    include $this->navInside."includes/topoAppPublic.php";
+                    include $this->navInside."includes/app/topo.php";
                   }else if($this->IS_SOON_PAGE){
-                    include $this->navInside."includes/topo_soon.php";
-                  }else{
-                    include $this->navInside."includes/cabecalho.php";
+                    include $this->navInside."includes/soon/topo.php";
                   }
 
                   //MAIN INCLUSION
                   include $this->getPagInclude();
 
                   if($this->incluiTopo){
-                    include $this->navInside."includes/rodape.php";
+                    include $this->navInside."includes/web/restrito/rodape.php";
                   }else if($this->incluiTopoPublic){
-                    include $this->navInside."includes/rodapePublic.php";
+                    include $this->navInside."includes/web/rodape.php";
                   }else if($this->incluiTopoApp){
-                    include $this->navInside."includes/rodapeApp.php";
+                    include $this->navInside."includes/app/restrito/rodape.php";
                   }else if($this->incluiTopoAppPublic){
-                    include $this->navInside."includes/rodapeAppPublic.php";
+                    include $this->navInside."includes/app/rodape.php";
                   }else if($this->IS_SOON_PAGE){
-                    include $this->navInside."includes/rodape_soon.php";
-                  }else{
-                    include $this->navInside."includes/includes_js.php";
+                    include $this->navInside."includes/soon/rodape.php";
                   }
+                  include $this->navInside."includes/includes_js.php";
 
                   //FECHA A CONEXãO COM O BANCO
                   \SolvesDAO\SolvesDAO::closeConnection($CONNECTION);

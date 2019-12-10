@@ -20,27 +20,12 @@ class SolvesDAOConnection {
 
 	public function __construct() {
 	    $this->BD_CONNECTION = null;
-	    $bd_host = '';
-	    $bd_port = '';
-	    $bd_url = '';
-	    $bd_user = '';
-	    $bd_passwd = '';
-	    $bd_database = '';
-	    if (\Solves\Solves::isDevMode()) {
-	        $bd_host = SolvesDAO::getBdDevHost();
-	        $bd_port = SolvesDAO::getBdDevPort();
-	        $bd_url = SolvesDAO::getBdDevUrl();
-	        $bd_user = SolvesDAO::getBdDevUser();
-	        $bd_passwd = SolvesDAO::getBdDevPassword();
-	        $bd_database = SolvesDAO::getBdDevDatabase();
-	    } else if (\Solves\Solves::isProdMode()) {
-            $bd_host = SolvesDAO::getBdProdHost();
-            $bd_port = SolvesDAO::getBdProdPort();
-            $bd_url = SolvesDAO::getBdProdUrl();
-            $bd_user = SolvesDAO::getBdProdUser();
-            $bd_passwd = SolvesDAO::getBdProdPassword();
-            $bd_database = SolvesDAO::getBdProdDatabase();
-	    }
+		$bd_host = SolvesDAO::getBdHost();
+		$bd_port = SolvesDAO::getBdPort();
+		$bd_url = SolvesDAO::getBdUrl();
+		$bd_user = SolvesDAO::getBdUser();
+		$bd_passwd = SolvesDAO::getBdPassword();
+		$bd_database = SolvesDAO::getBdDatabase();
 	    $this->BD_CONNECTION = self::connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database);
 	    if(SolvesDAO::isDebug()){
 	    	echo '[$bd_host:'.$bd_host.'], [$bd_port:'.$bd_port.'], [$bd_url:'.$bd_url.'], [$bd_user:'.$bd_user.'], [$bd_passwd:'.$bd_passwd.'], [$bd_database:'.$bd_database.']';

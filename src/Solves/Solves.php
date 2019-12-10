@@ -72,8 +72,8 @@ class Solves {
     public static function configMail($emailHost, $emailPort, $emailRemetente, $emailRemetentePasswd, $emailRemetenteFromLabel){
     	SolvesMail::config($emailHost, $emailPort, $emailRemetente, $emailRemetentePasswd, $emailRemetenteFromLabel);
     }
-    public static function configDAO($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase, $bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase){
-    	SolvesDAO::config($bdDevHost, $bdDevPort, $bdDevUrl, $bdDevUser, $bdDevPassword, $bdDevDatabase,$bdProdHost, $bdProdPort, $bdProdUrl, $bdProdUser, $bdProdPassword, $bdProdDatabase);
+    public static function configDAO($bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase){
+    	SolvesDAO::config($bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
     }
     public static function configNotifications($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId){
     	SolvesNotification::config($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId);
@@ -146,10 +146,10 @@ class Solves {
     public static function getWindowsStoreLink(){return Solves::$APP_WINDOWS_STORE_LINK;}
     public static function setWindowsStoreLink($p){Solves::$APP_WINDOWS_STORE_LINK = $p;}
 
-	public static function isDevMode() {return (SYSTEM_MODE_DEV==Solves::$SYSTEM_MODE);}
-	public static function isProdMode() {return (SYSTEM_MODE_PROD==Solves::$SYSTEM_MODE);}
-	public static function setDevMode() {Solves::$SYSTEM_MODE=SYSTEM_MODE_DEV;}
-	public static function setProdMode() {Solves::$SYSTEM_MODE=SYSTEM_MODE_PROD;}
+	public static function isDevMode() {return (self::SYSTEM_MODE_DEV==Solves::$SYSTEM_MODE);}
+	public static function isProdMode() {return (self::SYSTEM_MODE_PROD==Solves::$SYSTEM_MODE);}
+	public static function setDevMode() {Solves::$SYSTEM_MODE=self::SYSTEM_MODE_DEV;}
+	public static function setProdMode() {Solves::$SYSTEM_MODE=self::SYSTEM_MODE_PROD;}
 	public static function isModoSoon() {return Solves::$MODO_SOON_ATIVADO;}
 	public static function setModoSoon() {Solves::$MODO_SOON_ATIVADO=true;}
 
