@@ -102,7 +102,7 @@ class SolvesConf {
             self::$SOLVES_CONF_IDENTIFICACAO->getSiteDesc(),
             self::$SOLVES_CONF_IDENTIFICACAO->getSiteKeys(),
             self::$SOLVES_CONF_URLS::IMG,
-            self::$SOLVES_CONF_URLS::IMG.'logo/');
+            self::$SOLVES_CONF_URLS::IMG_LOGO);
         if(\Solves\Solves::isNotBlank(self::$SOLVES_CONF_IDENTIFICACAO->getSiteAuthor())) {
             \SolvesUi\SolvesCabecalho::setAuthor(self::$SOLVES_CONF_IDENTIFICACAO->getSiteAuthor());
         }
@@ -422,7 +422,7 @@ class SolvesConfUrl{
         $this->urlRaiz = $urlRaiz;
 
         $this->siteDir = $this->siteUrl;
-        $this->siteUrl = ($this->useHttps ?'https://':'http://').$this->siteDir;
+        $this->siteUrl = ($this->useHttps ?'https://':'http://').$this->siteDir.$this->siteContext;
         if(\Solves\Solves::isNotBlank($this->restUrl)){
             $this->restUrl = (($this->restUseHttps ?'https://':'http://').$this->restUrl);
         }else{
@@ -552,6 +552,7 @@ class SolvesConfUrls{
     const SYSTEM_MODE_PROD = 'PROD';
 
     const IMG ='/assets/img/';
+    const IMG_LOGO ='/assets/img/logo/';
     const CSS ='/assets/css/';
     const JS = '/assets/js/';
 
