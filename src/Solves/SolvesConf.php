@@ -553,7 +553,14 @@ class SolvesConfUrl{
         return $this->urlRaiz;
     }
 
-    public function checkIfIsThisEnvironment($host) :bool {return ($host==$this->siteUrl);}
+    public function checkIfIsThisEnvironment($host) :bool {
+        if($host==$this->siteDir){
+            return true;
+        }
+        $islocal = ('127.0.0.1'==$host || 'localhost'==$host);
+        $islocalServer = ('127.0.0.1'==$this->siteDir || 'localhost'==$this->siteDir);
+        return ($islocal && $islocalServer);
+    }
 
 }
 class SolvesConfUrls{
@@ -653,21 +660,27 @@ class SolvesConfUrls{
     public function setSolvesConfUrlDev(\Solves\SolvesConfUrl $solvesConfUrlDev){
         $this->solvesConfUrlDev = $solvesConfUrlDev;
         $this->isModeDev = $this->solvesConfUrlDev->checkIfIsThisEnvironment($this->host);
-        $this->fillAttrs($this->solvesConfUrlDev);
+        if($this->isModeDev){
+            $this->fillAttrs($this->solvesConfUrlDev);
+        }
     }
 
     public function getSolvesConfUrlHml() :\Solves\SolvesConfUrl {return $this->solvesConfUrlHml;}
     public function setSolvesConfUrlHml(\Solves\SolvesConfUrl $solvesConfUrlHml){
         $this->solvesConfUrlHml = $solvesConfUrlHml;
         $this->isModeHml = $this->solvesConfUrlHml->checkIfIsThisEnvironment($this->host);
-        $this->fillAttrs($this->solvesConfUrlHml);
+        if($this->isModeHml){
+            $this->fillAttrs($this->solvesConfUrlHml);
+        }
     }
 
     public function getSolvesConfUrlProd() :\Solves\SolvesConfUrl {return $this->solvesConfUrlProd;}
     public function setSolvesConfUrlProd(\Solves\SolvesConfUrl $solvesConfUrlProd){
         $this->solvesConfUrlProd = $solvesConfUrlProd;
         $this->isModeProd = $this->solvesConfUrlProd->checkIfIsThisEnvironment($this->host);
-        $this->fillAttrs($this->solvesConfUrlProd);
+        if($this->isModeProd){
+            $this->fillAttrs($this->solvesConfUrlProd);
+        }
     }
 
     public function fillAttrs(\Solves\SolvesConfUrl $solvesConfUrl){
