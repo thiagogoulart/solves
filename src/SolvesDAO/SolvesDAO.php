@@ -39,6 +39,7 @@ class SolvesDAO {
 	    SolvesDAO::setBdUser($bdUser);
 	    SolvesDAO::setBdPassword($bdPassword);
 	    SolvesDAO::setBdDatabase($bdDatabase);
+	    SolvesDAO::$DEBUG = \Solves\Solves::isDebugMode();
     }
     public static function setSystemDbTypeMySql(){SolvesDAO::$SYSTEM_DB_TYPE = self::SYSTEM_DB_TYPE_MYSQL;}
     public static function setSystemDbTypePostgresql(){SolvesDAO::$SYSTEM_DB_TYPE = self::SYSTEM_DB_TYPE_POSTGRESQL;}
