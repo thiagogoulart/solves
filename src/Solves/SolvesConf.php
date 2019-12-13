@@ -163,7 +163,9 @@ class SolvesConf {
                 self::$SOLVES_CONF_UI->getUiThemeBackgroundColor(), 
                 self::$SOLVES_CONF_UI->getUiThemeColor(),
                 self::$SOLVES_CONF_UI->getUiVersion());
-
+            if(\Solves\Solves::isNotBlank(self::$SOLVES_CONF_UI->getLogoOnLoading())){
+                \SolvesUi\SolvesCabecalho::setLogoOnLoading(self::$SOLVES_CONF_UI->getLogoOnLoading());
+            }
             \SolvesUi\SolvesCabecalho::config(self::$SOLVES_CONF_UI->getScriptAnalytics());
         }
     }
@@ -310,6 +312,7 @@ class SolvesConfUi{
     private $scriptsFilePaths = array();
     private $cssFilePaths = array();
     private $scriptAnalytics='';
+    private $logoOnLoading='';
 
     /**
      * SolvesUi constructor.
@@ -399,6 +402,20 @@ class SolvesConfUi{
     public function setScriptAnalytics(string $scriptAnalytics): SolvesConfUi
     {
         $this->scriptAnalytics = $scriptAnalytics;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogoOnLoading(){return $this->logoOnLoading;}
+
+    /**
+     * @param string $logo
+     * @return SolvesConfUi
+     */
+    public function setLogoOnLoading($logo){
+        $this->logoOnLoading = $logo;
         return $this;
     }
 
