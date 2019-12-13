@@ -72,8 +72,8 @@ class Solves {
     public static function configMail($emailHost, $emailPort, $emailRemetente, $emailRemetentePasswd, $emailRemetenteFromLabel){
     	SolvesMail::config($emailHost, $emailPort, $emailRemetente, $emailRemetentePasswd, $emailRemetenteFromLabel);
     }
-    public static function configDAO($bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase){
-    	SolvesDAO::config($bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
+    public static function configDAO($systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase){
+    	SolvesDAO::config($systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
     }
     public static function configNotifications($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId){
     	SolvesNotification::config($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId);
@@ -87,7 +87,7 @@ class Solves {
     public static function setSiteTitulo($p){Solves::$SITE_TITULO = $p;}
     public static function setSiteUrl($p){Solves::$SITE_URL = $p;}
     public static function setRestUrl($p){Solves::$REST_URL = $p;}
-    public static function setAppUrl($p){Solves::$APP_URL = (Solves::isNotBlank($p)?$p:Solves::$SITE_URL);}
+    public static function setAppUrl($p){Solves::$APP_URL = (Solves::isNotBlank($p)?$p:Solves::$SITE_URL.'app/');}
     public static function setSiteDescr($p){Solves::$SITE_DESCR = $p;}
     public static function setSiteKeys($p){Solves::$SITE_KEYS = $p;}
     public static function setImgPath($p){Solves::$IMG_PATH = $p;}

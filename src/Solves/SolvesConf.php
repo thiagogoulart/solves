@@ -143,7 +143,8 @@ class SolvesConf {
                 self::$SOLVES_CONF_IDENTIFICACAO->getSiteTitulo());            
         }
         if(isset(self::$SOLVES_CONF_BD)){
-            \Solves\Solves::configDAO(self::$SOLVES_CONF_BD->getHost(),
+            \Solves\Solves::configDAO(self::$SOLVES_CONF_BD->getSystemDbType(),
+                self::$SOLVES_CONF_BD->getHost(),
                 self::$SOLVES_CONF_BD->getPort(),
                 self::$SOLVES_CONF_BD->getUrl(),
                 self::$SOLVES_CONF_BD->getUser(),
@@ -1006,6 +1007,14 @@ class SolvesConfBD{
         }
         return '';
     }
+    /**
+     * @return string|null
+     */
+    public function getSystemDbType()
+    {
+        return $this->systemDbType;
+    }
+
 
     /**
      * @return string|null

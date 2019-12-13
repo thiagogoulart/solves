@@ -25,7 +25,14 @@ class SolvesDAO {
 
 
 	public static function isDebug(){return SolvesDAO::$DEBUG;}
-	public static function config($bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase){
+	public static function config($systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase){
+		if(self::SYSTEM_DB_TYPE_POSTGRESQL==$systemDbType){
+			SolvesDAO::setSystemDbTypePostgresql();
+		}else if(self::SYSTEM_DB_TYPE_MYSQL==$systemDbType){
+			SolvesDAO::setSystemDbTypeMySql();
+		}else{
+			throw new Exception("Error Processing SolvesDAO. System DB Type not configured.", 1);			
+		}
     	SolvesDAO::setBdHost($bdHost);
 	    SolvesDAO::setBdPort($bdPort);
 	    SolvesDAO::setBdUrl($bdUrl);
@@ -33,10 +40,10 @@ class SolvesDAO {
 	    SolvesDAO::setBdPassword($bdPassword);
 	    SolvesDAO::setBdDatabase($bdDatabase);
     }
-    public static function setSystemDbTypeMySql(){SolvesDAO::$SYSTEM_DB_TYPE = SYSTEM_DB_TYPE_MYSQL;}
-    public static function setSystemDbTypePostgresql(){SolvesDAO::$SYSTEM_DB_TYPE = SYSTEM_DB_TYPE_POSTGRESQL;}
-    public static function isSystemDbTypeMySql(){return SYSTEM_DB_TYPE_MYSQL==SolvesDAO::$SYSTEM_DB_TYPE;}
-    public static function isSystemDbTypePostgresql(){return SYSTEM_DB_TYPE_POSTGRESQL==SolvesDAO::$SYSTEM_DB_TYPE;}
+    public static function setSystemDbTypeMySql(){SolvesDAO::$SYSTEM_DB_TYPE = self::SYSTEM_DB_TYPE_MYSQL;}
+    public static function setSystemDbTypePostgresql(){SolvesDAO::$SYSTEM_DB_TYPE = self::SYSTEM_DB_TYPE_POSTGRESQL;}
+    public static function isSystemDbTypeMySql(){return self::SYSTEM_DB_TYPE_MYSQL==SolvesDAO::$SYSTEM_DB_TYPE;}
+    public static function isSystemDbTypePostgresql(){return self::SYSTEM_DB_TYPE_POSTGRESQL==SolvesDAO::$SYSTEM_DB_TYPE;}
 
     public static function setBdHost($p){SolvesDAO::$BD_HOST = $p;}
     public static function setBdPort($p){SolvesDAO::$BD_PORT = $p;}

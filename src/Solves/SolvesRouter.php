@@ -70,10 +70,14 @@ class SolvesRouter {
 
         $this->navInside = $navInside;
         $this->MODO_SOON_ATIVADO = \Solves\Solves::isModoSoon();
-        $this->requestedPage = $this->_HTTPREQUEST_GET['p'];
+        if(array_key_exists("p", $this->_HTTPREQUEST_GET) && isset($this->_HTTPREQUEST_GET['p'])){
+            $this->requestedPage = $this->_HTTPREQUEST_GET['p'];
+        }
+        $this->requestedPage = '';
+
 
         //Remove da URL o endereço de ROOT /home/...
-        if(\Solves\Solves::isNotBlank($this->requestedPage) && strpos('/'.$this->requestedPage, \Solves\Solves::getPathRaiz())>=0){
+        if(\Solves\Solves::isNotBlank($this->requestedPage) && \Solves\Solves::isNotBlank(\Solves\Solves::getPathRaiz()) && strpos('/'.$this->requestedPage, \Solves\Solves::getPathRaiz())>=0){
           //  echo '['.strpos('/'.$this->requestedPage, \Solves\Solves::getPathRaiz()).']';
          //   echo '$this->requestedPage['.$this->requestedPage.']';
             $new = str_replace(\Solves\Solves::getPathRaiz(), '', '/'.$this->requestedPage);
