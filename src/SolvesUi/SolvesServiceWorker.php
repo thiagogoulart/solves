@@ -77,7 +77,7 @@ self.addEventListener("install", function (event) {
       console.log("[PWA Builder] Caching pages during install");
       return cache.addAll(precacheFiles).then(function () {
         return cache.add(offlineFallbackPage);
-      });
+      }).catch(err => console.log("Error while fetching assets on serviceWorker.", err));
     })
   );
 });

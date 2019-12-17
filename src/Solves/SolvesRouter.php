@@ -70,10 +70,10 @@ class SolvesRouter {
 
         $this->navInside = $navInside;
         $this->MODO_SOON_ATIVADO = \Solves\Solves::isModoSoon();
+        $this->requestedPage = '';
         if(array_key_exists("p", $this->_HTTPREQUEST_GET) && isset($this->_HTTPREQUEST_GET['p'])){
             $this->requestedPage = $this->_HTTPREQUEST_GET['p'];
         }
-        $this->requestedPage = '';
 
 
         //Remove da URL o endereço de ROOT /home/...

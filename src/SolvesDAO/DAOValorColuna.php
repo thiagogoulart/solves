@@ -32,7 +32,7 @@ class DAOValorColuna {
             if($this->column->isTipoBoolean()){
                 $this->valor = 'false';
             }else{
-                throw new \Exception('Coluna '.$this->column->getNome().' é obrigatória.');
+                throw new \Exception('Coluna '.$this->column->getNome().' é obrigatória ['.$this->dao->getTabela().'].');
             }
         }
 		return $this->valor;

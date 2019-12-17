@@ -27,7 +27,7 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
 	protected $aprovado;
 	protected $aprovadoLabel;
 	protected $situacao;
-	protected $data_aprovacao= '0000-00-00 00:00:00';
+	protected $data_aprovacao= null;
 	protected $data_aprovacaoLabel;
 
 	protected $paid_first_name;
