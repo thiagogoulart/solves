@@ -122,7 +122,7 @@ class SolvesConf {
             \SolvesUi\SolvesCabecalho::setTwitterCreator(self::$SOLVES_CONF_IDENTIFICACAO->getTwitterCreator());
         }
         \Solves\Solves::setRestUrl(self::$SOLVES_CONF_URLS->getSolvesConfUrl()->getRestUrl());
-
+        \Solves\Solves::setSiteContext(self::$SOLVES_CONF_URLS->getSolvesConfUrl()->getSiteContext());
         //App Stores
         \Solves\Solves::setGooglePlayStoreLink(self::$SOLVES_CONF_URLS->getAppGooglePlayStoreLink());
         \Solves\Solves::setAppleStoreLink(self::$SOLVES_CONF_URLS->getAppAppleStoreLink());
