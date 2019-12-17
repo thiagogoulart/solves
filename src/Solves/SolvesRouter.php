@@ -442,6 +442,10 @@ class SolvesRouter {
                     $restDetails = $this->restDetails;
                     $restDetailsArr = $this->restDetailsArr;
                     $ROUTER = $this;
+
+                    $SCRIPTS = '';
+                    $SCRIPTS_ONLOAD = '';
+                    $INCLUDE_SCRIPTS_TAGS='';
                 //END TURNING INTO ACESSIBLE VARIABLES
 
                 if($this->isPageController){
