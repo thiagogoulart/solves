@@ -129,7 +129,7 @@ abstract class SolvesObject {
  		return (\Solves\Solves::isNotBlank(\Solves\Solves::removeEspacos($value)) ? $value.', ': '');
  	}
  	protected function getGeneratedShortName($value){
- 		return \Solves\Solves::getUrlNormalizada(strtolower($value));
+ 		return \Solves\Solves::getUrlNormalizada($value);
  	}
  	public static function getClassName() {
         return get_called_class();
