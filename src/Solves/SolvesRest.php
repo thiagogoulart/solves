@@ -115,6 +115,7 @@ abstract class SolvesRest {
     public function findByFiltros(){
     	$classe = $this->classeObject;
         $p = new $classe($this->getConnection());
+		$dados = $this->router->getDados();
         $arr = $p->findArrayByFiltros($this->getUser()->getId(), $dados);
         if(isset($arr) && count($arr)>0){
             $json = \Solves\SolvesJson::arrayFromDaoToJson($arr, $this->getPkName()); 
@@ -258,7 +259,7 @@ abstract class SolvesRest {
 		$this->msg = $msg;
 	}
 	protected function setResultMultiplos($arrJson, $msg='Resultado da busca encontrado com sucesso!'){
-		$this->jsonObjeto = $json;
+		$this->jsonObjeto = '';
 		$i=0;
 		$this->jsonDados = '{';
 		foreach($arrJson as $key=>$valueJson){
