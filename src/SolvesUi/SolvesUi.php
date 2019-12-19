@@ -99,15 +99,18 @@ class SolvesUi {
 
         $s .= $INCLUDE_SCRIPTS_TAGS; 
 
-        $s .= '<script type="text/javascript" defer>';
+        $s .= '<script type="text/javascript">';
         $s .= $SCRIPTS; 
-        $s .= "$(function(){
-            'use strict';".
-            ($IS_APP ? "$.Solves.app = true;" : "").
-            "$.Solves.url = '".$ATUAL_URL."';
-                ".$SCRIPTS_ONLOAD."
+        $s .= "
+
+            window.addEventListener('DOMContentLoaded', function() {
+                    (function($) {
+                         ".($IS_APP ? '$.Solves.app = true;' : '').
+                        "$.Solves.url = '".$ATUAL_URL."';
+                            ".$SCRIPTS_ONLOAD."
+                    })(jQuery);
             });
-        </script>";
+            </script>";
         return $s;
     }
 

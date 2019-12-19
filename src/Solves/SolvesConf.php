@@ -641,6 +641,7 @@ class SolvesConfUrls{
 
     private $jsRest;
     private $jsModel;
+    private $jsView;
     private $cdnApp;
     private $localCdnApp;
 
@@ -667,6 +668,7 @@ class SolvesConfUrls{
 
     public function getJsRest(){return $this->jsRest;}
     public function getJsModel(){return $this->jsModel;}
+    public function getJsView(){return $this->jsView;}
     public function getCdnApp(){return $this->cdnApp;}
     public function getLocalCdnApp(){return $this->localCdnApp;}
 
@@ -713,8 +715,9 @@ class SolvesConfUrls{
 
     public function fillAttrs(\Solves\SolvesConfUrl $solvesConfUrl){
         $this->solvesConfUrlAtivo = $solvesConfUrl;
-        $this->jsRest = $solvesConfUrl->getSiteContext().self::JS.'rest/';
-        $this->jsModel = $solvesConfUrl->getSiteContext().self::JS.'model/';
+        $this->jsRest = $solvesConfUrl->getSiteContext().Solves::removeBarraInicial(self::JS).'rest/';
+        $this->jsModel = $solvesConfUrl->getSiteContext().Solves::removeBarraInicial(self::JS).'model/';
+        $this->jsView = $solvesConfUrl->getSiteContext().Solves::removeBarraInicial(self::JS).'view/';
         $this->pathRootRelative = ('../'.$solvesConfUrl->getSiteDir().'/');
 
         //filling values in Public folders vars
@@ -730,7 +733,7 @@ class SolvesConfUrls{
         //CDN app
         $this->cdnApp = self::SOLVES_CDN.$dirCdnInApp;
         //LOCAL CDN app
-        $this->cdnApp = self::SOLVES_LOCAL_CDN.$dirCdnInApp;
+        $this->localCdnApp = self::SOLVES_LOCAL_CDN.$dirCdnInApp;
 
         //Informa lib Solves
         if($this->isModeProd){
