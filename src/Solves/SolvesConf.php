@@ -601,6 +601,13 @@ class SolvesConfUrls{
     const SOLVES_CDN_IMG = 'https://cdn.solves.com.br/img/';
     const SOLVES_CDN_LIB = 'https://cdn.solves.com.br/lib/';
 
+//Solves LOCAL CDN
+    const SOLVES_LOCAL_CDN = '/vendor/thiagogoulart/solves_cdn/';
+    const SOLVES_LOCAL_CDN_JS = '/vendor/thiagogoulart/solves_cdn/js/';
+    const SOLVES_LOCAL_CDN_CSS = '/vendor/thiagogoulart/solves_cdn/css/';
+    const SOLVES_LOCAL_CDN_IMG = '/vendor/thiagogoulart/solves_cdn/img/';
+    const SOLVES_LOCAL_CDN_LIB = '/vendor/thiagogoulart/solves_cdn/lib/';
+
     private $host;
     private $acessoRestritoTipo;
     private $modoSoonAtivado = false;
@@ -635,6 +642,7 @@ class SolvesConfUrls{
     private $jsRest;
     private $jsModel;
     private $cdnApp;
+    private $localCdnApp;
 
     private $appGooglePlayStoreLink = '';
     private $appAppleStoreLink = '';
@@ -660,6 +668,7 @@ class SolvesConfUrls{
     public function getJsRest(){return $this->jsRest;}
     public function getJsModel(){return $this->jsModel;}
     public function getCdnApp(){return $this->cdnApp;}
+    public function getLocalCdnApp(){return $this->localCdnApp;}
 
     public function getSolvesConfUrl() :\Solves\SolvesConfUrl {
         if($this->isModeProd){
@@ -717,8 +726,11 @@ class SolvesConfUrls{
         $this->publicFolderDocsRelative =  $this->publicFolderRelative.$this->publicFolderDocsName.'/';
         $this->publicFolderDocs = $this->publicFolder.$this->publicFolderDocsName.'/';
 
+        $dirCdnInApp = 'apps/'.$this->solvesConfIdentificacao->getSystemNameCdn().'/'.$this->solvesConfIdentificacao->getVersao().'/';
         //CDN app
-        $this->cdnApp = self::SOLVES_CDN.'apps/'.$this->solvesConfIdentificacao->getSystemNameCdn().'/'.$this->solvesConfIdentificacao->getVersao().'/';
+        $this->cdnApp = self::SOLVES_CDN.$dirCdnInApp;
+        //LOCAL CDN app
+        $this->cdnApp = self::SOLVES_LOCAL_CDN.$dirCdnInApp;
 
         //Informa lib Solves
         if($this->isModeProd){
