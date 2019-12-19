@@ -69,7 +69,7 @@ class SolvesUi {
 
     public static function getScriptFilePaths(){return SolvesUi::$SCRIPT_FILEPATHS;}
     public static function getSingleScriptFilePath($item){return self::getSingleFilePath($item); }
-    public static function getSingleScriptFilePathProperties($item){return (is_array($item) ? $item[1]:  (strpos($item, '/')==0 ?'':'crossorigin="anonymous"'));}
+    public static function getSingleScriptFilePathProperties($item){return (is_array($item) ? (count($item)>1?$item[1]:''):  (strpos($item, '/')==0 ?'':'crossorigin="anonymous"'));}
 
     public static function getSingleFilePath($item){
         $path = (is_array($item) ? $item[0]: $item);
@@ -99,7 +99,7 @@ class SolvesUi {
 
         $s .= $INCLUDE_SCRIPTS_TAGS; 
 
-        $s .= '<script type="text/javascript">';
+        $s .= '<script type="text/javascript" defer>';
         $s .= $SCRIPTS; 
         $s .= "$(function(){
             'use strict';".

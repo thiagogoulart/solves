@@ -588,6 +588,7 @@ class SolvesConfUrls{
     const SYSTEM_MODE_HML = 'HML';
     const SYSTEM_MODE_PROD = 'PROD';
 
+    const ASSETS ='/assets/';
     const IMG ='/assets/img/';
     const IMG_LOGO ='/assets/img/logo/';
     const CSS ='/assets/css/';
