@@ -306,6 +306,9 @@ abstract class SolvesRest {
 		}
     	return (isset($this->user) && $this->user->getId()>0);
 	}
+	protected function atualizaUsuarioLogado(){
+		$this->user = \SolvesAuth\SolvesAuth::checkToken($this->getConnection(), $this->router->getToken(), $this->router->getUserData());
+	}
 	protected function isRestritoTipo(){	
 		if($this->restritoTipo!=null && $this->user!=null){
 			return (strtolower($this->user->getClassName())==strtolower($this->restritoTipo));

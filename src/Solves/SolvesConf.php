@@ -3,12 +3,12 @@
  * @author Thiago G.S. Goulart
  * @version 1.0
  * @created 09/12/2019
- */ 
+ */
 namespace Solves;
 
 class SolvesConf {
 
-	public static $DEFAULT_CHARSET = 'UTF-8';
+    public static $DEFAULT_CHARSET = 'UTF-8';
     public static $SYSTEM_DEBUG_MODE=false;
     public static $LIMIT_PAGINATION = 20;
     public static $LIMIT_UPLOAD = (1024 * 1024 * 2);
@@ -43,11 +43,11 @@ class SolvesConf {
         return self::$SOLVES_CONF_URLS;
     }
 
-	/** Configuração de acesso ao banco */
+    /** Configuração de acesso ao banco */
     /** @var \Solves\SolvesConfBD */
-	private static $SOLVES_CONF_BD;
-	public static function setSolvesConfBd(\Solves\SolvesConfBD $bdConf){
-	    self::$SOLVES_CONF_BD = $bdConf;
+    private static $SOLVES_CONF_BD;
+    public static function setSolvesConfBd(\Solves\SolvesConfBD $bdConf){
+        self::$SOLVES_CONF_BD = $bdConf;
     }
     public static function getSolvesConfBd() :\Solves\SolvesConfBD {
         return self::$SOLVES_CONF_BD;
@@ -127,7 +127,7 @@ class SolvesConf {
         \Solves\Solves::setGooglePlayStoreLink(self::$SOLVES_CONF_URLS->getAppGooglePlayStoreLink());
         \Solves\Solves::setAppleStoreLink(self::$SOLVES_CONF_URLS->getAppAppleStoreLink());
         \Solves\Solves::setWindowsStoreLink(self::$SOLVES_CONF_URLS->getAppWindowsStoreLink());
-        
+
         \Solves\Solves::configAuth(self::$SOLVES_CONF_FIREBASE->getFirebaseConfigJsonFile(),
             self::$SOLVES_CONF_FIREBASE->getFirebaseConfigUser());
         \SolvesUi\SolvesConfigJS::setFirebaseJsonConfig(self::$SOLVES_CONF_FIREBASE->getFirebaseConfigJsonConfig());
@@ -140,7 +140,7 @@ class SolvesConf {
                 self::$SOLVES_CONF_EMAILS->getEmailPort(),
                 self::$SOLVES_CONF_EMAILS->getEmailRemetente(),
                 self::$SOLVES_CONF_EMAILS->getEmailRemetentePassword(),
-                self::$SOLVES_CONF_IDENTIFICACAO->getSiteTitulo());            
+                self::$SOLVES_CONF_IDENTIFICACAO->getSiteTitulo());
         }
         if(isset(self::$SOLVES_CONF_BD)){
             \Solves\Solves::configDAO(self::$SOLVES_CONF_BD->getSystemDbType(),
@@ -161,7 +161,7 @@ class SolvesConf {
         if(isset(self::$SOLVES_CONF_UI)){
             \Solves\Solves::configUi(self::$SOLVES_CONF_UI->getCssFilePaths(),
                 self::$SOLVES_CONF_UI->getScriptsFilePaths(),
-                self::$SOLVES_CONF_UI->getUiThemeBackgroundColor(), 
+                self::$SOLVES_CONF_UI->getUiThemeBackgroundColor(),
                 self::$SOLVES_CONF_UI->getUiThemeColor(),
                 self::$SOLVES_CONF_UI->getUiVersion());
             if(\Solves\Solves::isNotBlank(self::$SOLVES_CONF_UI->getLogoOnLoading())){
@@ -567,7 +567,7 @@ class SolvesConfUrl{
     /**
      * @return mixed
      */
-    public function getUrlRaiz(){ 
+    public function getUrlRaiz(){
         return $this->urlRaiz;
     }
 
@@ -643,6 +643,7 @@ class SolvesConfUrls{
     private $jsModel;
     private $jsView;
     private $cdnApp;
+    private $localCdn;
     private $localCdnApp;
 
     private $appGooglePlayStoreLink = '';
@@ -662,7 +663,7 @@ class SolvesConfUrls{
         $this->host = $host;
         $this->acessoRestritoTipo = $acessoRestritoTipo;
         $this->modoSoonAtivado = $modoSoonAtivado;
- 
+
         $this->pathRoot = str_replace('\\','/', dirname(__FILE__).self::DS);
     }
 
@@ -670,6 +671,7 @@ class SolvesConfUrls{
     public function getJsModel(){return $this->jsModel;}
     public function getJsView(){return $this->jsView;}
     public function getCdnApp(){return $this->cdnApp;}
+    public function getLocalCdn(){return $this->localCdn;}
     public function getLocalCdnApp(){return $this->localCdnApp;}
 
     public function getSolvesConfUrl() :\Solves\SolvesConfUrl {
@@ -733,7 +735,8 @@ class SolvesConfUrls{
         //CDN app
         $this->cdnApp = self::SOLVES_CDN.$dirCdnInApp;
         //LOCAL CDN app
-        $this->localCdnApp = self::SOLVES_LOCAL_CDN.$dirCdnInApp;
+        $this->localCdn = $this->getPathRaiz().self::SOLVES_LOCAL_CDN;
+        $this->localCdnApp = $this->localCdn.$dirCdnInApp;
 
         //Informa lib Solves
         if($this->isModeProd){
@@ -958,13 +961,13 @@ class SolvesConfUrls{
     {
         return $this->solvesConfUrlAtivo;
     }
-    
+
 }
 class SolvesConfBD{
 
     const SYSTEM_DB_TYPE_MYSQL = 'MYSQL';
     const SYSTEM_DB_TYPE_POSTGRESQL = 'POSTGRESQL';
-    
+
     const SYSTEM_DB_TYPE_MYSQL_DEFAULT_HOST = 'localhost';
     const SYSTEM_DB_TYPE_MYSQL_DEFAULT_PORT = '3306';
 
@@ -993,33 +996,33 @@ class SolvesConfBD{
         $this->url = $this->getUrlByDbType();
     }
     public function isBdMySql(){
-    	return self::SYSTEM_DB_TYPE_MYSQL == $this->systemDbType;
-    } 
+        return self::SYSTEM_DB_TYPE_MYSQL == $this->systemDbType;
+    }
     public function isBdPostgreSql(){
-    	return self::SYSTEM_DB_TYPE_POSTGRESQL == $this->systemDbType;
-    } 
+        return self::SYSTEM_DB_TYPE_POSTGRESQL == $this->systemDbType;
+    }
 
     private function getUrlByDbType(){
         if($this->isBdMySql()) {
-        	return $this->host.(strlen($this->port)>0?':'.$this->port:'');
+            return $this->host.(strlen($this->port)>0?':'.$this->port:'');
         }else if($this->isBdPostgreSql()) {
-        	return $this->host.(strlen($this->port)>0?':'.$this->port:'');
+            return $this->host.(strlen($this->port)>0?':'.$this->port:'');
         }
         return '';
     }
     private function getDefaultHostByDbType(){
         if($this->isBdMySql()) {
-        	return self::SYSTEM_DB_TYPE_MYSQL_DEFAULT_HOST;
+            return self::SYSTEM_DB_TYPE_MYSQL_DEFAULT_HOST;
         }else if($this->isBdPostgreSql()) {
-        	return self::SYSTEM_DB_TYPE_POSTGRESQL_DEFAULT_HOST;
+            return self::SYSTEM_DB_TYPE_POSTGRESQL_DEFAULT_HOST;
         }
         return '';
     }
     private function getDefaultPortByDbType(){
         if($this->isBdMySql()) {
-        	return self::SYSTEM_DB_TYPE_MYSQL_DEFAULT_PORT;
+            return self::SYSTEM_DB_TYPE_MYSQL_DEFAULT_PORT;
         }else if($this->isBdPostgreSql()) {
-        	return self::SYSTEM_DB_TYPE_POSTGRESQL_DEFAULT_PORT;
+            return self::SYSTEM_DB_TYPE_POSTGRESQL_DEFAULT_PORT;
         }
         return '';
     }
@@ -1556,7 +1559,7 @@ class SolvesConfResponsiveFileManager{
     /** @type \Solves\SolvesConfUrls */
     private $solvesConfUrls;
 
-     /**
+    /**
      * SolvesConfNotifications constructor.
      * @param \Solves\SolvesConfUrls $solvesConfUrls
      * @param $dir
@@ -1571,15 +1574,15 @@ class SolvesConfResponsiveFileManager{
         $this->privateKey = $privateKey;
     }
 
-        
+
     function getUrlSelectImage($fieldElmId, $isMultiple=true){
-      return $this->url.'dialog.php?crossdomain=1&amp;type=1&amp;fldr='.$this->solvesConfUrls->getPublicFolderImagesName().'&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
+        return $this->url.'dialog.php?crossdomain=1&amp;type=1&amp;fldr='.$this->solvesConfUrls->getPublicFolderImagesName().'&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
     }
     function getUrlSelectFile($fieldElmId, $isMultiple=true){
-      return $this->url.'dialog.php?crossdomain=1&amp;type=2&amp;fldr='.$this->solvesConfUrls->getPublicFolderDocsName().'&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
+        return $this->url.'dialog.php?crossdomain=1&amp;type=2&amp;fldr='.$this->solvesConfUrls->getPublicFolderDocsName().'&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
     }
     function getUrlSelectAll($fieldElmId, $isMultiple=true){
-      return $this->url.'dialog.php?crossdomain=1&amp;type=2&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
+        return $this->url.'dialog.php?crossdomain=1&amp;type=2&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
     }
 
 }
