@@ -908,12 +908,17 @@ class DAO {
                 return false;
             }
 	}
-	public function delete($id, $usuarioId, $ip, $data, $moduloId, $rotinaId){
-            if($this->marcaDelete($id, $usuarioId, $ip, $data, $moduloId, $rotinaId)){                    
+
+    public function delete($id){
+        //Exclui o registro do banco
+        $sql = "DELETE FROM ".$this->tabela." WHERE ".$this->pk."=".$id.";";
+        $result = $this->executeQuery($sql,'delete');
+        return $result;
+    }
+	public function deleteComMarcacao($id, $usuarioId, $ip, $data, $moduloId, $rotinaId){
+            if($this->marcaDelete($id, $usuarioId, $ip, $data, $moduloId, $rotinaId)){
                 //Exclui o registro do banco
-                $sql = "DELETE FROM ".$this->tabela." WHERE ".$this->pk."=".$id.";"; 
-                $result = $this->executeQuery($sql,'delete');
-                return $result;                    
+                return $this->delete($id);
             }else{
             // echo $this->msgError;
                 return false;
