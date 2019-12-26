@@ -170,6 +170,25 @@ abstract class SolvesObject {
         }
  	 }
 
+    public function getConditionSqlWithPagination($paginacaoAtual, $paginacaoQtd=null, $conditionPadrao = " 1=1 ") {
+        if(!\Solves\Solves::isNotBlank($paginacaoQtd)){
+            $paginacaoQtd = self::$PAGINACAO_QTD;
+        }
+        $init = 0;
+        if($paginacaoAtual>1){
+            $init = ($paginacaoAtual-1)*$paginacaoQtd;
+            $this->dao->setLimit($init.','.$paginacaoQtd);
+        }else if($paginacaoAtual==1){
+            $this->dao->setLimit($init.','.$paginacaoQtd);
+        }
+        $colRemoved = $this->dao->getColunaByNome('removed');
+        if(isset($colRemoved) && ($colRemoved->getDao()!=null) ){
+            $conditionPadrao = " ".$colRemoved->getNomeWithPrefix()." =0 ";
+        }
+        $sql = " WHERE ". $conditionPadrao;
+        return ($sql);
+    }
+
  	 public function toArray() {
  	 	$this->addValores();
   		 $arr = array(); 

@@ -10,9 +10,9 @@ Data de criação: 01/01/2010.
 namespace SolvesDAO;
 
 class DAO {
-	
+
 	private $connection;
-	
+
 	private $tabela;
 	private $pk;
 	private $colunaLabelOrder;
@@ -22,14 +22,14 @@ class DAO {
 	private $qtdColunas;
 	private $limit;
 	private $extendsDao;
-        
+
 	private $outrosFieldsSelect;
 	private $outrosFieldsSelectSqlPuro;
 
 	private $sequencePk;
 	private $pkValue;
 	private $orderByEspecifico;
-	
+
 	private $msgError;
 	private $charset;
 
@@ -37,21 +37,21 @@ class DAO {
 	private $arrIdsColunasSensiveis = array();
 
 	public static $NULL_TIMESTAMP = null;
-	
+
 	public function __construct(){
 		$this->colunas = array();
 		$this->valoresColunas = array();
         $this->outrosFieldsSelect = array();
         $this->outrosFieldsSelectSqlPuro= array();
 		$this->colsLabelOrder = array();
-		
-		$this->charset = "UTF-8";		
-		
+
+		$this->charset = "UTF-8";
+
 		$this->msgError = '<br>Solicita&ccedil;&atilde;o n&atilde;o atendida. n&atilde;o foi poss&iacute;vel executar consulta.';
 	}
-	
-	
-/*START getters e setters*/	
+
+
+/*START getters e setters*/
     public function setArrIdsColunasSensiveis($p) {
        $this->arrIdsColunasSensiveis = $p;
     }
@@ -97,8 +97,9 @@ class DAO {
 		$coluna->setTipo($tipo);
 		$coluna->setSearchable($searchable);
 		$coluna->setOrderByType($orderByType);
+        $coluna->setTabela($this->getTabela());
 		$coluna->setDao($this);
-		
+
 		$this->colunas[$order] = $coluna;
 	}
 	public function addOutroFieldSelect($order, $coluna){
@@ -107,7 +108,7 @@ class DAO {
 	public function addOutroFieldSelectSqlPuro($sql){
             $this->outrosFieldsSelectSqlPuro[] = $sql;
     }
-    public function getSqlColNumRows($sqlCondition){    	
+    public function getSqlColNumRows($sqlCondition){
 		$joins_sql = '';
 		$cols = $this->getColunas();
 		$this->qtdColunas = count($cols);
@@ -116,7 +117,7 @@ class DAO {
             if(\Solves\Solves::isNotBlank($arr[2])){
             	$joins_sql .= $arr[2];
             }
-		}	
+		}
         return "(SELECT COUNT(*) FROM ".$this->getTabela()." ".$joins_sql." ".$sqlCondition.") as num_rows";
     }
 	public function setColunaLabelOrder($order){
@@ -162,13 +163,13 @@ class DAO {
 	public function getColsLabelOrder(){
 		return $this->colsLabelOrder;
 	}
-	public function getColuna($order){
+	public function getColuna($order) : DAOColuna{
 		return $this->colunas[$order];
 	}
 	public function getColunas($isSelect=true){
 		$cols = $this->colunas;
 		if($isSelect && !$this->connection->isExibeColunasSensiveis() && isset($this->arrIdsColunasSensiveis) && count($this->arrIdsColunasSensiveis)>0){
-			foreach($this->arrIdsColunasSensiveis as $idColuna){ 
+			foreach($this->arrIdsColunasSensiveis as $idColuna){
 				unset($cols[$idColuna]);
 				unset($cols[$idColuna."_label"]);
 			}
@@ -188,16 +189,26 @@ class DAO {
 		if(!isset($coluna)){
 			echo 'Coluna não encontrada ['.$this->tabela.':'.$order.'].';
 		}
-		return $this->tabela.'.'.$coluna->getNome();
+		return $coluna->getNomeWithPrefix();
 	}
-	public function getColunaByOrder($columnOrder){
+	public function getColunaByOrder($columnOrder) : DAOColuna{
 		return $this->getColuna($columnOrder);
 	}
-	
+    public function getColunaByNome($columnNome) : DAOColuna{
+        $col = new DAOColuna();
+        foreach($this->colunas as $coluna) {
+            if ($coluna->getNome() == $columnNome) {
+                $col = $coluna;
+                break;
+            }
+        }
+        return $col;
+    }
+
 	public function getValorColunaByOrder($columnOrder){
 		return $this->valoresColunas[$columnOrder];
 	}
-	
+
 	public function addValorColuna($colOrder, $valor){
 		if($colOrder==0){
 			$this->pkValue = $valor;
@@ -207,11 +218,11 @@ class DAO {
 			$valorColuna->setColumn($this->getColuna($colOrder));
 			$valorColuna->setValor($valor);
 			$valorColuna->setDao($this);
-			
+
 			$this->valoresColunas[$colOrder] = $valorColuna;
 		}
 	}
-	
+
 	public function getValoresColunas(){
 		return $this->valoresColunas;
 	}
@@ -242,22 +253,22 @@ class DAO {
 	public function setExtendsDao($p){
 		$this->extendsDao = $p;
 		$cols = $this->extendsDao->getColunas();
-		
+
 		foreach($cols as $col){
 			$this->colunas[] = $col;
 		}
-		
+
 		$this->setQtdColunas(count($this->colunas));
 	}
 	private function getBdConnection(){
 		return $this->connection->getBdConnection();
 	}
-/*END getters e setters*/	
+/*END getters e setters*/
 	public function getSequencePkValue(){
 		$sqlSeq = "SELECT nextval('".$this->sequencePk."'::regclass);";
-		$resSequence = $this->sqlToResultArray($sqlSeq);	
-				
-		$this->pkValue = $resSequence[0][0];	
+		$resSequence = $this->sqlToResultArray($sqlSeq);
+
+		$this->pkValue = $resSequence[0][0];
 		return $this->pkValue;
 	}
 
@@ -266,15 +277,15 @@ class DAO {
 		if(isset($this->sequencePk) && strlen($this->sequencePk)>1){
 			return $this->getSequencePkValue();
 		}else{
-			$sql = "SELECT MAX(".$this->pk.") FROM ".$this->tabela;			
+			$sql = "SELECT MAX(".$this->pk.") FROM ".$this->tabela;
 			$result = $this->sqlToResultArray($sql);
-			if($result[0][0]+1==0){ 
-				return 1;			
+			if($result[0][0]+1==0){
+				return 1;
 			}
 			return $result[0][0]+1;
 		}
 	}
-	
+
 	public function getCount(){
 		$sql = "SELECT COUNT(*) as qtd FROM ".$this->tabela;
 		$result = $this->sqlToResultArray($sql);
@@ -285,32 +296,32 @@ class DAO {
 		$result = $this->sqlToResultArray($sql);
 		return $result[0]['qtd'];
 	}
-	
-	
+
+
 	public function findAll(){
-		if($this->tabela){			
-			$sql = "SELECT DISTINCT "; 
+		if($this->tabela){
+			$sql = "SELECT DISTINCT ";
 			$joins_sql = '';
 			$cols = $this->getColunas();
 			$this->qtdColunas = count($cols);
 			$qtd = $this->qtdColunas;
 			$i=0;
-			
+
 			$sql .= $this->tabela.".".$this->pk;
-			
+
 			if($qtd>0){
 				$sql .= ", ";
 			}
 			$ordenation = " ORDER BY ";
 			foreach($cols as $coluna){
 				$i++;
-                                
+
 				$arr = $this->getSqlFormSelectColNameAndLabel($coluna);
                 $colName = $arr[0];
-                $colLabel = $arr[1];     
+                $colLabel = $arr[1];
                 $joins_sql .= $arr[2];
                 $sql.= $arr[3];
-				
+
 				if($i!=$qtd){
 					$sql .= ", ";
 				}
@@ -320,24 +331,24 @@ class DAO {
 						$ordenation .= ", ";
 					}
 				}
-			}	
-                        
+			}
+
 			foreach($this->outrosFieldsSelect as $otherCol){
                 $arr = $this->getSqlFormSelectColNameAndLabel($otherCol);
                 $colName = $arr[0];
-                $colLabel = $arr[1];                                
+                $colLabel = $arr[1];
                 $sql.= ','.$arr[3];
-            }     
-			foreach($this->outrosFieldsSelectSqlPuro as $sqlColPuro){                          
+            }
+			foreach($this->outrosFieldsSelectSqlPuro as $sqlColPuro){
                 $sql.= ','.$sqlColPuro;
             }
 			if($ordenation==" ORDER BY "){
 				$ordenation .= "1 ";
-			}			
+			}
 			if(substr($ordenation,strlen($ordenation)-2,strlen($ordenation))==", "){
 				$ordenation = substr($ordenation,0,strlen($ordenation)-2);
 			}
-						
+
 			$sql .= " FROM ";
 			if($this->extendsDao){
 				$sql .= $this->tabela;
@@ -345,33 +356,33 @@ class DAO {
 				$sql .= $this->tabela.".".$this->pk."=".$this->extendsDao->getTabela().".".$this->extendsDao->getPk();
 			}
 			else{
-				$sql .= $this->tabela;	
+				$sql .= $this->tabela;
 			}
 			$sql .= $joins_sql;
-			
+
 			if(\Solves\Solves::isNotBlank($this->orderByEspecifico)){
 				$sql .= "  ".$this->orderByEspecifico. " ";
 			}else{
-				$sql .= $ordenation." "; 
+				$sql .= $ordenation." ";
 			}
 			if($this->limit){
 				$sql .= " LIMIT ".$this->limit;
 			}
 			$sql .= ";";
-			
+
 	//	    echo $sql;
-	
+
 			$result = $this->sqlToResultArray($sql);
-			
+
 			return $result;
 		}
 		else{
 			echo $this->msgError;
-			return false;	
+			return false;
 		}
 	}
 	public function findById($id){
-		if($this->tabela && $id){			
+		if($this->tabela && $id){
 			$sql = "SELECT DISTINCT ";
 			$joins_sql = '';
 			$cols = $this->getColunas();
@@ -379,21 +390,21 @@ class DAO {
 			$i=0;
 
 			$sql .= $this->tabela.".".$this->pk;
-			
+
 			if($qtd>0){
 				$sql .= ", ";
 			}
-			
+
 			$ordenation = " ORDER BY ";
 			foreach($cols as $coluna){
 				$i++;
 
                                 $arr = $this->getSqlFormSelectColNameAndLabel($coluna);
                                 $colName = $arr[0];
-                                $colLabel = $arr[1];     
+                                $colLabel = $arr[1];
                                 $joins_sql .= $arr[2];
                                 $sql.= $arr[3];
-				
+
 				if($i!=$qtd){
 					$sql .= ", ";
 				}
@@ -403,22 +414,22 @@ class DAO {
 						$ordenation .= ", ";
 					}
 				}
-			}	
+			}
             foreach($this->outrosFieldsSelect as $otherCol){
                     $arr = $this->getSqlFormSelectColNameAndLabel($otherCol);
                     $colName = $arr[0];
-                    $colLabel = $arr[1];                                
+                    $colLabel = $arr[1];
                     $sql.= ','.$arr[3];
-            } 
-			foreach($this->outrosFieldsSelectSqlPuro as $sqlColPuro){                          
+            }
+			foreach($this->outrosFieldsSelectSqlPuro as $sqlColPuro){
                 $sql.= ','.$sqlColPuro;
             }
 
 			if($ordenation==" ORDER BY "){
 				$ordenation .= "1 ";
 			}
-			
-			
+
+
 			$sql .= " FROM ";
 			if($this->extendsDao){
 				$sql .= $this->tabela;
@@ -426,77 +437,77 @@ class DAO {
 				$sql .= $this->tabela.".".$this->pk."=".$this->extendsDao->getTabela().".".$this->extendsDao->getPk();
 			}
 			else{
-				$sql .= $this->tabela;	
+				$sql .= $this->tabela;
 			}
 			$sql .= $joins_sql;
-			
-			$sql .= " WHERE ".$this->tabela.".".$this->pk."=".$id." ".@$ordernation." "; 
-			
+
+			$sql .= " WHERE ".$this->tabela.".".$this->pk."=".$id." ".@$ordernation." ";
+
 			if($this->limit){
 				$sql .= " LIMIT ".$this->limit;
 			}
 			$sql .= ";";
-			
+
 			//echo $sql;
-			
+
 			$result = $this->sqlToResultArray($sql);
-			
+
 			return $result;
 		}
 		else{
 			echo $this->msgError;
-			return false;	
+			return false;
 		}
 	}
 	public function findByCondition($condition){
 		if($this->tabela && $condition){
-			
+
 			$sql = "SELECT DISTINCT ";
 			$joins_sql = '';
 			$cols = $this->getColunas();
 			$qtd = count($cols);
 			$i=0;
-			
+
 			$sql .= " ".$this->tabela.".".$this->pk;
-			
+
 			if($qtd>0){
 				$sql .= ", ";
 			}
-			
+
 			$ordenation = " ORDER BY ";
 			foreach($cols as $coluna){
 				$i++;
                 $arr = $this->getSqlFormSelectColNameAndLabel($coluna);
                 $colName = $arr[0];
-                $colLabel = $arr[1];     
+                $colLabel = $arr[1];
                 $joins_sql .= $arr[2];
                 $sql.= $arr[3];
-				
+
 				if($i!=$qtd){
 					$sql .= ", ";
 				}
 				if($coluna->isOrdenable()){
 					$ordenation .= $colName.' '.$coluna->getOrderByType() .", ";
 				}
-			}	
+			}
             foreach($this->outrosFieldsSelect as $otherCol){
                     $arr = $this->getSqlFormSelectColNameAndLabel($otherCol);
                     $colName = $arr[0];
-                    $colLabel = $arr[1];                                
+                    $colLabel = $arr[1];
                     $sql.= ','.$arr[3];
-            } 
-			foreach($this->outrosFieldsSelectSqlPuro as $sqlColPuro){                          
+            }
+			foreach($this->outrosFieldsSelectSqlPuro as $sqlColPuro){
                 $sql.= ','.$sqlColPuro;
             }
 
 			if($ordenation==" ORDER BY "){
 				$ordenation .= "1 ";
 			}
-			
+
 			if(substr($ordenation,strlen($ordenation)-2,strlen($ordenation))==", "){
 				$ordenation = substr($ordenation,0,strlen($ordenation)-2);
 			}
-			
+
 			$sql .= " FROM ";
 			if($this->extendsDao){
 				$sql .= $this->tabela;
@@ -504,42 +515,42 @@ class DAO {
 				$sql .= $this->tabela.".".$this->pk."=".$this->extendsDao->getTabela().".".$this->extendsDao->getPk();
 			}
 			else{
-				$sql .= $this->tabela;	
+				$sql .= $this->tabela;
 			}
 			$sql .= $joins_sql;
-			
+
 			if(substr($sql,strlen($sql)-2,strlen($sql))==", "){
 				$sql = substr($sql,0,strlen($sql)-2);
 			}
 			if(substr($ordenation,strlen($ordenation)-2,strlen($ordenation))==", "){
 				$ordenation = substr($ordenation,0,strlen($ordenation)-2);
 			}
-					
+
 			$sql .= " ".$condition;
 
 
 			if(\Solves\Solves::isNotBlank($this->orderByEspecifico)){
 				$sql .= "  ".$this->orderByEspecifico. " ";
 			}else{
-				$sql .= $ordenation." "; 
+				$sql .= $ordenation." ";
 			}
-			
+
 			if($this->limit){
 				$sql .= " LIMIT ".$this->limit;
 			}
 			$sql .= ";";
 			//echo $sql;
 			$result = $this->sqlToResultArray($sql);
-			
+
 			return $result;
 		}
 		else{
 			echo $this->msgError;
-			return false;	
+			return false;
 		}
 	}
-	
-	
+
+
 	public function findBySearchAndCondition($search, $condit){
 		if($this->tabela && $search && $condit){
 			$condition = $this->getSqlSearch($search);
@@ -549,36 +560,35 @@ class DAO {
 		}
 		else{
 			echo $this->msgError;
-			return false;	
+			return false;
 		}
 	}
-	
+
 	public function findBySearch($search){
-		if($this->tabela && $search){			
-			$condition = $this->getSqlSearch($search);	
-			//echo $condition;		
+		if($this->tabela && $search){
+			$condition = $this->getSqlSearch($search);
+			//echo $condition;
 			return $this->findByCondition($condition);
 		}
 		else{
 			echo $this->msgError;
-			return false;	
+			return false;
 		}
 	}
-	
-	public function getSqlSearchByParams($usuarioId, $params, $useAndByColumn=true){		
+
+	public function getSqlSearchByParams($usuarioId, $params, $useAndByColumn=true){
 		$condition = "";
-		$coluna = new DAOColuna();
 		$entrou = false;
-		foreach ($params as $key => $search){	
+		foreach ($params as $key => $search){
 			$search = strtoupper($search);
 			$result = array();
-			$palavras = explode(" ", $search);	
+			$palavras = explode(" ", $search);
 			foreach($this->colunas as $coluna){
 				if($coluna->getNome()==$key){
 					$conditionCol =$coluna->getSearchSql($search);
 					if(\Solves\Solves::isNotBlank($conditionCol)){
 						if($entrou){
-							$condition .= ($useAndByColumn?"AND":"OR");							
+							$condition .= ($useAndByColumn?"AND":"OR");
 						}
 						$condition .= " (".$conditionCol.") ";
 						$entrou = true;
@@ -591,30 +601,24 @@ class DAO {
 		}
 		return $condition;
 	}
-	public function getSqlSearch($search){			
+	public function getSqlSearch($search){
 			$search = strtoupper($search);
-			$result = array();
 			$palavras = explode(" ", $search);
-			
+
 			$condition = "WHERE (";
-			
-			$coluna = new DAOColuna();
+
 			$i=0;
 			$v=0;
-			$entrou = 0;
-			
+
 			if(is_numeric($search)){
-				$condition .= " ".$this->tabela.".".$this->pk." = ".$search." ";	
-				$entrou = 1;
+				$condition .= " ".$this->tabela.".".$this->pk." = ".$search." ";
 			}
 			$firstSearchable = false;
-			$addedOr = false;
 			foreach($this->colunas as $coluna){
 				$v++;
 				if($coluna->isSearchable()){
 					$condInit = '';
 					if($v>1 && $firstSearchable){
-						$addedOr = true;
 						$condInit .= " OR ";
 					}
 					$cond = '';
@@ -622,11 +626,11 @@ class DAO {
 					$qtdAdded = 0;
 					for($j=0; $j!=$qtdPalavras; $j++){
 						$table = $coluna->getDao()->getTabela();
-						
+
 						$added = false;
 						$w = '';
 						if($coluna->getTipo()=='string'){
-							$w .= " UPPER(".$table.".".$coluna->getNome().") LIKE '%".$palavras[$j]."%' "; 
+							$w .= " UPPER(".$table.".".$coluna->getNome().") LIKE '%".$palavras[$j]."%' ";
 							$added = true;
 							$qtdAdded++;
 						}
@@ -651,34 +655,34 @@ class DAO {
 			$condition .= ')';
 			return $condition;
 	}
-	
+
 	public function save(){
-		if($this->tabela){	
-			$hasParent = false;	
-			$sqlParent = '';		
+		if($this->tabela){
+			$hasParent = false;
+			$sqlParent = '';
 			$sql = "INSERT INTO ".$this->tabela."(";
-												  
+
 			if($this->extendsDao){
 				$hasParent = true;
 				$sqlParent = "INSERT INTO ".$this->extendsDao->getTabela()."(";
-																	   
+
 				$colParent;
 				$vcolParent;
 			}
-			
+
 			if($hasParent){
 				$this->sequencePk = $this->extendsDao->getSequencePk();
 			}
 			if($this->sequencePk && !isset($this->pkValue)){
 				$this->pkValue = $this->getSequencePkValue();
 			}
-											
+
 			$entrou = false;
 			$colunas = $this->getColunas(false);
 			$this->qtdColunas = count($colunas);
 			$qtdCols = $this->qtdColunas;
 
-			$col=''; $vcol='';	
+			$col=''; $vcol='';
 			$first = true;
 			foreach($colunas as $coluna){
 				$i = $coluna->getColumnOrder();
@@ -686,31 +690,31 @@ class DAO {
 				if($first && $this->pkValue){
 					$sql .= $this->pk;
 					$vcol = $this->pkValue;
-					
+
 					$sql .= ', ';
 					$vcol .= ', ';
 				}
 				$first = false;
-				if($i==0 && $hasParent){					
+				if($i==0 && $hasParent){
 					$sqlParent .= $this->pk;
 					$vcolParent = $this->pkValue;
-					
+
 					$sql .= $this->pk;
 					$vcol = $this->pkValue;
-					
+
 					if($i!=($qtdCols-1)){
 						$sqlParent .= ', ';
 						$vcolParent .= ', ';
-						
+
 						$sql .= ', ';
 						$vcol .= ', ';
-					}	
+					}
 				}
-				
+
 				if($coluna->getDao()->getTabela()==$this->tabela){
 					$sql .= $coluna->getNome();
 					$vcol .= $this->getValorColunaParaScript($coluna, $vColuna->getValor());
-					
+
 			//	echo '$i['.$i.']; $qtdCols['.$qtdCols.'];';
 					if($i!=($qtdCols)){
 						$sql .= ', ';
@@ -725,10 +729,10 @@ class DAO {
                                             $vcolParent .= ', ';
 					}
 				}
-				
-				$entrou = true;				
+
+				$entrou = true;
 			}
-			if($entrou){				
+			if($entrou){
 				if($hasParent){
 					if(substr($sqlParent,strlen($sqlParent)-2,strlen($sqlParent))==", "){
 						$sqlParent = substr($sqlParent,0,strlen($sqlParent)-2);
@@ -736,37 +740,37 @@ class DAO {
 					if(substr($vcolParent,strlen($vcolParent)-2,strlen($vcolParent))==", "){
 						$vcolParent = substr($vcolParent,0,strlen($vcolParent)-2);
 					}
-					
+
 					$sqlParent .= ")";
 					$sqlParent .= "VALUES (";
 					$sqlParent .= $vcolParent;
-					$sqlParent .= ");"; 
+					$sqlParent .= ");";
 				}
-				
+
 				if(substr($sql,strlen($sql)-2,strlen($sql))==", "){
 					$sql = substr($sql,0,strlen($sql)-2);
 				}
 				if(substr($vcol,strlen($vcol)-2,strlen($vcol))==", "){
 					$vcol = substr($vcol,0,strlen($vcol)-2);
 				}
-				
-				$sql .= ")"; 
-				$sql .= "VALUES (";								 
+
+				$sql .= ")";
+				$sql .= "VALUES (";
 				$sql .= $vcol;
-				$sql .= ");";	
+				$sql .= ");";
 			}
 			else{
 				$sql = "";
 			}
-			
+
 		//  	echo '<br>SQL: '.$sql.'<br><br>PARENT: '.$sqlParent;
-			
+
 			if($hasParent){
-				$result = $this->executeQuery($sqlParent,'insert');	
+				$result = $this->executeQuery($sqlParent,'insert');
 			}
-			
+
 			$result = $this->executeQuery($sql,'insert');
-			
+
 			return $result;
 		}
 		else{
@@ -775,11 +779,11 @@ class DAO {
 		}
 	}
         public function getValorColunaParaScript($coluna, $value, $isSearch=false){
-            $vcol='';  
+            $vcol='';
             $tipo = $coluna->getTipo();
             $isNotNull = $coluna->isObrigatorio();
             $hasValue = (\Solves\Solves::isNotBlank($value));
-            
+
             if($tipo=="string" || $tipo=="date" || $tipo=="text" || $tipo=="timestamp" || $tipo=="time"){
                  if($hasValue){
                  	if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
@@ -817,10 +821,10 @@ class DAO {
                  }
             }
             else if($hasValue){
-                $vcol .= $value;	
+                $vcol .= $value;
             }
             else{
-                $vcol .= "null";	
+                $vcol .= "null";
             }
             if(strlen($vcol)==0){
                 $vcol .= "null";
@@ -829,21 +833,21 @@ class DAO {
         }
 	public function getSqlUpdate($id){
 		if($this->tabela && $id){
-			$hasParent = false;			
+			$hasParent = false;
 			$sql = "UPDATE ".$this->tabela." SET ";
 			$colWithValue = "";
-			
+
 			if($this->extendsDao){
 				$hasParent = true;
 				$sqlParent = "UPDATE ".$this->extendsDao->getTabela()." SET ";
-																	   
+
 				$colWithValueParent = "";
 			}
 
 			$colunas = $this->getColunas(false);
 			$this->qtdColunas = count($colunas);
 
-			$col=''; $vcol='';		
+			$col=''; $vcol='';
 			foreach($colunas as $coluna){
 				$i = $coluna->getColumnOrder();
 				$valorColuna = $this->getValorColunaByOrder($i);
@@ -870,13 +874,13 @@ class DAO {
 			}
 			if($hasParent){
 				$sqlParent .= $colWithValueParent;
-				$sqlParent .= " WHERE ".$this->pk."= ".$id.";"; 
-				
+				$sqlParent .= " WHERE ".$this->pk."= ".$id.";";
+
 				$sql = $sqlParent. '  ' .$sql;
 			}
-			
+
 			$sql .= $colWithValue;
-			$sql .= " WHERE ".$this->pk."= ".$id.";"; 
+			$sql .= " WHERE ".$this->pk."= ".$id.";";
 
 
 			return $sql;
@@ -889,7 +893,7 @@ class DAO {
 	public function update($id){
 		if($this->tabela && $id){
 			$sql = $this->getSqlUpdate($id);
-			$result = $this->executeQuery($sql,'update');		
+			$result = $this->executeQuery($sql,'update');
 			return $result;
 		}
 		else{
@@ -898,11 +902,11 @@ class DAO {
 		}
 	}
 	public function marcarRemovido($id, $usuarioId, $ip, $data, $moduloId, $rotinaId){
-            if($this->marcaDelete($id, $usuarioId, $ip, $data, $moduloId, $rotinaId)){                    
+            if($this->marcaDelete($id, $usuarioId, $ip, $data, $moduloId, $rotinaId)){
                 //Exclui o registro do banco
-                $sql = "UPDATE ".$this->tabela." SET removed = true, removed_at=NOW() WHERE ".$this->pk."=".$id.";"; 
+                $sql = "UPDATE ".$this->tabela." SET removed = true, removed_at=NOW() WHERE ".$this->pk."=".$id.";";
                 $result = $this->executeQuery($sql,'update');
-                return $result;                    
+                return $result;
             }else{
             // echo $this->msgError;
                 return false;
@@ -925,14 +929,14 @@ class DAO {
             }
 	}
 	private function marcaDelete($id, $usuarioId, $ip, $data, $moduloId, $rotinaId){
-		if($this->tabela && $this->pk && 
-                        \Solves\Solves::isNotBlank($id) && 
-                        \Solves\Solves::isNotBlank($usuarioId) && 
-                        \Solves\Solves::isNotBlank($ip) && 
-                        \Solves\Solves::isNotBlank($data) && 
-                        \Solves\Solves::isNotBlank($moduloId) && 
+		if($this->tabela && $this->pk &&
+                        \Solves\Solves::isNotBlank($id) &&
+                        \Solves\Solves::isNotBlank($usuarioId) &&
+                        \Solves\Solves::isNotBlank($ip) &&
+                        \Solves\Solves::isNotBlank($data) &&
+                        \Solves\Solves::isNotBlank($moduloId) &&
                         \Solves\Solves::isNotBlank($rotinaId)){
-                    
+
                     $rotina = new ErpRotina($this->connection);
                     $rotina = $rotina->findById($rotinaId);
                     if(isset($rotina)){
@@ -947,10 +951,10 @@ class DAO {
 
                             //Registra Auditoria da ação de EXCLUSÃO
                             $audit = new Auditoria($this->connection);
-                            $audit->create($usuarioId, 
+                            $audit->create($usuarioId,
                                     $ip, $data,
                                     'Registro excluído de '.$rotina->getLabel().' em '. $data.'.',
-                                    TipoAuditoria::$TIPO_EXCLUSAO, 
+                                    TipoAuditoria::$TIPO_EXCLUSAO,
                                     $rotinaInstancia->getRotinaInstanciaId());
                         }
 
@@ -966,7 +970,7 @@ class DAO {
 		}
                 return false;
 	}
-	
+
 	public function mountWherePeriod($campoData, $dataInicio, $dataFim){
 		$where = "";
                 $campoData.='::date';
@@ -979,7 +983,7 @@ class DAO {
 		}
 		return $where;
 	}
-	public function mountInValues($array){				
+	public function mountInValues($array){
 		$count = count($array);
 		$in = '';
 		for ($i = 0; $i !=$count; $i++) {
@@ -990,7 +994,7 @@ class DAO {
 		}
 		return $in;
 	}
-	public function mountInStringValues($array){				
+	public function mountInStringValues($array){
 		$count = count($array);
 		$in = '';
 		for ($i = 0; $i !=$count; $i++) {
@@ -1023,9 +1027,9 @@ class DAO {
 		if($sql && $sql!=""){
 			$result = false;
 			//echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$op." | ".$sql.". </div>";exit;
-			try{						
+			try{
 				$this->openTransaction();
-				if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
+				if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
 					$result = $this->getBdConnection()->query($sql);
 					if($result){
 						if($op=='insert'){
@@ -1047,7 +1051,6 @@ class DAO {
 					$result = false;
 				}
 			}catch (\Exception $e) {
-				$result = false;
 				$this->msgError .= $this->getBdConnection()->error;
 				$erro = $this->msgError.(\Solves\Solves::isDebugMode() ?  "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.".</div>" : "");
 				$this->rollbackTransaction();
@@ -1060,17 +1063,17 @@ class DAO {
 			return false;
 		}
 	}
-	
+
 	public function sqlToResultArray($sql){
 		$this->msgError .= '[consulta]';
 		if($sql && $sql!=""){
 		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>";
 			$resultado = array();
-			if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
+			if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
 				$result = $this->getBdConnection()->query($sql, MYSQLI_USE_RESULT) or die($this->msgError.
                                         (false ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->getBdConnection()->error."</div>"));
-				while($dados=$result->fetch_array(MYSQLI_ASSOC)){ 
-					$resultado[] = $dados;	
+				while($dados=$result->fetch_array(MYSQLI_ASSOC)){
+					$resultado[] = $dados;
 				}
 				$dados = null;
 				@$result->close();
@@ -1080,11 +1083,11 @@ class DAO {
 			}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
 				$result = pg_query($this->getBdConnection(), $sql) or die($this->msgError.
                                         (\Solves\Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
-					
+
 				while($dados=pg_fetch_array($result)){
-					$resultado[] = $dados;	
+					$resultado[] = $dados;
 				}
-			}			
+			}
 			return $resultado;
 		}
 		else{
@@ -1157,12 +1160,12 @@ class DAO {
         $arr[3] = $colName . ', ' . $colLabel;
         return $arr;
     }
-    
+
     public function confereParametro($paramValue, $tipo, $maxSize){
         return !strstr($paramValue,"'") && strlen($paramValue)<$maxSize;
     }
 	public function removeAtributosSensiveisDeArray($arrItem, $arrIdsColunas){
-		foreach($arrIdsColunas as $idColuna){ 
+		foreach($arrIdsColunas as $idColuna){
 			unset($arrItem[$this->getColunaNome($idColuna)]);
 			unset($arrItem[$this->getColunaNome($idColuna)."_label"]);
 		}

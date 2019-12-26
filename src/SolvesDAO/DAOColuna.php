@@ -14,6 +14,7 @@ class DAOColuna {
 	private $dao;
 	
 	private $columnOrder;
+    private $tabela;
 	private $nome;
 	private $label;
 	private $colunaLabel;
@@ -39,12 +40,21 @@ class DAOColuna {
 	public function setColumnOrder($p){
 		$this->columnOrder = $p;
 	}
+    public function getTabela(){
+        return $this->tabela;
+    }
+    public function setTabela($p){
+        $this->tabela = $p;
+    }
 	public function getNome(){
 		return $this->nome;
 	}
 	public function setNome($p){
 		$this->nome = $p;
 	}
+    public function getNomeWithPrefix(){
+        return (\Solves\Solves::isNotBlank($this->getTabela()) ? $this->getTabela().'.':'').$this->getNome();
+    }
 	public function isObrigatorio(){
 		return $this->obrigatorio;
 	}
@@ -96,10 +106,10 @@ class DAOColuna {
 	public function setOrderByType($p){
 		$this->orderByType = $p;
 	}
-        
-        public function isTipoBoolean(){
-            return ($this->tipo=='boolean');
-        }
+
+    public function isTipoBoolean(){
+        return ($this->tipo=='boolean');
+    }
 /*END getters e setters*/	
 	
 	public function getSearchSql($search){
@@ -115,12 +125,12 @@ class DAOColuna {
 				$w = '';
 				$valuePalavra = $this->dao->getValorColunaParaScript($this, $palavras[$j], true);
 				if($this->getTipo()=='string'){
-					$w .= " UPPER(".$table.".".$this->getNome().") LIKE ".$valuePalavra." "; 
+					$w .= " UPPER(".$this->getNomeWithPrefix().") LIKE ".$valuePalavra." ";
 					$added = true;
 					$qtdAdded++;
 				}
 				else if(is_numeric($search) && $this->getTipo()=='integer'){
-					$w .= " ".$table.".".$this->getNome()." = ".$valuePalavra." ";
+					$w .= " ".$this->getNomeWithPrefix()." = ".$valuePalavra." ";
 					$added = true;
 					$qtdAdded++;
 				}
