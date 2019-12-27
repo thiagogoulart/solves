@@ -156,6 +156,10 @@ abstract class SolvesObject {
   	 public function update() {$this->addValores();$result = $this->dao->update($this->getId());$this->afterUpdate($this->old);return $result;}
   	 public function remove() {$dt = \Solves\SolvesTime::getTimestampAtual();$this->setRemoved(1);$this->setUpdatedAt($dt);$this->setRemovedAt($dt);$result = $this->update();$this->afterDelete();return $result;}
 
+    public function delete(){
+        return $this->dao->delete($this->getId());
+    }
+
  	 public function toObjectArray($list) {$resultado = array();$qtd = count($list);for ($i = 0; $i != $qtd; $i++) {$object = $this->getObject($list[$i]);$resultado[] = $object;}return $resultado;}
  	 public function toOneObject($list) {
  	 	$resultado = $this->toObjectArray($list);
