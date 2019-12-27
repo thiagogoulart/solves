@@ -186,11 +186,11 @@ abstract class SolvesObject {
             $this->dao->setLimit($init.','.$paginacaoQtd);
         }
         if($conditionPadrao==null){
-        	$conditionPadrao =" 1=1 ";
-        }else{
 	        $colRemoved = $this->dao->getColunaByNome('removed');
 	        if(isset($colRemoved) && ($colRemoved->getDao()!=null) ){
 	            $conditionPadrao = " ".$colRemoved->getNomeWithPrefix()." =0 ";
+	        }else{
+	        	$conditionPadrao =" 1=1 ";
 	        }
 	    }
         $sql = " WHERE ". $conditionPadrao;
