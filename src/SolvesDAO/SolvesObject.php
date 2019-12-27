@@ -174,7 +174,7 @@ abstract class SolvesObject {
         }
  	 }
 
-    public function getConditionSqlWithPagination($paginacaoAtual, $paginacaoQtd=null, $conditionPadrao = " 1=1 ") {
+    public function getConditionSqlWithPagination($paginacaoAtual, $paginacaoQtd=null, $conditionPadrao = null) {
         if(!\Solves\Solves::isNotBlank($paginacaoQtd)){
             $paginacaoQtd = self::$PAGINACAO_QTD;
         }
@@ -185,10 +185,14 @@ abstract class SolvesObject {
         }else if($paginacaoAtual==1){
             $this->dao->setLimit($init.','.$paginacaoQtd);
         }
-        $colRemoved = $this->dao->getColunaByNome('removed');
-        if(isset($colRemoved) && ($colRemoved->getDao()!=null) ){
-            $conditionPadrao = " ".$colRemoved->getNomeWithPrefix()." =0 ";
-        }
+        if($conditionPadrao==null){
+        	$conditionPadrao =" 1=1 ";
+        }else{
+	        $colRemoved = $this->dao->getColunaByNome('removed');
+	        if(isset($colRemoved) && ($colRemoved->getDao()!=null) ){
+	            $conditionPadrao = " ".$colRemoved->getNomeWithPrefix()." =0 ";
+	        }
+	    }
         $sql = " WHERE ". $conditionPadrao;
         return ($sql);
     }
