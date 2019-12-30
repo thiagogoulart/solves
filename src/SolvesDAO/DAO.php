@@ -13,8 +13,9 @@ class DAO {
 
 	private $connection;
 
-	private $tabela;
+    private $tabela;
 	private $pk;
+    private $alias;
 	private $colunaLabelOrder;
 	private $colsLabelOrder;
 	private $colunas;
@@ -70,6 +71,12 @@ class DAO {
 	public function setTabela($p){
 		$this->tabela = $p;
 	}
+    public function getAlias(){
+        return $this->alias;
+    }
+    public function setAlias($p){
+        $this->alias = $p;
+    }
 	public function getPk(){
 		return $this->pk;
 	}
@@ -99,7 +106,6 @@ class DAO {
 		$coluna->setOrderByType($orderByType);
         $coluna->setTabela($this->getTabela());
 		$coluna->setDao($this);
-
 		$this->colunas[$order] = $coluna;
 	}
 	public function addOutroFieldSelect($order, $coluna){
@@ -141,6 +147,7 @@ class DAO {
 	}
 	public function addJoinWithAlias($type, $colOrder, $daoTarget, $alias){
 		$daoColuna = $this->getColuna($colOrder);
+        $daoTarget->setAlias($alias);
 		$join = new DAOJoin($this, $daoColuna, $type, $colOrder, $daoTarget);
 		$join->setAlias($alias);
 		$this->colunas[$colOrder]->setJoin($join);

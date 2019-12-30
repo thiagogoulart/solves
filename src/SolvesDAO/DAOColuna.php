@@ -53,7 +53,8 @@ class DAOColuna {
 		$this->nome = $p;
 	}
     public function getNomeWithPrefix(){
-        return (\Solves\Solves::isNotBlank($this->getTabela()) ? $this->getTabela().'.':'').$this->getNome();
+        $alias = (\Solves\Solves::isNotBlank($this->dao->getAlias()) ? $this->dao->getAlias().'.': (\Solves\Solves::isNotBlank($this->getTabela()) ? $this->getTabela().'.':''));
+        return $alias.$this->getNome();
     }
 	public function isObrigatorio(){
 		return $this->obrigatorio;
@@ -120,7 +121,6 @@ class DAOColuna {
 			$palavras = explode(" ", $search);	
 			$qtdPalavras = count($palavras);
 			for($j=0; $j!=$qtdPalavras; $j++){
-				$table = $this->getDao()->getTabela();						
 				$added = false;
 				$w = '';
 				$valuePalavra = $this->dao->getValorColunaParaScript($this, $palavras[$j], true);
