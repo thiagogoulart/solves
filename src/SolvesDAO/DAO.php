@@ -1067,7 +1067,7 @@ class DAO {
 	public function sqlToResultArray($sql){
 		$this->msgError .= '[consulta]';
 		if($sql && $sql!=""){
-		//	echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>";
+			//echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>";
 			$resultado = array();
 			if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
 				$result = $this->getBdConnection()->query($sql, MYSQLI_USE_RESULT) or die($this->msgError.
@@ -1145,6 +1145,34 @@ class DAO {
                     		$origemJoinColName = $daoTargetAlias . '.' . $targetColLabel->getNome();
                     		$nomeColunaOtherJoinLabel = $nomeColuna . '_'.$targetColLabel->getNome();
                         	$joinLabels .= (\Solves\Solves::isNotBlank($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaOtherJoinLabel;
+
+                            $subjoinLabel = $targetColLabel->getJoin();
+                            if(isset($subjoinLabel)){
+                                $daoTargetSubJoin = $subjoinLabel->getDaoTarget();
+                                $daoTargetSubJoinTabela = $daoTargetSubJoin->getTabela();
+                                $daoTargetSubJoinPk = $daoTargetSubJoin->getPk();
+                                $daoTargetSubJoinAlias = $subjoinLabel->getAlias();
+                                $daoTargetSubJoinColLabel = $daoTarget->getColunaLabelName();
+                                $daoTargetColsLabelSubJoin = $daoTargetSubJoin->getColsLabelOrder();
+                                if (!isset($daoTargetSubJoinAlias)) {
+                                    $daoTargetSubJoinAlias = $daoTargetSubJoin->getTabela();
+                                }
+                                //subjoin target alias deve ser concatenado com o superior
+                                $daoTargetSubJoinAlias = $daoTargetAlias.'_'.$daoTargetSubJoinAlias;
+                                $joins_sql .= ' ' . $subjoinLabel->getType() . ' JOIN ' . $daoTargetSubJoinTabela . ' as ' . $daoTargetSubJoinAlias . ' ON ' . $daoTargetSubJoinAlias . '.' . $daoTargetSubJoinPk . ' = ' . $origemJoinColName;
+
+                                $origemSubJoinColName = $daoTargetSubJoinAlias . '.' . $daoTargetSubJoinColLabel;
+                                $nomeColunaOtherSubJoinLabel = $nomeColunaOtherJoinLabel. '_'.$daoTargetSubJoinColLabel;
+                                $joinLabels .= (\Solves\Solves::isNotBlank($joinLabels) ? ', ' : ''). $origemSubJoinColName . ' as ' . $nomeColunaOtherSubJoinLabel;
+
+                                if(isset($daoTargetColsLabelSubJoin) && count($daoTargetColsLabelSubJoin)>0){
+                                    foreach($daoTargetColsLabelSubJoin as $targetColLabelSubJoin){
+                                        $origemSubJoinColName = $daoTargetSubJoinAlias . '.' . $targetColLabelSubJoin->getNome();
+                                        $nomeColunaOtherSubJoinLabel = $nomeColunaOtherJoinLabel.'_'.$targetColLabelSubJoin->getNome();
+                                        $joinLabels .= (\Solves\Solves::isNotBlank($joinLabels) ? ', ' : ''). $origemSubJoinColName . ' as ' . $nomeColunaOtherSubJoinLabel;
+                                    }
+                                }
+                            }
 	                    }
 	                }
                 }
