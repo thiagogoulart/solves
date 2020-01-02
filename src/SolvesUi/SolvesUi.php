@@ -42,6 +42,10 @@ class SolvesUi {
     }
     public static function getRestrictedUrls(){return SolvesUi::$RESTRICTED_URLS;}
     public static function isRestrictedUrl($url){
+        if(\Solves\Solves::isNotBlank($url)){
+            $arrUrl = explode('/', $url);
+            $url = $arrUrl[0];
+        }
         if(SolvesUi::$ALL_RESTRICTED){
             return !in_array($url, SolvesUi::$PUBLIC_URLS);
         }else{
@@ -59,6 +63,10 @@ class SolvesUi {
     }
     public static function getPublicUrls(){return SolvesUi::$PUBLIC_URLS;}
     public static function isPublicUrl($url){
+        if(\Solves\Solves::isNotBlank($url)){
+            $arrUrl = explode('/', $url);
+            $url = $arrUrl[0];
+        }
         return in_array($url, SolvesUi::$PUBLIC_URLS);
     }
 
