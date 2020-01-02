@@ -645,6 +645,8 @@ class SolvesConfUrls{
     private $cdnApp;
     private $localCdn;
     private $localCdnApp;
+    private $localCdnAddress;
+    private $localCdnAppAddress;
 
     private $appGooglePlayStoreLink = '';
     private $appAppleStoreLink = '';
@@ -672,7 +674,9 @@ class SolvesConfUrls{
     public function getJsView(){return $this->jsView;}
     public function getCdnApp(){return $this->cdnApp;}
     public function getLocalCdn(){return $this->localCdn;}
+    public function getLocalCdnAddress(){return $this->localCdnAddress;}
     public function getLocalCdnApp(){return $this->localCdnApp;}
+    public function getLocalCdnAppAddress(){return $this->localCdnAppAddress;}
 
     public function getSolvesConfUrl() :\Solves\SolvesConfUrl {
         if($this->isModeProd){
@@ -737,6 +741,9 @@ class SolvesConfUrls{
         //LOCAL CDN app
         $this->localCdn = $this->getPathRaiz().self::SOLVES_LOCAL_CDN;
         $this->localCdnApp = $this->localCdn.$dirCdnInApp;
+        //Local CDN ADDRESS (starting like http:// https://)
+        $this->localCdnAddress = $solvesConfUrl->getSiteUrl().Solves::removeBarraInicial($this->localCdn);
+        $this->localCdnAppAddress = $solvesConfUrl->getSiteUrl().Solves::removeBarraInicial($this->localCdnApp);
 
         //Informa lib Solves
         if($this->isModeProd){
