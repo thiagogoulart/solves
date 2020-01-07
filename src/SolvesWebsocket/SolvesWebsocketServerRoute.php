@@ -21,6 +21,9 @@ class SolvesWebSocketServerRoute {
     public function getPath(){
         return $this->path;
     }
+    public function getQtdConnections(){
+        return count($this->connections);
+    }
 
     protected function registraNovaConexao(\Ratchet\ConnectionInterface $conn){
         $this->connections[$conn->resourceId] = $conn;

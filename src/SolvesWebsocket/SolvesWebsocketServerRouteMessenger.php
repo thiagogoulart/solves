@@ -77,7 +77,12 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
         return $this->getHttpHeaderProperty($conn, "Sec-WebSocket-Key");
     }
     private function getHttpHeaderProperty(\Ratchet\ConnectionInterface $conn, $propName){
-        $v = $this->getHttpRequestHeaders($conn)[$propName];
-        return ((isset($v) && count($v)>0) ? $v[0] : null);
+        $headers = $this->getHttpRequestHeaders($conn);
+        $v = null;
+        if(isset($headers) && array_key_exists($propName, $headers)){
+            $arr = $headers[$propName];
+            $v = ((isset($arr) && count($arr)>0) ? $arr[0] : null);
+        }
+        return $v;
     }
 }
