@@ -19,20 +19,26 @@ final class MessageData implements \JsonSerializable
 
     public static function fromArray(array $data): self
     {
+        $messageData = new self();
+
         foreach ($data as $key => $value) {
-            if (!\is_string($key) || !\is_string($value)) {
-                throw new InvalidArgumentException('The keys and values in message data must be all strings.');
+            if (!self::isStringable($key) || !self::isStringable($value)) {
+                throw new InvalidArgumentException('Message data must be a one-dimensional array of string(able) keys and values.');
             }
+
+            $messageData->data[(string) $key] = (string) $value;
         }
 
-        $new = new self();
-        $new->data = $data;
-
-        return $new;
+        return $messageData;
     }
 
     public function jsonSerialize()
     {
         return $this->data;
+    }
+
+    private static function isStringable($value): bool
+    {
+        return \is_string($value) || (\is_object($value) && \method_exists($value, '__toString'));
     }
 }

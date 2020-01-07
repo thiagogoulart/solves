@@ -7,6 +7,7 @@ namespace Kreait\Firebase;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 use Kreait\Firebase\ServiceAccount\Discoverer;
 use Kreait\Firebase\Util\JSON;
+use Throwable;
 
 class ServiceAccount
 {
@@ -15,6 +16,16 @@ class ServiceAccount
     private $clientId;
     private $clientEmail;
     private $privateKey;
+    /** @var string|null */
+    private $filePath;
+
+    /**
+     * @return string|null
+     */
+    public function getFilePath()
+    {
+        return $this->filePath;
+    }
 
     public function getProjectId(): string
     {
@@ -159,15 +170,23 @@ class ServiceAccount
         try {
             $file = new \SplFileObject($filePath);
             $json = $file->fread($file->getSize());
-        } catch (\Throwable $e) {
-            throw new InvalidArgumentException(\sprintf('%s can not be read: %s', $filePath, $e->getMessage()));
+        } catch (Throwable $e) {
+            throw new InvalidArgumentException("{$filePath} can not be read: {$e->getMessage()}");
+        }
+
+        if (!\is_string($json)) {
+            throw new InvalidArgumentException("{$filePath} can not be read");
         }
 
         try {
-            return self::fromJson($json);
-        } catch (\Throwable $e) {
+            $serviceAccount = self::fromJson($json);
+        } catch (Throwable $e) {
             throw new InvalidArgumentException(\sprintf('%s could not be parsed to a Service Account: %s', $filePath, $e->getMessage()));
         }
+
+        $serviceAccount->filePath = $filePath;
+
+        return $serviceAccount;
     }
 
     public static function withProjectIdAndServiceAccountId(string $projectId, string $serviceAccountId): self

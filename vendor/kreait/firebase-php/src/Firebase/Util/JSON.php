@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Util;
 
 use Kreait\Firebase\Exception\InvalidArgumentException;
+use Throwable;
 
-/**
- * @internal
- */
 class JSON
 {
     /**
@@ -21,12 +19,12 @@ class JSON
      * @see \GuzzleHttp\json_encode()
      *
      * @param mixed $value   The value being encoded
-     * @param int    $options JSON encode option bitmask
-     * @param int    $depth   Set the maximum depth. Must be greater than zero
+     * @param int $options JSON encode option bitmask
+     * @param int $depth   Set the maximum depth. Must be greater than zero
      *
      * @throws InvalidArgumentException if the JSON cannot be encoded
      */
-    public static function encode($value, $options = null, $depth = null): string
+    public static function encode($value, int $options = null, int $depth = null): string
     {
         $options = $options ?? 0;
         $depth = $depth ?? 512;
@@ -37,7 +35,7 @@ class JSON
                 'json_encode error: '.\json_last_error_msg());
         }
 
-        return $json;
+        return (string) $json;
     }
 
     /**
@@ -82,7 +80,7 @@ class JSON
             self::decode($value);
 
             return true;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
     }
@@ -94,6 +92,6 @@ class JSON
      */
     public static function prettyPrint($value): string
     {
-        return self::encode($value, \JSON_PRETTY_PRINT);
+        return self::encode($value, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES);
     }
 }

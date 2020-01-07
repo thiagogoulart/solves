@@ -7,6 +7,7 @@ namespace Kreait\Firebase\Util;
 use DateTimeImmutable;
 use DateTimeZone;
 use Kreait\Firebase\Exception\InvalidArgumentException;
+use Throwable;
 
 /**
  * @internal
@@ -33,10 +34,11 @@ class DT
             $value = '0';
         }
 
-        try {
+        if (\is_scalar($value) || (\is_object($value) && \method_exists($value, '__toString'))) {
             $value = (string) $value;
-        } catch (\Throwable $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } else {
+            $type = \is_object($value) ? \get_class($value) : \gettype($value);
+            throw new InvalidArgumentException("This {$type} cannot be parsed to a DateTime value");
         }
 
         if (\ctype_digit($value)) {
@@ -57,7 +59,7 @@ class DT
 
         // microtime
         if (\preg_match('@(?P<msec>^0?\.\d+) (?P<sec>\d+)$@', $value, $matches)) {
-            $value = (float) $matches['sec'] + (float) $matches['msec'];
+            $value = (string) ((float) $matches['sec'] + (float) $matches['msec']);
 
             if ($result = DateTimeImmutable::createFromFormat('U.u', \sprintf('%F', $value))) {
                 return $result->setTimezone($tz);
@@ -66,7 +68,7 @@ class DT
 
         try {
             return (new DateTimeImmutable($value))->setTimezone($tz);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
     }

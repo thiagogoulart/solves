@@ -8,10 +8,8 @@ use function GuzzleHttp\Psr7\uri_for;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 use Kreait\Firebase\Value;
 use Psr\Http\Message\UriInterface;
+use Throwable;
 
-/**
- * @internal
- */
 class Url implements \JsonSerializable, Value
 {
     /**
@@ -27,11 +25,20 @@ class Url implements \JsonSerializable, Value
         $this->value = $value;
     }
 
+    /**
+     * @param string|UriInterface|mixed $value
+     *
+     * @throws InvalidArgumentException
+     */
     public static function fromValue($value): self
     {
+        if (\is_object($value) && \method_exists($value, '__toString')) {
+            $value = (string) $value;
+        }
+
         try {
             return new self(uri_for($value));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
     }

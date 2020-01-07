@@ -1,13 +1,14 @@
 {
     "name": "thiagogoulart/solves",
-    "description": "Classes úteis para Autorização, Pagamento e Mapeamento Objeto relacional de forma simples e configurável para PHP.",
+    "description": "Classes úteis para Autorização, Pagamento, Envio de E-mail, WebSocket, Router, Mapeamento Objeto relacional de forma simples e configurável para PHP, entre outras classes úteis.",
     "type": "library",
     "require": {
         "php": ">=7.1",
         "pagseguro/pagseguro-php-sdk" : "*",
         "kreait/firebase-php" : "*",
         "minishlink/web-push": "^5.2.0",
-        "phpmailer/phpmailer" : "~6.0"
+        "phpmailer/phpmailer" : "~6.0",
+        "cboden/ratchet": "^0.4"
     },
     "repositories": [
         {
@@ -25,6 +26,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/web-push-libs/web-push-php.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ratchetphp/Ratchet.git"
         }
     ],
     "license": "proprietary",
@@ -43,7 +48,8 @@
             "SolvesMail\\": "src/SolvesMail/",
             "SolvesPay\\": "src/SolvesPay/",
             "SolvesUi\\": "src/SolvesUi/",
-            "SolvesNotification\\": "src/SolvesNotification/"
+            "SolvesNotification\\": "src/SolvesNotification/",
+            "SolvesWebsocket\\": "src/SolvesWebsocket/"
         }
     }
 }

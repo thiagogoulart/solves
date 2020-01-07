@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Messaging;
 
 use Kreait\Firebase\Exception\InvalidArgumentException;
+use Throwable;
 
 class Notification implements \JsonSerializable
 {
@@ -22,6 +23,10 @@ class Notification implements \JsonSerializable
         $this->title = $title;
         $this->body = $body;
         $this->imageUrl = $imageUrl;
+
+        if ($this->title === null && $this->body === null) {
+            throw new InvalidArgumentException('The title and body of a notification cannot both be NULL');
+        }
     }
 
     public static function create(string $title = null, string $body = null, string $imageUrl = null): self
@@ -37,7 +42,7 @@ class Notification implements \JsonSerializable
                 $data['body'] ?? null,
                 $data['image'] ?? null
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }

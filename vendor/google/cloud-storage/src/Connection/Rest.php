@@ -43,9 +43,9 @@ class Rest implements ConnectionInterface
     use RestTrait;
     use UriTrait;
 
-    const BASE_URI = 'https://www.googleapis.com/storage/v1/';
-    const UPLOAD_URI = 'https://www.googleapis.com/upload/storage/v1/b/{bucket}/o{?query*}';
-    const DOWNLOAD_URI = 'https://www.googleapis.com/storage/v1/b/{bucket}/o/{object}{?query*}';
+    const BASE_URI = 'https://storage.googleapis.com/storage/v1/';
+    const UPLOAD_URI = 'https://storage.googleapis.com/upload/storage/v1/b/{bucket}/o{?query*}';
+    const DOWNLOAD_URI = 'https://storage.googleapis.com/storage/v1/b/{bucket}/o/{object}{?query*}';
 
     /**
      * @var string
@@ -406,6 +406,46 @@ class Rest implements ConnectionInterface
     public function lockRetentionPolicy(array $args = [])
     {
         return $this->send('buckets', 'lockRetentionPolicy', $args);
+    }
+
+    /**
+     * @param array $args
+     */
+    public function createHmacKey(array $args = [])
+    {
+        return $this->send('projects.resources.hmacKeys', 'create', $args);
+    }
+
+    /**
+     * @param array $args
+     */
+    public function deleteHmacKey(array $args = [])
+    {
+        return $this->send('projects.resources.hmacKeys', 'delete', $args);
+    }
+
+    /**
+     * @param array $args
+     */
+    public function getHmacKey(array $args = [])
+    {
+        return $this->send('projects.resources.hmacKeys', 'get', $args);
+    }
+
+    /**
+     * @param array $args
+     */
+    public function updateHmacKey(array $args = [])
+    {
+        return $this->send('projects.resources.hmacKeys', 'update', $args);
+    }
+
+    /**
+     * @param array $args
+     */
+    public function listHmacKeys(array $args = [])
+    {
+        return $this->send('projects.resources.hmacKeys', 'list', $args);
     }
 
     /**

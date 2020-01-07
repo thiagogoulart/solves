@@ -1,21 +1,305 @@
 # CHANGELOG
 
+## 4.38.0 - 2020-01-02
+
+* Validate Cloud Message data before casting it to strings (and failing while doing it) ([#365](https://github.com/kreait/firebase-php/issues/365), [#368](https://github.com/kreait/firebase-php/issues/368))
+
+## 4.37.0 - 2019-12-13
+
+### Auth
+
+* Reworked action link (OOB mail) handling for better resilience and flexibility
+* Added methods ([Documentation](https://firebase-php.readthedocs.io/en/latest/user-management.html#email-link-for-sign-in))
+  * `getEmailVerificationLink($email, $actionCodeSettings)`
+  * `sendEmailVerificationLink($email, $actionCodeSettings, $locale)`
+  * `getPasswordResetLink($email, $actionCodeSettings)`
+  * `sendPasswordResetLink($email, $actionCodeSettings, $locale)`
+  * `getSignInWithEmailLink($email, $actionCodeSettings)`
+  * `sendSignInWithEmailLink($email, $actionCodeSettings, $locale)`
+  * `getEmailActionLink($type, $email, $actionCodeSettings)`
+  * `sendEmailActionLink($type, $email, $actionCodeSettings, $locale)`
+* Deprecated methods
+  * `sendPasswordResetEmail()`
+  * `sendEmailVerification()`
+
+## 4.36.2 - 2019-12-05
+
+* Actually increased the FCM batch request limit to 500 (not just in the documentation)
+
+## 4.36.1 - 2019-12-02
+
+### Bugfixes
+
+#### Messaging
+
+* The Messaging component didn't work for projects with non-word characters in their project ID.  
+
+## 4.36.0 - 2019-12-01
+
+### Auth
+
+* Added methods to verify password reset codes and confirm password reset requests
+  ([Documentation](https://firebase-php.readthedocs.io/en/latest/user-management.html#verify-a-password-reset-code)),
+  thanks to [@joemugen](https://github.com/joemugen)
+
+### Messaging
+
+* Increased FCM batch request limit to 500 (see [firebase/firebase-admin-node#699](https://github.com/firebase/firebase-admin-node/pull/696))
+
+### General
+
+* Made custom PSR-7 messages with wrapped messages immutable (until now only the wrapped messages were immutable)
+* Added PHP 7.4 to the testing matrix
+
+## 4.35.1 - 2019-11-01
+
+### Bugfixes
+
+* Replaced usages of `mb_strlen()` with `Psr\Http\Message\StreamInterface::getSize()` to determine the Content-Length
+  of a request to prevent unexpected side effects [#348](https://github.com/kreait/firebase-php/pull/348).
+
+## 4.35.0 - 2019-10-18
+
+### Changes
+
+* Removed deprecation warnings (`E_USER_DEPRECATED`) when using `Kreait\Firebase` and `Kreait\Firebase\Factory` 
+
+#### Internal
+
+* Storage and Firestore clients are now instantiated directly instead of relying on the `ServiceBuilder` class that
+  comes with the `google/cloud-core` package. This enables the usage of `google/cloud-core` versions smaller than
+  `1.19` (for example in older projects that can't use newer versions)
+* `Kreait\Firebase\Factory` is now injected into `Kreait\Firebase` instead of each individual component.
+
+## 4.34.0 - 2019-10-13
+
+### Added
+
+#### Firestore
+
+* You can now access your project's Firestore database. ([Documentation](https://firebase-php.readthedocs.io/en/latest/cloud-firestore.html))
+
+#### General
+
+* It is now possible to override the HTTP Handler used for API requests. ([Documentation](https://firebase-php.readthedocs.io/en/latest/setup.html#using-a-custom-http-handler))
+
+### Changes
+
+#### Messaging
+
+* When sending a message with a notification that has neither a title nor a body, the Firebase API returns an error.
+  This is now prevented by checking for the existence of one of both when creating a notification. It is still
+  possible to explicitely use empty strings.
+
+#### Storage
+
+* The direct integration of [`league/flystem`](https://github.com/thephpleague/flysystem) via
+  [`superbalist/flysystem-google-storage`](https://github.com/Superbalist/flysystem-google-cloud-storage) and
+  by `\Kreait\Firebase\Storage::getFilesystem()` has been deprecated.
+
+#### General
+
+* Using the `Kreait\Firebase` class has been deprecated. Please instantiate the services you need directly: 
+
+```php
+<?php
+
+use Kreait\Firebase;
+
+# deprecated
+$firebase = (new Firebase\Factory())
+    // ->withServiceAccount(...)
+    // ->...
+    ->create()
+;
+
+$auth = $firebase->getAuth();
+$database = $firebase->getDatabase();
+$messaging = $firebase->getMessaging();
+$remoteConfig = $firebase->getRemoteConfig();
+$storage = $firebase->getStorage();
+
+# recommended
+$factory = (new Firebase\Factory())
+    // ->withServiceAccount(...)
+    // ->...
+    // no call to ->create()
+;
+
+$auth = $factory->createAuth();
+$database = $factory->createDatabase();
+$messaging = $factory->createMessaging();
+$remoteConfig = $factory->createRemoteConfig();
+$storage = $factory->createStorage();
+```
+
+* When using `Kreait\Firebase\Factory::withServiceAccount()` auto-discovery will be disabled.
+* Calling a deprecated method will trigger a `E_USER_DEPRECATED` warning (only if PHP is configured to show them). 
+
+## 4.32.0 - 2019-09-13
+
+### Added
+
+#### Dynamic Links
+
+* You can now create Dynamic Links and retrieve statistics for Dynamic Links. ([Documentation](https://firebase-php.readthedocs.io/en/latest/dynamic-links.html))
+  
+  ```php
+  use Kreait\Firebase;
+
+  $firebaseFactory = new Firebase\Factory();
+
+  $dynamicLinksDomain = 'https://example.page.link';
+  $dynamicLinks = $firebaseFactory->createDynamicLinksService($dynamicLinksDomain);
+  
+  $shortLink = $dynamicLinks->createShortLink('https://domain.tld/some/path');
+  $stats = $dynamicLinks->getStatistics('https://example.page.link/wXYZ');
+  ```
+
+### Changes
+
+#### General
+
+* It is now possible to give the path to a Service Account JSON file directly to the factory instead of instantiating a
+  `ServiceAccount` instance beforehand.
+  
+  ```php
+  use Kreait\Firebase;
+  
+  $firebase = (new Firebase\Factory())
+      ->withServiceAccount('/path/to/google-service-account.json')
+      ->create();
+  ```
+
+#### Realtime Database
+
+- `Kreait\Firebase\Database::getRules()` has been deprecated in favor of `Kreait\Firebase\Database::getRuleSet()`
+
+## 4.31.0 - 2019-08-22
+
+### Bugfixes
+
+#### Messaging
+
+* Fixed the inability to correctly parse a response from the Firebase Batch Messaging when `Messaging::sendMulticast()`
+  or `Messaging::sendAll()` was used with only one recipient. 
+
+### Changes
+
+#### Auth
+
+* The third parameter of `Kreait\Firebase\Auth::verifyIdToken()` (`$allowTimeInconsistencies`) has been deprecated
+  because, since 4.25.0, a default leeway of 5 minutes is already applied. Using it will trigger a `E_USER_DEPRECATED`
+  warning.
+* Previously the "verified" status of an user email could be `null` if not defined - it will now be `false` by default 
+
+## 4.30.1 - 2019-08-17
+
+### Changes
+
+#### Database
+
+* Fixed a deprecation warning when getting the root reference with `Kreait\Firebase\Database::getReference()` 
+  without giving a path.
+  
+#### Messaging
+
+* When sending multiple messages at once, it can happen in some cases that the HTTP sub-responses can not be parsed
+  which would cause an exception. Until we figure out the cause, those exceptions are now caught, with the caveat
+  that the resulting send-report is not correct (it will show 0 successes and 0 failures even if the messages
+  were successfully sent).
+
+## 4.30.0 - 2019-08-16
+
+### Changes
+
+``Kreait\Firebase\Factory`` now exposes the methods to create the single components (Auth, Messaging, Remote Config,
+Storage) directly in order to enable its usage in [kreait/laravel-firebase](https://github.com/kreait/laravel-firebase).
+
+## 4.29.0 - 2019-08-13
+
+### Added
+
+#### Cloud Messaging
+
+* Added `Kreait\Firebase\Messaging::sendAll()` to send up to 100 messages to multiple targets (tokens, topics, and
+  conditions) in one request.
+  ([Documentation](https://firebase-php.readthedocs.io/en/latest/cloud-messaging.html#send-multiple-messages-at-once))
+* A condition will now ensure that no more than five topics are provided. Previously, the Firebase REST API would 
+  have rejected the message with a non-specific "Invalid condition expression provided."
+  
+#### Remote Config
+
+* The Remote Config history can now be filtered. 
+  ([Documentation](https://firebase-php.readthedocs.io/en/latest/remote-config.html#filtering))
+* A published Remote Config template now contains a version that can be retrieved with 
+  `Kreait\Firebase\RemoteConfig\Template::getVersion()`
+* The parameters of a Remote Config template can now be retrieved with
+  `Kreait\Firebase\RemoteConfig\Template::getParameters()`
+  
+### Changes
+
+#### Cloud Messaging
+
+* `Kreait\Firebase\Messaging::sendMulticast()` now makes full use of the FCM batch API, resulting in substantial
+  performance improvements.
+* Values passed to `Kreait\Firebase\Messaging\MessageData::withData()` will now be cast to strings instead of
+  throwing InvalidArgument exceptions when they are not strings.
+
+## 4.28.0 - 2019-07-29
+
+### Added
+
+#### General
+
+* The SDK is now able to handle connection issues more gracefully. The following exceptions will now be thrown 
+  when a connection could not be established:
+  * `Kreait\Firebase\Auth\ApiConnectionFailed`
+  * `Kreait\Firebase\Database\ApiConnectionFailed`
+  * `Kreait\Firebase\Messaging\ApiConnectionFailed`
+  * `Kreait\Firebase\RemoteConfig\ApiConnectionFailed`
+
+#### Cloud Messaging
+
+* It is now possible to retrieve extended information about application instances related to a 
+  registration token, including the topics an application instance/registration token is subscribed to.
+  ([Documentation](https://firebase-php.readthedocs.io/en/latest/cloud-messaging.html#app-instance-management))
+
+### Changes
+
+#### General
+
+* Each component now has its own catchable exception interface, e.g. `Kreait\Firebase\Exception\AuthException` or 
+  `Kreait\Firebase\Exception\DatabaseException`.
+* The following exceptions are now interfaces implemented by specific errors instead of extensible classes:
+  * `Kreait\Firebase\Exception\AuthException`
+  * `Kreait\Firebase\Exception\DatabaseException` (new)
+  * `Kreait\Firebase\Exception\MessagingException`
+  * `Kreait\Firebase\Exception\RemoteConfigException`
+* `Kreait\Firebase\Auth\CustomTokenViaGoogleIam` is no longer using deprecated methods to build a custom token.
+* Getting requests and responses from exceptions is now considered deprecated. If you want to debug HTTP requests,
+  use the Firebase factory to debug the HTTP client via configuration or an additional middleware.    
+
 ## 4.27.0 - 2019-07-19
 
 ### Added
 
-- Cloud Messaging: Notifications can now be provided with an image URL
+#### Cloud Messaging
+
+* Notifications can now be provided with an image URL
   ([Documentation](https://firebase-php.readthedocs.io/en/latest/cloud-messaging.html#adding-a-notification))
-- Cloud Messaging: You can use `Kreait\Firebase\Messaging\RawMessageFromArray(array $data)` to create a message
+* You can use `Kreait\Firebase\Messaging\RawMessageFromArray(array $data)` to create a message
   without the SDK checking it for validity before sending it. This gives you full control over the sent 
   message, but also means that you have to send/validate a message in order to know if it's valid or not.
   ([Documentation](https://firebase-php.readthedocs.io/en/latest/cloud-messaging.html#sending-a-fully-configured-raw-message))
-- Cloud Messaging: It is now possible to add platform independent FCM options to a message.
+* It is now possible to add platform independent FCM options to a message.
   ([Documentation](https://firebase-php.readthedocs.io/en/latest/cloud-messaging.html#adding-platform-independent-fcm-options))
 
-### Changed
+### Changes
 
-- Removed ability to specify multiple message targets (Condition/Token/Topic) at once when creating an FCM message
+#### Cloud Messaging
+
+* Removed ability to specify multiple message targets (Condition/Token/Topic) at once when creating an FCM message
   through `CloudMessage::fromArray()`. Previously, only the first matched target was used. 
   Now, an `InvalidArgument` exception is thrown.
 
@@ -375,7 +659,7 @@ so existing behaviour doesn't change.
 ### New features
 
 * Added support for the Firebase Cloud Storage
-  ([Documentation](https://firebase-php.readthedocs.io/en/latest/storage.html))
+  ([Documentation](https://firebase-php.readthedocs.io/en/latest/cloud-storage.html))
 
 ## 4.0.2 - 2018-02-22
 
@@ -679,5 +963,4 @@ to see which changes in your code are required when upgrading from 2.x to 3.0.
 
 ## 1.x
 
-* The changelog for version 1.x can be found here:
-  https://github.com/kreait/firebase-php/blob/1.x/CHANGELOG.md
+* The changelog for version 1.x can be found at https://github.com/kreait/firebase-php/blob/1.1/CHANGELOG.md

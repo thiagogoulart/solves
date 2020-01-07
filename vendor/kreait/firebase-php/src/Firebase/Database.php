@@ -46,14 +46,16 @@ class Database
      *
      * @see https://firebase.google.com/docs/reference/js/firebase.database.Database#ref
      *
-     * @param string $path
-     *
      * @throws InvalidArgumentException
      */
     public function getReference(string $path = null): Reference
     {
+        if ($path === null || \trim($path) === '') {
+            $path = '/';
+        }
+
         try {
-            return new Reference($this->uri->withPath($path ?? ''), $this->client);
+            return new Reference($this->uri->withPath($path), $this->client);
         } catch (\InvalidArgumentException $e) {
             throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
@@ -88,11 +90,27 @@ class Database
      *
      * @see https://firebase.google.com/docs/database/rest/app-management#retrieving-firebase-realtime-database-rules
      */
-    public function getRules(): RuleSet
+    public function getRuleSet(): RuleSet
     {
         $rules = $this->client->get($this->uri->withPath('.settings/rules'));
 
         return RuleSet::fromArray($rules);
+    }
+
+    /**
+     * Retrieve Firebase Database Rules.
+     *
+     * @deprecated 4.32.0 Use \Kreait\Firebase\Database::getRuleSet() instead
+     * @see getRuleSet()
+     */
+    public function getRules(): RuleSet
+    {
+        \trigger_error(
+            __METHOD__.' is deprecated. Use \Kreait\Firebase\Database::getRuleSet() instead.',
+            \E_USER_DEPRECATED
+        );
+
+        return $this->getRuleSet();
     }
 
     /**
