@@ -25,11 +25,14 @@ class SolvesWebSocketServer {
     }
 
     public function addRoute(SolvesWebSocketServerRoute $instance){    
-    	$this->routes[] = $instance;
+    	$this->routes[$instance->getPath()] = $instance;
 	    $this->app->route($instance->getPath(), $instance, array('*'));
     }
     public function addRouteEcho(){    	
 	    $this->app->route('/echo', new \Ratchet\Server\EchoServer, array('*'));
+    }
+    public function getRoute($path){
+        return $this->routes[$path];
     }
     public function getRoutes(){
     	return $this->routes;

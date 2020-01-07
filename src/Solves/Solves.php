@@ -54,6 +54,8 @@ class Solves {
 	private static $IMG_PATH;
 	private static $IMG_PATH_LOGO;
 
+	private static $WEBSOCKET_SERVER = null;
+
     public static function config($systemName, $systemVersion, $siteTitulo, $siteUrl, $siteDescr, $sitekeys, $imgPath, $imgPathLogo, $appUrl=null){
     	Solves::setSystemName($systemName);
     	Solves::setSystemVersion($systemVersion);
@@ -109,6 +111,10 @@ class Solves {
     public static function getCompleteSiteIcone(){return self::getCompleteUrlPath(Solves::$IMG_PATH_LOGO.'favicon-32x32.png');}
     public static function getSiteContext(){return Solves::$SITE_CONTEXT;}
     public static function getSiteDir(){return Solves::$SITE_DIR;}
+
+
+    public static function setWebsocketServer(\SolvesWebsocket\SolvesWebSocketServer $s){Solves::$WEBSOCKET_SERVER = $s;}
+    public static function getWebsocketServer(){return Solves::$WEBSOCKET_SERVER;}
 
     public static function getCompleteImgPath(){
         return self::getCompleteUrlPath(Solves::getImgPath());
