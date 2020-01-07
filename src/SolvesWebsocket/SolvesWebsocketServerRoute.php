@@ -28,9 +28,8 @@ class SolvesWebSocketServerRoute {
     }
     protected function fechaConexao(\Ratchet\ConnectionInterface $conn){
         $resourceId = $conn->resourceId;
-        $key = array_search($resourceId, $this->connections);
-        if($key!==false){
-            unset($this->connections[$key]);
+        if(array_key_exists($resourceId, $this->connections)){
+            unset($this->connections[$resourceId]);
         }
         $this->clients->detach($conn);
     }

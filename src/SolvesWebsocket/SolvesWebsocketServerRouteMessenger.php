@@ -25,7 +25,7 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
         $this->onEventMessage($from, $msg);
     }
     public function onOpen(\Ratchet\ConnectionInterface $conn) {
-        $this->resgistraNovaConexao($conn);
+        $this->registraNovaConexao($conn);
         $this->onEventOpen($conn);
     }
     public function onClose(\Ratchet\ConnectionInterface $conn) {
@@ -47,5 +47,37 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
     public function sendToOne(\Ratchet\ConnectionInterface $from, $destinatarioResourceId, $msg){
         $connDestino = $this->getConnectionClientByResourceId($destinatarioResourceId);
         $connDestino->send($msg);
+    }
+
+    protected function getHttpRequest(\Ratchet\ConnectionInterface $conn){
+        return $conn->httpRequest;
+    }
+    protected function getHttpRequestHeaders(\Ratchet\ConnectionInterface $conn){
+        return $conn->httpRequest->getHeaders();
+    }
+    public function getResourceId(\Ratchet\ConnectionInterface $conn){
+        return $conn->resourceId;
+    }
+    public function getHost(\Ratchet\ConnectionInterface $conn){
+        return $this->getHttpHeaderProperty($conn, 'Host');
+    }
+    public function getUserAgent(\Ratchet\ConnectionInterface $conn){
+        return $this->getHttpHeaderProperty($conn, "User-Agent");
+    }
+    public function getOrigin(\Ratchet\ConnectionInterface $conn){
+        return $this->getHttpHeaderProperty($conn, "Origin");
+    }
+    public function getCookie(\Ratchet\ConnectionInterface $conn){
+        return $this->getHttpHeaderProperty($conn, 'Cookie');
+    }
+    public function getSecWebSocketVersion(\Ratchet\ConnectionInterface $conn){
+        return $this->getHttpHeaderProperty($conn, "Sec-WebSocket-Version");
+    }
+    public function getSecWebSocketKey(\Ratchet\ConnectionInterface $conn){
+        return $this->getHttpHeaderProperty($conn, "Sec-WebSocket-Key");
+    }
+    private function getHttpHeaderProperty(\Ratchet\ConnectionInterface $conn, $propName){
+        $v = $this->getHttpRequestHeaders($conn)[$propName];
+        return ((isset($v) && count($v)>0) ? $v[0] : null);
     }
 }
