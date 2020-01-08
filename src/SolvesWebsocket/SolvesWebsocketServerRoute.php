@@ -38,7 +38,7 @@ class SolvesWebSocketServerRoute {
     }
 
     protected function getConnectionClientByResourceId($resourceId){
-        return $this->connections[$resourceId];
+        return (array_key_exists($resourceId, $this->connections) ? $this->connections[$resourceId] : null);
     }
 
 }

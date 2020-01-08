@@ -3,12 +3,12 @@
  * @author Thiago G.S. Goulart
  * @version 1.0
  * @created 18/07/2019
- */ 
+ */
 namespace Solves;
 
 
 class SolvesJson {
-    
+
     public static function arrayFromDaoToString($array, $sep) {
         $str = '';
         $first = true;
@@ -110,7 +110,7 @@ class SolvesJson {
 
 
     public static function getJsonByArrayItemFromDao(array $array=null, string $pkName=null, bool $duplaContraBarra){
-         if (!is_array($array)) {
+        if (!is_array($array)) {
             return false;
         }
         $associative = count(array_diff(array_keys($array), array_keys(array_keys($array))));
@@ -209,5 +209,15 @@ class SolvesJson {
     public static function escape_query_com_aspas(string $str=null, bool $duplaContraBarra) {
         return '"' . SolvesJson::escape_query($str, @$duplaContraBarra) . '"';
     }
-
+    public static function getPropertyData($dados, string $property, bool $obrigatorio=false, string $label=''){
+        $value = null;
+        if($dados!=null && property_exists($dados, $property)){
+            $value = @\Solves\SolvesJson::getJsonFieldValue($dados->{$property});
+        }
+        if($obrigatorio && !\Solves\Solves::isNotBlank($value)){
+            $label = (\Solves\Solves::isNotBlank($label) ? $label : $property);
+            throw new \Exception("Informe o campo obrigatório '".$label."'.");
+        }
+        return $value;
+    }
 }

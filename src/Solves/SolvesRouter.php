@@ -3,7 +3,7 @@
  * @author Thiago G.S. Goulart
  * @version 1.0
  * @created 06/09/2019
- */ 
+ */
 namespace Solves;
 
 
@@ -35,22 +35,22 @@ class SolvesRouter {
     private $isRestricted = false;
 
     //RESULT OF PROCESSMENT
-    private $requestedPage = ''; 
+    private $requestedPage = '';
     private $pagInclude ='';
 
-    //USED BY CONTROLLERS TO RECEIVE REQUEST DATA  
-    private $dados = null;   
-    private $token = null;   
-    private $userData = null;   
-    private $perfil = null;   
-    private $usuario = null;   
+    //USED BY CONTROLLERS TO RECEIVE REQUEST DATA
+    private $dados = null;
+    private $token = null;
+    private $userData = null;
+    private $perfil = null;
+    private $usuario = null;
 
-    //HTTP 
+    //HTTP
     private $HTTP_METHOD;
     private $_HTTPREQUEST_SERVER;
-    private $_HTTPREQUEST_POST;   
-    private $_HTTPREQUEST_GET;   
-    private $_HTTPREQUEST_PUT;   
+    private $_HTTPREQUEST_POST;
+    private $_HTTPREQUEST_GET;
+    private $_HTTPREQUEST_PUT;
     private $_HTTPREQUEST_DELETE;
     private $_HTTPREQUEST_FILES;
 
@@ -59,8 +59,9 @@ class SolvesRouter {
     private $restDetails;
     private $restDetailsArr;
 
+    private $isWebSocket;
 
-    public function __construct($_HTTPREQUEST_SERVER, $_HTTPREQUEST_POST, $_HTTPREQUEST_GET, $_HTTPREQUEST_PUT, $_HTTPREQUEST_DELETE, $_HTTPREQUEST_FILES, $navInside='') {
+    public function __construct($_HTTPREQUEST_SERVER, $_HTTPREQUEST_POST, $_HTTPREQUEST_GET, $_HTTPREQUEST_PUT, $_HTTPREQUEST_DELETE, $_HTTPREQUEST_FILES, $navInside='', $isWebSocket=false) {
         $this->_HTTPREQUEST_SERVER = $_HTTPREQUEST_SERVER;
         $this->_HTTPREQUEST_POST = $_HTTPREQUEST_POST;
         $this->_HTTPREQUEST_GET = $_HTTPREQUEST_GET;
@@ -69,6 +70,7 @@ class SolvesRouter {
         $this->_HTTPREQUEST_FILES = $_HTTPREQUEST_FILES;
 
         $this->navInside = $navInside;
+        $this->isWebSocket = $isWebSocket;
         $this->MODO_SOON_ATIVADO = \Solves\Solves::isModoSoon();
         $this->requestedPage = '';
         if(array_key_exists("p", $this->_HTTPREQUEST_GET) && isset($this->_HTTPREQUEST_GET['p'])){
@@ -78,83 +80,83 @@ class SolvesRouter {
 
         //Remove da URL o endereço de ROOT /home/...
         if(\Solves\Solves::isNotBlank($this->requestedPage) && \Solves\Solves::isNotBlank(\Solves\Solves::getPathRaiz()) && strpos('/'.$this->requestedPage, \Solves\Solves::getPathRaiz())>=0){
-          //  echo '['.strpos('/'.$this->requestedPage, \Solves\Solves::getPathRaiz()).']';
-         //   echo '$this->requestedPage['.$this->requestedPage.']';
+            //  echo '['.strpos('/'.$this->requestedPage, \Solves\Solves::getPathRaiz()).']';
+            //   echo '$this->requestedPage['.$this->requestedPage.']';
             $new = str_replace(\Solves\Solves::getPathRaiz(), '', '/'.$this->requestedPage);
             if($new!='/'.$this->requestedPage){
                 $this->requestedPage = $new;
             }
-         //   echo '$this->requestedPage['.$this->requestedPage.']';
+            //   echo '$this->requestedPage['.$this->requestedPage.']';
         }
         $this->processa();
-    } 
+    }
     private function processa(){
         if(isset($this->requestedPage) && strlen($this->requestedPage)>1 && strlen($this->requestedPage)<9999){
-          if(substr_compare($this->requestedPage, 'processupload.php', -strlen('processupload.php')) === 0){
-            //ALIAS
-            $this->requestedPage = 'rest/upload';
-          }
-          $this->isPageController = $this->verifyIfIsPageController();
-          $this->IS_APP = $this->verifyIfIsApp();
-          if($this->isPageController) {
-            $this->processaController();
-          }else if(substr($this->requestedPage, 0, 5)=='sw.js'){
-            $this->isServiceWorkerFile = true;
-            $this->isJs = true;
-            $this->pagInclude = '/sw.js';
-          }else if(substr($this->requestedPage, 0, 9)=='config.js'){
-            $this->isConfigJsFile = true;
-            $this->isJs = true;
-            $this->pagInclude = '/config.js';
-          }else if(substr($this->requestedPage, 0, 14)=='sw_register.js'){
-            $this->isServiceWorkerRegisterFile = true;
-            $this->isJs = true;
-            $this->pagInclude = '/sw_register.js';
-          }else if(substr($this->requestedPage, 0, 20)=='manifest.webmanifest'){ 
-            $this->isWebManifest = true;
-            $this->pagInclude = '/manifest.webmanifest';
-          }else if(substr($this->requestedPage, 0, 4)=='soon'){
-            //SOON PAGES
-            $this->IS_SOON_PAGE = true;
-            $this->ATUAL_URL = \Solves\Solves::getUrlName('',$this->requestedPage, false);
-            $this->p= \Solves\Solves::getUrlNameViewPath($this->ATUAL_URL);
-            if($this->checkIfFileExists($this->p)) {
-              $this->pagInclude = $this->p;
-            }else{
-              $this->pagInclude = 'views/soon.php';
+            if(substr_compare($this->requestedPage, 'processupload.php', -strlen('processupload.php')) === 0){
+                //ALIAS
+                $this->requestedPage = 'rest/upload';
             }
-          }else if(substr($this->requestedPage, 0, 3)=='pre'){
-            //SOON PAGES
-            $this->IS_SOON_PAGE = true;
-            $this->ATUAL_URL = \Solves\Solves::getUrlName('',$this->requestedPage, false);
-            $this->p= 'views/cadastro.php';
-            if($this->checkIfFileExists($this->p)) {
-              $this->pagInclude = $this->p;
+            $this->isPageController = $this->verifyIfIsPageController();
+            $this->IS_APP = $this->verifyIfIsApp();
+            if($this->isPageController) {
+                $this->processaController();
+            }else if(substr($this->requestedPage, 0, 5)=='sw.js'){
+                $this->isServiceWorkerFile = true;
+                $this->isJs = true;
+                $this->pagInclude = '/sw.js';
+            }else if(substr($this->requestedPage, 0, 9)=='config.js'){
+                $this->isConfigJsFile = true;
+                $this->isJs = true;
+                $this->pagInclude = '/config.js';
+            }else if(substr($this->requestedPage, 0, 14)=='sw_register.js'){
+                $this->isServiceWorkerRegisterFile = true;
+                $this->isJs = true;
+                $this->pagInclude = '/sw_register.js';
+            }else if(substr($this->requestedPage, 0, 20)=='manifest.webmanifest'){
+                $this->isWebManifest = true;
+                $this->pagInclude = '/manifest.webmanifest';
+            }else if(substr($this->requestedPage, 0, 4)=='soon'){
+                //SOON PAGES
+                $this->IS_SOON_PAGE = true;
+                $this->ATUAL_URL = \Solves\Solves::getUrlName('',$this->requestedPage, false);
+                $this->p= \Solves\Solves::getUrlNameViewPath($this->ATUAL_URL);
+                if($this->checkIfFileExists($this->p)) {
+                    $this->pagInclude = $this->p;
+                }else{
+                    $this->pagInclude = 'views/soon.php';
+                }
+            }else if(substr($this->requestedPage, 0, 3)=='pre'){
+                //SOON PAGES
+                $this->IS_SOON_PAGE = true;
+                $this->ATUAL_URL = \Solves\Solves::getUrlName('',$this->requestedPage, false);
+                $this->p= 'views/cadastro.php';
+                if($this->checkIfFileExists($this->p)) {
+                    $this->pagInclude = $this->p;
+                }else{
+                    $this->pagInclude = 'views/soon.php';
+                }
             }else{
-              $this->pagInclude = 'views/soon.php';
+                $this->ATUAL_URL = \Solves\Solves::getUrlName('',$this->requestedPage, false);
+                $this->isRestricted = \SolvesUi\SolvesUi::isRestrictedUrl($this->ATUAL_URL);
+                $this->p = \Solves\Solves::getUrlNameViewPath($this->ATUAL_URL);
+                $this->includePage();
             }
-          }else{    
-            $this->ATUAL_URL = \Solves\Solves::getUrlName('',$this->requestedPage, false);
-            $this->isRestricted = \SolvesUi\SolvesUi::isRestrictedUrl($this->ATUAL_URL);
-            $this->p = \Solves\Solves::getUrlNameViewPath($this->ATUAL_URL);
-            $this->includePage();
-          }
         }else{
-          $this->pagInclude = 'views/index.php';
+            $this->pagInclude = 'views/index.php';
         }
 
         //POR DEFAULT VAI PARA SOON
-        if($this->MODO_SOON_ATIVADO && !$this->isPageController && !$this->IS_SOON_PAGE){ 
-          $this->IS_SOON_PAGE = true;
-          //TODO deixar parametrizado Quais URLS serão abertas durante SOON
-          if($this->ATUAL_URL=='meu_perfil' || $this->ATUAL_URL=='termo_uso' || $this->ATUAL_URL=='termo_privacidade'){
-            $this->pagInclude = \Solves\Solves::getUrlNameViewPath($this->ATUAL_URL);
-            if(!$this->checkIfFileExists($this->pagInclude)) {
-              $this->pagInclude= 'views/soon.php';
+        if($this->MODO_SOON_ATIVADO && !$this->isPageController && !$this->IS_SOON_PAGE){
+            $this->IS_SOON_PAGE = true;
+            //TODO deixar parametrizado Quais URLS serão abertas durante SOON
+            if($this->ATUAL_URL=='meu_perfil' || $this->ATUAL_URL=='termo_uso' || $this->ATUAL_URL=='termo_privacidade'){
+                $this->pagInclude = \Solves\Solves::getUrlNameViewPath($this->ATUAL_URL);
+                if(!$this->checkIfFileExists($this->pagInclude)) {
+                    $this->pagInclude= 'views/soon.php';
+                }
+            }else{
+                $this->pagInclude= 'views/soon.php';
             }
-          }else{
-            $this->pagInclude= 'views/soon.php';
-          }
         }
         //END SOON
 
@@ -173,9 +175,9 @@ class SolvesRouter {
     }
     private function configUseOfTopos(){
         if($this->IS_SOON_PAGE){
-          $this->incluiTopoApp = false;
-          $this->incluiTopo = false;
-          $this->incluiTopoPublic = false;
+            $this->incluiTopoApp = false;
+            $this->incluiTopo = false;
+            $this->incluiTopoPublic = false;
         }else if($this->IS_APP){
             if($this->isRestricted){
                 $this->incluiTopoApp = true;
@@ -184,40 +186,44 @@ class SolvesRouter {
                 $this->incluiTopoAppPublic = true;
                 $this->incluiTopoApp = false;
             }
-          $this->incluiTopo = false;
-          $this->incluiTopoPublic = false;
+            $this->incluiTopo = false;
+            $this->incluiTopoPublic = false;
         }else if($this->isRestricted){
-          $this->incluiTopo = true;
-          $this->incluiTopoApp = false;
-          $this->incluiTopoPublic = false;
+            $this->incluiTopo = true;
+            $this->incluiTopoApp = false;
+            $this->incluiTopoPublic = false;
         }else{
-          $this->incluiTopoPublic = true;
-          $this->incluiTopo = false;
+            $this->incluiTopoPublic = true;
+            $this->incluiTopo = false;
         }
     }
     private function processaController(){
-        try{ 
+        try{
             /*************** REGRA DO CONTROLLER  ************************/
             $this->isRest = false;
             if(isset($this->requestedPage) && strlen($this->requestedPage)>1 && strlen($this->requestedPage)<255){
                 if(substr($this->requestedPage, 0, 5)=='rest/'){
                     $this->processaRest();
-                }else if(strpos($this->requestedPage, 'avatar/')===0){                
-                  $this->processaAvatar();
+                }else if(strpos($this->requestedPage, 'avatar/')===0){
+                    $this->processaAvatar();
                 }else if(strpos($this->requestedPage, 'public/')===0 || strpos($this->requestedPage, 'thumbs/')===0){
-                  $this->processaArquivo();
-                }else if(strpos($this->requestedPage, 'foto/')===0){                
-                  $this->processaFoto();
+                    $this->processaArquivo();
+                }else if(strpos($this->requestedPage, 'foto/')===0){
+                    $this->processaFoto();
                 }else{
-                  $this->isPageController = false;
-                  $this->include404();
+                    $this->isPageController = false;
+                    $this->include404();
                 }
             }else{
-              $this->isPageController = false;
-              $this->include404();
+                $this->isPageController = false;
+                $this->include404();
             }
         } catch (Exception $e) {
-            header("HTTP/1.1 500 Internal Server Error");
+            if($this->isWebSocket){
+                echo $e->getMessage();
+            }else{
+                header("HTTP/1.1 500 Internal Server Error");
+            }
         }
     }
     private function includePage(){
@@ -243,7 +249,7 @@ class SolvesRouter {
                 $this->p= 'index';
             }
             if($this->checkIfFileExists($this->p)) {
-              $this->pagInclude = $this->p;
+                $this->pagInclude = $this->p;
             }else{
                 $this->include404();
             }
@@ -265,7 +271,7 @@ class SolvesRouter {
         if(strpos($this->restService, 'app/')===0){
             $this->restService = str_replace('app/', '', $this->restService);
         }
-         $pos_startDetails=strlen($this->restService)+1;
+        $pos_startDetails=strlen($this->restService)+1;
         $this->restDetails = substr($requisicaoRest, $pos_startDetails, strlen($requisicaoRest)-$pos_startDetails-(substr($requisicaoRest, -1)=='/'?1:0));
         $this->restDetailsArr = explode('/', $this->restDetails);
         $this->restDetails =  $this->restDetailsArr[0];
@@ -276,12 +282,12 @@ class SolvesRouter {
         $this->preencheRestDetails();
 
         $this->preencheVariaveisDeDados();
-        
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST");
-        header("Access-Control-Allow-Headers: GET, POST");
-        header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
-        
+        if(!$this->isWebSocket) {
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Methods: GET, POST");
+            header("Access-Control-Allow-Headers: GET, POST");
+            header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
+        }
         $this->pagInclude = 'rest/'.$this->restService.'.rest.php';
         if(!$this->checkIfFileExists($this->pagInclude)){
             $r = \Solves\Solves::getNomeClasse($this->restService);
@@ -304,12 +310,12 @@ class SolvesRouter {
 
         $this->HTTP_METHOD = $this->_HTTPREQUEST_SERVER['REQUEST_METHOD'];
         if("POST"==$this->HTTP_METHOD) {
-          $this->dados = $this->_HTTPREQUEST_POST["dados"];
+            $this->dados = $this->_HTTPREQUEST_POST["dados"];
         }else if("PUT"==$this->HTTP_METHOD || "DELETE"==$this->HTTP_METHOD) {
-          $this->_HTTPREQUEST_PUT = \Solves\Solves::parsePutRequest();
-          $this->dados = $this->_HTTPREQUEST_PUT["dados"];
+            $this->_HTTPREQUEST_PUT = \Solves\Solves::parsePutRequest();
+            $this->dados = $this->_HTTPREQUEST_PUT["dados"];
         }
-        if(substr($this->_HTTPREQUEST_SERVER['CONTENT_TYPE'],0,19)=='multipart/form-data'){ 
+        if(substr($this->_HTTPREQUEST_SERVER['CONTENT_TYPE'],0,19)=='multipart/form-data'){
             $this->preProcessDataFromMultipartFormData();
         }
         $this->extractData();
@@ -343,12 +349,15 @@ class SolvesRouter {
     private function processaAvatar(){
         $this->isRest = true;
         $this->preencheRestDetails();
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET");
-        header("Access-Control-Allow-Headers: GET");
-        header("Cache-control: private, max-age=0, no-cache");
-        header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
-        header('content-type: image/png');
+
+        if(!$this->isWebSocket) {
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Methods: GET");
+            header("Access-Control-Allow-Headers: GET");
+            header("Cache-control: private, max-age=0, no-cache");
+            header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
+            header('content-type: image/png');
+        }
 
         $this->restService = 'avatar';
         $this->pagInclude = 'rest/'.$this->restService.'.rest.php';
@@ -360,12 +369,14 @@ class SolvesRouter {
 
             $this->isRest = true;
             $this->preencheRestDetails();
-            header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Methods: GET");
-            header("Access-Control-Allow-Headers: GET");
-            header("Cache-control: private, max-age=0, no-cache");
-            header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
 
+            if(!$this->isWebSocket) {
+                header("Access-Control-Allow-Origin: *");
+                header("Access-Control-Allow-Methods: GET");
+                header("Access-Control-Allow-Headers: GET");
+                header("Cache-control: private, max-age=0, no-cache");
+                header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
+            }
             $contentType = \Solves\SolvesFile::getContentType($file);
             header('content-type: '.$contentType);
 
@@ -377,13 +388,15 @@ class SolvesRouter {
     private function processaFoto(){
         $this->isRest = true;
         $this->preencheRestDetails();
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET");
-        header("Access-Control-Allow-Headers: GET");
-        header("Cache-control: private, max-age=0, no-cache");
-        header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
-        header('content-type: image/jpg');
 
+        if(!$this->isWebSocket) {
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Methods: GET");
+            header("Access-Control-Allow-Headers: GET");
+            header("Cache-control: private, max-age=0, no-cache");
+            header("Access-Control-Request-Method: Cache-Control, Pragma, Authorization, Key, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, HTTP_X_USER_LOGIN, HTTP_X_AUTH_TOKEN, X_USER_LOGIN, X_AUTH_TOKEN");
+            header('content-type: image/jpg');
+        }
         $this->restService = 'foto';
         $this->pagInclude = 'rest/'.$this->restService.'.rest.php';
     }
@@ -391,6 +404,9 @@ class SolvesRouter {
 
     public function getToken(){
         return $this->token;
+    }
+    public function setToken($t){
+        $this->token = $t;
     }
     public function getUserData(){
         return $this->userData;
@@ -421,88 +437,92 @@ class SolvesRouter {
         $CONNECTION = null;
         try{
             if($this->isJs){
-              $this->printJS();
+                $this->printJS();
             }else if($this->isWebManifest){
-              $this->printWebManifest();
+                $this->printWebManifest();
             }else{
                 //WILL BE PROCESSED BY PHP FILES
 
                 //TURNING INTO ACESSIBLE VARIABLES - EXPLICT WAY //TODO remover este trecho pois já está em SolvesRest
-                    $ATUAL_URL = $this->ATUAL_URL;
-                    $CANNONICAL = $this->CANNONICAL;
-                    $MODO_SOON_ATIVADO = $this->MODO_SOON_ATIVADO;
-                    $IS_SOON_PAGE = $this->IS_SOON_PAGE;
-                    $IS_APP = $this->IS_APP;
-                    $dados = $this->dados;
-                    $token = $this->token;
-                    $userData = $this->userData;
-                    $perfil = $this->perfil;
-                    $usuario = $this->usuario;
-                    $restService = $this->restService;
-                    $restDetails = $this->restDetails;
-                    $restDetailsArr = $this->restDetailsArr;
-                    $ROUTER = $this;
+                $ATUAL_URL = $this->ATUAL_URL;
+                $CANNONICAL = $this->CANNONICAL;
+                $MODO_SOON_ATIVADO = $this->MODO_SOON_ATIVADO;
+                $IS_SOON_PAGE = $this->IS_SOON_PAGE;
+                $IS_APP = $this->IS_APP;
+                $dados = $this->dados;
+                $token = $this->token;
+                $userData = $this->userData;
+                $perfil = $this->perfil;
+                $usuario = $this->usuario;
+                $restService = $this->restService;
+                $restDetails = $this->restDetails;
+                $restDetailsArr = $this->restDetailsArr;
+                $ROUTER = $this;
 
-                    $SCRIPTS = '';
-                    $SCRIPTS_ONLOAD = '';
-                    $INCLUDE_SCRIPTS_TAGS='';
+                $SCRIPTS = '';
+                $SCRIPTS_ONLOAD = '';
+                $INCLUDE_SCRIPTS_TAGS='';
                 //END TURNING INTO ACESSIBLE VARIABLES
 
                 if($this->isPageController){
-                  if($this->checkIfFileExists($this->getPagInclude())) {
-                    include $this->getPagInclude();
-                    if($this->isRest){
-                        $classe =$this->getRestClassName();
-                        if(null!=$classe){
-                            $obj = new $classe($this); 
-                            $obj->execute();
+                    if($this->checkIfFileExists($this->getPagInclude())) {
+                        include $this->getPagInclude();
+                        if($this->isRest){
+                            $classe =$this->getRestClassName();
+                            if(null!=$classe){
+                                $obj = new $classe($this);
+                                $obj->execute();
+                            }
                         }
+                    }else{
+                        header ("HTTP/1.0 404 Not Found");
+                        echo '{"router":"Página ['.$this->getPagInclude().'] não encontrada. Requisição ['.$this->requestedPage.']!"}';
+                        return;
                     }
-                  }else{
-                    header ("HTTP/1.0 404 Not Found");
-                    echo '{"router":"Página ['.$this->getPagInclude().'] não encontrada. Requisição ['.$this->requestedPage.']!"}';
-                    return;
-                  }
-                }else{ 
-                  $CONNECTION = \SolvesDAO\SolvesDAO::openConnection();  
+                }else{
+                    $CONNECTION = \SolvesDAO\SolvesDAO::openConnection();
 
-                  include $this->navInside."includes/cabecalho.php";
-                  if($this->incluiTopo){
-                    include $this->navInside."includes/web/restrito/topo.php";
-                  }else if($this->incluiTopoPublic){
-                    include $this->navInside."includes/web/topo.php";
-                  }else if($this->incluiTopoApp){
-                    include $this->navInside."includes/app/restrito/topo.php";
-                  }else if($this->incluiTopoAppPublic){
-                    include $this->navInside."includes/app/topo.php";
-                  }else if($this->IS_SOON_PAGE){
-                    include $this->navInside."includes/soon/topo.php";
-                  }
+                    include $this->navInside."includes/cabecalho.php";
+                    if($this->incluiTopo){
+                        include $this->navInside."includes/web/restrito/topo.php";
+                    }else if($this->incluiTopoPublic){
+                        include $this->navInside."includes/web/topo.php";
+                    }else if($this->incluiTopoApp){
+                        include $this->navInside."includes/app/restrito/topo.php";
+                    }else if($this->incluiTopoAppPublic){
+                        include $this->navInside."includes/app/topo.php";
+                    }else if($this->IS_SOON_PAGE){
+                        include $this->navInside."includes/soon/topo.php";
+                    }
 
-                  //MAIN INCLUSION
-                  include $this->getPagInclude();
+                    //MAIN INCLUSION
+                    include $this->getPagInclude();
 
-                  if($this->incluiTopo){
-                    include $this->navInside."includes/web/restrito/rodape.php";
-                  }else if($this->incluiTopoPublic){
-                    include $this->navInside."includes/web/rodape.php";
-                  }else if($this->incluiTopoApp){
-                    include $this->navInside."includes/app/restrito/rodape.php";
-                  }else if($this->incluiTopoAppPublic){
-                    include $this->navInside."includes/app/rodape.php";
-                  }else if($this->IS_SOON_PAGE){
-                    include $this->navInside."includes/soon/rodape.php";
-                  }
-                  include $this->navInside."includes/includes_js.php";
+                    if($this->incluiTopo){
+                        include $this->navInside."includes/web/restrito/rodape.php";
+                    }else if($this->incluiTopoPublic){
+                        include $this->navInside."includes/web/rodape.php";
+                    }else if($this->incluiTopoApp){
+                        include $this->navInside."includes/app/restrito/rodape.php";
+                    }else if($this->incluiTopoAppPublic){
+                        include $this->navInside."includes/app/rodape.php";
+                    }else if($this->IS_SOON_PAGE){
+                        include $this->navInside."includes/soon/rodape.php";
+                    }
+                    include $this->navInside."includes/includes_js.php";
 
-                  //FECHA A CONEXãO COM O BANCO
-                  \SolvesDAO\SolvesDAO::closeConnection($CONNECTION);
+                    //FECHA A CONEXãO COM O BANCO
+                    \SolvesDAO\SolvesDAO::closeConnection($CONNECTION);
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             //FECHA A CONEXãO COM O BANCO
-            \SolvesDAO\SolvesDAO::closeConnection($CONNECTION);            
-            header("HTTP/1.1 500 Internal Server Error");
+            \SolvesDAO\SolvesDAO::closeConnection($CONNECTION);
+            if($this->isWebSocket){
+                echo $e->getMessage();
+            }else{
+                header("HTTP/1.1 500 Internal Server Error");
+            }
         }
     }
     private function getRestClassName(){
@@ -522,14 +542,17 @@ class SolvesRouter {
         return null;
     }
     private function printJS(){
+        if($this->isWebSocket) {
+            return;
+        }
         header("Content-Type: text/javascript");
         if($this->checkIfFileExists($this->pagInclude)) {
             readfile(\Solves\Solves::getVendorInsideNavs().$this->pagInclude);
-        }else if($this->isServiceWorkerFile){ 
+        }else if($this->isServiceWorkerFile){
             echo \SolvesUi\SolvesServiceWorker::getScript();
-        }else if($this->isServiceWorkerRegisterFile){ 
+        }else if($this->isServiceWorkerRegisterFile){
             echo \SolvesUi\SolvesServiceWorkerRegister::getScript();
-        }else if($this->isConfigJsFile){ 
+        }else if($this->isConfigJsFile){
             echo \SolvesUi\SolvesConfigJS::getScript();
         }else{
             header ("HTTP/1.0 404 Not Found");
@@ -537,12 +560,15 @@ class SolvesRouter {
         }
     }
     private function printWebManifest(){
-          header('Content-Type: application/json');
-          if($this->checkIfFileExists($this->pagInclude)) {
+        if($this->isWebSocket) {
+            return;
+        }
+        header('Content-Type: application/json');
+        if($this->checkIfFileExists($this->pagInclude)) {
             readfile(\Solves\Solves::getVendorInsideNavs().$this->pagInclude);
-          }else{
+        }else{
             echo \SolvesUi\SolvesWebmanifest::getManifest();
-          }
+        }
     }
     private function checkIfFileExists($f){
         return file_exists($f);
