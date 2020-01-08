@@ -1,34 +1,70 @@
 <?php
+namespace SolvesWebsocket;
+
+
 /**
+ * Class SolvesWebSocketServerRoute
+ * @package SolvesWebsocket
  * @author Thiago G.S. Goulart
  * @version 1.0
  * @created 06/01/2020
  */
-namespace SolvesWebsocket;
+abstract class SolvesWebSocketServerRoute {
 
-
-class SolvesWebSocketServerRoute {
-
+    /**
+     * @var string
+     * Caminho da rota (Ex: "/chat")
+     */
     protected $path;
+    /**
+     * @var \SplObjectStorage
+     * Array (map) de objetos de conexões clientes.
+     */
     protected $clients;
+    /**
+     * @var array
+     * Array de objetos de conexões clientes com índice de resourceId.
+     */
     protected $connections = array();
 
-    public function __construct($path) {
+    /**
+     * SolvesWebSocketServerRoute constructor.
+     * @param string $path
+     */
+    public function __construct(string $path) {
         $this->path = $path;
         $this->clients = new \SplObjectStorage;
     }
 
-    public function getPath(){
+    /**
+     * @return string
+     * Retorna o caminho da rota (EX: "/chat")
+     */
+    public function getPath(): string{
         return $this->path;
     }
-    public function getQtdConnections(){
+
+    /**
+     * @return int
+     * Retorna a quantidade total de conexões ativas.
+     */
+    public function getQtdConnections(): int{
         return count($this->connections);
     }
 
+    /**
+     * @param \Ratchet\ConnectionInterface $conn
+     * Atualiza os arrays de conexões e configurações necessárias quando uma nova conexão é ABERTA.
+     */
     protected function registraNovaConexao(\Ratchet\ConnectionInterface $conn){
         $this->connections[$conn->resourceId] = $conn;
         $this->clients->attach($conn);
     }
+
+    /**
+     * @param \Ratchet\ConnectionInterface $conn
+     * Atualiza os arrays de conexões e configurações necessárias quando uma conexão é FECHADA.
+     */
     protected function fechaConexao(\Ratchet\ConnectionInterface $conn){
         $resourceId = $conn->resourceId;
         if(array_key_exists($resourceId, $this->connections)){
@@ -37,7 +73,12 @@ class SolvesWebSocketServerRoute {
         $this->clients->detach($conn);
     }
 
-    protected function getConnectionClientByResourceId($resourceId){
+    /**
+     * @param int $resourceId
+     * @return \Ratchet\ConnectionInterface|null
+     * Retorna qual a conexão ativa pelo RESOURCE_ID informado.
+     */
+    protected function getConnectionClientByResourceId(int $resourceId): ?\Ratchet\ConnectionInterface{
         return (array_key_exists($resourceId, $this->connections) ? $this->connections[$resourceId] : null);
     }
 
