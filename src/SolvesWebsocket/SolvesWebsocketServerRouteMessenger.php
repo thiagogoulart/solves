@@ -142,7 +142,6 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
      * Trata os erros que ocorreram no processamento do websocket, realiza prcocessamento padrão, fechando a conexão, e então delega para o método onEventError, para a classe que implementa possa fazer seus trataments específicos
      */
     public function onError(\Ratchet\ConnectionInterface $conn, \Exception $e) {
-        $conn->close();
         $this->onEventError($conn, $e);
     }
 
