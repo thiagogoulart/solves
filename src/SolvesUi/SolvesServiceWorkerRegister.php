@@ -28,7 +28,7 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("'.\Solves\Solves::getRelativePath('sw.js').'").then(function(reg ) {
       console.log("Service worker  registrado com sucesso:", reg );
       try {
-        $.SolvesNotifications.push_updateSubscription();
+        if(undefined!==$.SolvesNotifications){$.SolvesNotifications.push_updateSubscription();}
       } catch (err) {
         console.log(err);
       }

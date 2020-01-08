@@ -48,19 +48,23 @@ class SolvesConfigJS {
     }
     private static function getNotificationsSettings(){
       return '//SolvesNotifications
-$.SolvesNotifications.serverUrlNotifications = "'.\SolvesNotification\SolvesNotification::getServerSubscriptionsUrl().'"; 
-$.SolvesNotifications.setApplicationServerKey = "'.\SolvesNotification\SolvesNotification::getPublicKey().'";';
+if(undefined!==$.SolvesNotifications){
+   $.SolvesNotifications.serverUrlNotifications = "'.\SolvesNotification\SolvesNotification::getServerSubscriptionsUrl().'"; 
+   $.SolvesNotifications.setApplicationServerKey = "'.\SolvesNotification\SolvesNotification::getPublicKey().'";
+}';
     }
     private static function getFirebaseNotificationsSettings(){
         //TODO attrs dinamicos
       return '
 /*
 // Notificações  Firebase
-$.SolvesNotifications.initFireBaseConfig();
-$.SolvesNotifications.setFirebasePublicVapidKey("...");
-$.SolvesNotifications.setFireBaseTokenDivId(""); 
-$.SolvesNotifications.setFireBasePermissionDivId("permission");
-$.SolvesNotifications.setFireBaseMessagesDivId("messages"); 
+if(undefined!==$.SolvesNotifications){
+   $.SolvesNotifications.initFireBaseConfig();
+   $.SolvesNotifications.setFirebasePublicVapidKey("...");
+   $.SolvesNotifications.setFireBaseTokenDivId(""); 
+   $.SolvesNotifications.setFireBasePermissionDivId("permission");
+   $.SolvesNotifications.setFireBaseMessagesDivId("messages"); 
+}
 */
 ';
     }
@@ -80,7 +84,8 @@ $.Solves.setFireBaseConfig('.SolvesConfigJS::getFirebaseJsonConfig().');
     private static function getAuthSettings(){
       $s =  '
 //Autenticação
-$.SolvesAuth.fireBaseAuthDivId = "firebase_login";
+if(undefined!==$.SolvesAuth){
+    $.SolvesAuth.fireBaseAuthDivId = "firebase_login";
 ';
       if(SolvesConfigJS::$FIREBASE_AUTH_GOOGLE){
         $s.='
@@ -105,11 +110,13 @@ $.SolvesAuth.fireBaseAuthDivId = "firebase_login";
       }
       $s.='
         
-$.SolvesAuth.urlLogadoSucesso = "'.SolvesConfigJS::getAuthUrlLogadoSucesso().'";
-$.SolvesAuth.urlTermosUso = "'.SolvesConfigJS::getAuthUrlTermoUso().'";
-$.SolvesAuth.urlTermosPrivacidade = "'.SolvesConfigJS::getAuthUrlTermoPrivacidade().'";
-$.SolvesAuth.setAuthSuccessFunc(function(authResult){'.SolvesConfigJS::getAuthFunctionSucesso().'(authResult)});
-$.SolvesAuth.initFireBaseConfig();
+    $.SolvesAuth.urlLogadoSucesso = "'.SolvesConfigJS::getAuthUrlLogadoSucesso().'";
+    $.SolvesAuth.urlTermosUso = "'.SolvesConfigJS::getAuthUrlTermoUso().'";
+    $.SolvesAuth.urlTermosPrivacidade = "'.SolvesConfigJS::getAuthUrlTermoPrivacidade().'";
+    $.SolvesAuth.setAuthSuccessFunc(function(authResult){'.SolvesConfigJS::getAuthFunctionSucesso().'(authResult)});
+    $.SolvesAuth.initFireBaseConfig();
+
+}
 ';
 
       return $s;
