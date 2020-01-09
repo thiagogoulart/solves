@@ -111,8 +111,8 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
         $msg = $json->dados;
 
         $token = \Solves\SolvesJson::getPropertyData($json, 'token', true, 'Token');
-        $rest = \Solves\SolvesJson::getPropertyData($json, 'rest', true, 'Rest');
-        $rest_method = \Solves\SolvesJson::getPropertyData($json, 'rest_method', true, 'RestMethod');
+        $rest = \Solves\SolvesJson::getPropertyData($json, 'rest', false, 'Rest');
+        $rest_method = \Solves\SolvesJson::getPropertyData($json, 'rest_method', false, 'RestMethod');
         $receiver_id = \Solves\SolvesJson::getPropertyData($json, 'receiver_id', false, 'receiver_id');
         $msg_id = \Solves\SolvesJson::getPropertyData($json, 'msg_id', false, 'msg_id');
 
