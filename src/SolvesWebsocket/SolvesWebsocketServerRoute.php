@@ -13,6 +13,11 @@ abstract class SolvesWebSocketServerRoute {
 
     /**
      * @var string
+     * Nome da rota que será utilizado como referencia para buscá-la (Ex: "chat")
+     */
+    protected $name;
+    /**
+     * @var string
      * Caminho da rota (Ex: "/chat")
      */
     protected $path;
@@ -29,13 +34,22 @@ abstract class SolvesWebSocketServerRoute {
 
     /**
      * SolvesWebSocketServerRoute constructor.
+     * @param string $name
      * @param string $path
      */
-    public function __construct(string $path) {
+    public function __construct(string $name, string $path) {
+        $this->name = $name;
         $this->path = $path;
         $this->clients = new \SplObjectStorage;
     }
 
+    /**
+     * @return string
+     * Retorna o Nome da rota que será utilizado como referencia para buscá-la (Ex: "chat")
+     */
+    public function getName(): string{
+        return $this->name;
+    }
     /**
      * @return string
      * Retorna o caminho da rota (EX: "/chat")

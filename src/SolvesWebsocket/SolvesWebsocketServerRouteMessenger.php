@@ -17,10 +17,11 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
 
     /**
      * SolvesWebSocketServerRouteMessenger constructor.
-     * @param $path
+     * @param string $name
+     * @param string $path
      */
-    public function __construct($path) {
-        parent::__construct($path);
+    public function __construct(string $name, string $path) {
+        parent::__construct($name, $path);
     }
 
     /**

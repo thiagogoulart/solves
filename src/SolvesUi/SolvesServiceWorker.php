@@ -17,7 +17,7 @@ const precacheFiles = [
     "'.\Solves\Solves::getRelativePath('manifest.webmanifest').'"';
 
 /*CSS*/
-    $cssFilePaths = \SolvesUi\SolvesUi::getCssFilePaths();
+    $cssFilePaths = \SolvesUi\SolvesUi::getCssFilePathsNotInline();
     foreach($cssFilePaths as $cssFilePath){
         $script .= ', "'.$cssFilePath.'"';
     }

@@ -33,6 +33,7 @@ class SolvesConfigJS {
         $script .= SolvesConfigJS::getFirebaseInitSettings();
         $script .= SolvesConfigJS::getAuthSettings();
         $script .= SolvesConfigJS::getFirebaseNotificationsSettings();
+        $script .= SolvesConfigJS::getWebSocketSettings();
         return $script;
     }
 
@@ -66,6 +67,15 @@ if(undefined!==$.SolvesNotifications){
    $.SolvesNotifications.setFireBaseMessagesDivId("messages"); 
 }
 */
+';
+    }
+    private static function getWebSocketSettings(){
+      return '
+//SolvesWebsocket
+if(undefined!==$.SolvesWebsocket){
+      $.SolvesWebsocket.webSocketUrl="'.\SolvesWebsocket\SolvesWebsocketServer::getWsUrl().'";
+      $.SolvesWebsocket.webSocketRoutes=['.\SolvesWebsocket\SolvesWebsocketServer::getRoutesStringObjArr().'];
+}
 ';
     }
     private static function getSolvesInit(){

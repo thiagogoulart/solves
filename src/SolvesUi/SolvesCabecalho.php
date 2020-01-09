@@ -1,42 +1,119 @@
 <?php
-/**
- * @author Thiago G.S. Goulart
- * @version 1.0
- * @created 20/07/2019
- */ 
 namespace SolvesUi;
 
 
+/**
+ * Class SolvesCabecalho
+ * @package SolvesUi
+ * @author Thiago G.S. Goulart
+ * @version 1.0
+ * @created 20/07/2019
+ */
 class SolvesCabecalho {
 
+    /**
+     * @var string Para a tag de author no cabeçalho
+     */
     private static $AUTHOR = 'Thiago G.S. Goulart';
+    /**
+     * @var string Para a tag de twitter creator no cabeçalho
+     */
     private static $TWITTER_CREATOR = '@solves';
+    /**
+     * @var string Script do Google Analytcs
+     */
     private static $SCRIPT_ANALYTICS='';
+    /**
+     * @var string
+     */
     private static $THEME_COLOR='#FFFFFF';
+    /**
+     * @var bool
+     */
     private static $SHOW_LOGO_ON_LOADING=false;
+    /**
+     * @var null  Caminho da logo para ser exibida na tela de loading
+     */
     private static $LOGO_ON_LOADING=null;
 
 
+    /**
+     * @return string
+     */
     public static function getTwitterCreator(){return SolvesCabecalho::$TWITTER_CREATOR;}
+
+    /**
+     * @param $p
+     */
     public static function setTwitterCreator($p){SolvesCabecalho::$TWITTER_CREATOR=$p;}
+
+    /**
+     * @return string
+     */
     public static function getAuthor(){return SolvesCabecalho::$AUTHOR;}
+
+    /**
+     * @param $p
+     */
     public static function setAuthor($p){SolvesCabecalho::$AUTHOR=$p;}
+
+    /**
+     * @param $scriptAnalytics
+     */
     public static function config($scriptAnalytics){SolvesCabecalho::setScriptAnalytics($scriptAnalytics);}
 
+    /**
+     * @return string
+     */
     public static function getScriptAnalytics(){return SolvesCabecalho::$SCRIPT_ANALYTICS;}
+
+    /**
+     * @param $p
+     */
     public static function setScriptAnalytics($p){SolvesCabecalho::$SCRIPT_ANALYTICS=$p;}
+
+    /**
+     * @return string
+     */
     public static function getThemeColor(){return SolvesCabecalho::$THEME_COLOR;}
+
+    /**
+     * @param $p
+     */
     public static function setThemeColor($p){SolvesCabecalho::$THEME_COLOR=$p;}
 
+    /**
+     * @return bool
+     */
     public static function isShowLogoOnLoading(){return SolvesCabecalho::$SHOW_LOGO_ON_LOADING;}
+
+    /**
+     * @param $p
+     */
     public static function setShowLogoOnLoading($p){SolvesCabecalho::$SHOW_LOGO_ON_LOADING=$p;}
+
+    /**
+     *
+     */
     public static function showLogoOnLoading(){SolvesCabecalho::setShowLogoOnLoading(true);}
-    
+
+    /**
+     * @return null
+     */
     public static function getLogoOnLoading(){return SolvesCabecalho::$LOGO_ON_LOADING;}
+
+    /**
+     * @param $p
+     */
     public static function setLogoOnLoading($p){
         SolvesCabecalho::$LOGO_ON_LOADING=$p;
         SolvesCabecalho::setShowLogoOnLoading(\Solves\Solves::isNotBlank(SolvesCabecalho::$LOGO_ON_LOADING));
     }
+
+    /**
+     * @param $SITE_TITULO
+     * @return string
+     */
     public static function getHtmlTagImgLogoOnLoading($SITE_TITULO){
         $logo = (\Solves\Solves::getCompleteImgPathLogo()).'favicon-96x96.png';
         if(\Solves\Solves::isNotBlank(SolvesCabecalho::$LOGO_ON_LOADING)){
@@ -45,6 +122,13 @@ class SolvesCabecalho {
         return '<img  class="img-responsive" src="'.$logo.'" alt="'.$SITE_TITULO.'" title="'.$SITE_TITULO.'">';
     }
 
+    /**
+     * @param $completeUrl
+     * @param $pageTitle
+     * @param $pageDescr
+     * @param null $themeColor
+     * @return string
+     */
     public static function getHtml($completeUrl, $pageTitle, $pageDescr, $themeColor=null){
         if(\Solves\Solves::isNotBlank($themeColor)){
             SolvesCabecalho::setThemeColor($themeColor);
@@ -103,12 +187,10 @@ class SolvesCabecalho {
     <meta name="keywords" content="'.(\Solves\Solves::getSiteKeys()).'" />
     <meta name="description" content="'.$SITE_DESCRIPTION.'" />';
 
-    //$html .='<link rel="preconnect" href="'.\Solves\SolvesConfUrls::SOLVES_CDN.'">';
 /*CSS*/
-    $cssFilePaths = \SolvesUi\SolvesUi::getCssFilePaths();
-    foreach($cssFilePaths as $cssFilePath){
-        $cssFilePath = \SolvesUi\SolvesUi::getSingleCssFilePath($cssFilePath);
-        $html .='<link rel="stylesheet" href="'.$cssFilePath.'">';
+    $uiCssList = \SolvesUi\SolvesUi::getUiCssList();
+    foreach($uiCssList  as $itemCss){
+        $html .= $itemCss->getIncludeTag();
     }
 
 /*SCRIPT ANALYTCS*/
@@ -136,10 +218,7 @@ class SolvesCabecalho {
 </div>
 
 <div class="overlay" id="overlay" style="display:none;"></div>
-<div id="overlay_loading" style="display:none;">
-    '.\SolvesUi\SolvesUi::getLoadingElementHtml().'
-    Carregando
-</div>
+<div id="overlay_loading" style="display:none;">'.\SolvesUi\SolvesUi::getLoadingElementHtml().' Carregando</div>
 <div id="overlay_loaded" style="display:none;"></div>
 <div id="preloader" style="">
   <div class="preloader-container">

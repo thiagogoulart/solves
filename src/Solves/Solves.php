@@ -80,8 +80,8 @@ class Solves {
     public static function configNotifications($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId){
     	SolvesNotification::config($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId);
     }
-    public static function configUi($cssFilePaths, $jsFilePaths, $themeBgColor, $themeColor, $uiVersion){
-    	SolvesUi::config($cssFilePaths, $jsFilePaths, $themeBgColor, $themeColor,$uiVersion);
+    public static function configUi(array $uiCssList,array $jsFilePaths,string $themeBgColor,string $themeColor,string $uiVersion){
+    	SolvesUi::config($uiCssList, $jsFilePaths, $themeBgColor, $themeColor,$uiVersion);
     }
 
     public static function setSystemName($p){Solves::$SYSTEM_NAME = $p;}

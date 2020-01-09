@@ -11,36 +11,54 @@ use Ratchet\ConnectionInterface;
 use Ratchet\App;
 
 class SolvesWebSocketServer {
-    private $app;
-    private $host;
-    private $port;
+    private static $app;
+    private static $url;
+    private static $host;
+    private static $port;
 
-    private $routes = [];
+    private static $configRoutes = [];
+    private static $routes = [];
 
-    public function __construct($host, $port) {
-    	$this->host = $host;
-    	$this->port = $port;
+    public static function config(string $url, string $host, string $port){
+        self::$url = $url;
+        self::$host = $host;
+        self::$port = $port;
+        self::$app = new \Ratchet\App(self::$host, self::$port);
 
-    	$this->app = new \Ratchet\App($this->host, $this->port);
+    }
+    public static function addConfigRoute(string $name, string $path){
+        self::$configRoutes[$name] = $path;
+
+    }
+    public static function addRoute(SolvesWebSocketServerRoute $instance){    
+    	self::$routes[$instance->getPath()] = $instance;
+	    self::$app->route($instance->getPath(), $instance, array('*'));
+    }
+    public static function getWsUrl(): string{
+        return self::$url;
+    }
+    public static function getRoutesStringObjArr(): string{
+        $arrStr = '';
+        $first = true;
+        foreach(self::$configRoutes as $name=>$path){
+            $arrStr.= ($first?'':',').'{name:"'.$name.'",path:"'.$path.'"}';
+            $first = false;
+        }
+        return $arrStr;
+    }
+    public static function addRouteEcho(){    	
+	    self::$app->route('/echo', new \Ratchet\Server\EchoServer, array('*'));
+    }
+    public static function getRoute($path){
+        return self::$routes[$path];
+    }
+    public static function getRoutes(): array{
+    	return self::$routes;
     }
 
-    public function addRoute(SolvesWebSocketServerRoute $instance){    
-    	$this->routes[$instance->getPath()] = $instance;
-	    $this->app->route($instance->getPath(), $instance, array('*'));
-    }
-    public function addRouteEcho(){    	
-	    $this->app->route('/echo', new \Ratchet\Server\EchoServer, array('*'));
-    }
-    public function getRoute($path){
-        return $this->routes[$path];
-    }
-    public function getRoutes(){
-    	return $this->routes;
-    }
-
-    public function startServer(){
+    public static function startServer(){
 	    //RUN
-    	$this->app->run();
+    	self::$app->run();
     }
 
 }

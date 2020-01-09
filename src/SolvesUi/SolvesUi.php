@@ -13,7 +13,10 @@ class SolvesUi {
     private static $RESTRICTED_URLS = array();
 
     private static $SCRIPT_FILEPATHS = array();
-    private static $CSS_FILEPATHS = array();
+    /**
+    *@var \SolvesUi\SolvesUiCss[]
+    */
+    private static $UI_CSS_LIST = array();
     
     private static $SCRIPTS_ONLOAD = '';
     private static $INCLUDE_SCRIPTS_TAGS='';
@@ -24,8 +27,8 @@ class SolvesUi {
     private static $IS_APP=false;
     private static $UI_VERSION=null;
 
-    public static function config($cssFilePaths, $jsFilePaths, $themeBgColor, $themeColor, $uiVersion){
-        SolvesUi::setCssFilePaths($cssFilePaths);
+    public static function config(array $uiCssList,array $jsFilePaths,string $themeBgColor,string $themeColor,string $uiVersion){
+        SolvesUi::setUiCssList($uiCssList);
         SolvesUi::setScriptFilePaths($jsFilePaths);
         SolvesUi::setThemeBackgroundColor($themeBgColor);
         SolvesUi::setThemeColor($themeColor);
@@ -44,7 +47,7 @@ class SolvesUi {
     public static function isRestrictedUrl($url){
         if(\Solves\Solves::isNotBlank($url)){
             $arrUrl = explode('/', $url);
-            $url = $arrUrl[0];
+            $url = ($arrUrl[0]=='app' ? $arrUrl[0].'/'.$arrUrl[1] : $arrUrl[0]);
         }
         if(SolvesUi::$ALL_RESTRICTED){
             return !in_array($url, SolvesUi::$PUBLIC_URLS);
@@ -65,28 +68,37 @@ class SolvesUi {
     public static function isPublicUrl($url){
         if(\Solves\Solves::isNotBlank($url)){
             $arrUrl = explode('/', $url);
-            $url = $arrUrl[0];
+            $url = ($arrUrl[0]=='app' ? $arrUrl[0].'/'.$arrUrl[1] : $arrUrl[0]);
         }
         return in_array($url, SolvesUi::$PUBLIC_URLS);
     }
 
-    public static function setScriptFilePaths($arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
-    public static function setCssFilePaths($arr){SolvesUi::$CSS_FILEPATHS = $arr;}
-    public static function getCssFilePaths(){return SolvesUi::$CSS_FILEPATHS;}
-    public static function getSingleCssFilePath($item){return self::getSingleFilePath($item); }
+    public static function setScriptFilePaths(array $arr){SolvesUi::$SCRIPT_FILEPATHS = $arr;}
+    public static function setUiCssList(array $arr){SolvesUi::$UI_CSS_LIST = $arr;}
+    public static function getUiCssList(): array{return SolvesUi::$UI_CSS_LIST;}
+    public static function getSingleCss(\SolvesUi\SolvesUiCss $item): string{return $item->getIncludeTag(); }
+    public static function getCssFilePathsNotInline(): array{
+        $paths = [];
+        foreach(SolvesUi::$UI_CSS_LIST as $item){
+            if(!$item->isInline()){
+                $paths[] = $item->getPath();
+            }
+        }
+        return $paths;
+    }
 
-    public static function getScriptFilePaths(){return SolvesUi::$SCRIPT_FILEPATHS;}
-    public static function getSingleScriptFilePath($item){return self::getSingleFilePath($item); }
-    public static function getSingleScriptFilePathProperties($item){return (is_array($item) ? (count($item)>1?$item[1]:''):  (strpos($item, '/')==0 ?'':'crossorigin="anonymous"'));}
+    public static function getScriptFilePaths(): array{return SolvesUi::$SCRIPT_FILEPATHS;}
+    public static function getSingleScriptFilePath($item): string{return self::getSingleFilePath($item); }
+    public static function getSingleScriptFilePathProperties($item): string{return (is_array($item) ? (count($item)>1?$item[1]:''):  (strpos($item, '/')==0 ?'':'crossorigin="anonymous"'));}
 
-    public static function getSingleFilePath($item){
+    public static function getSingleFilePath($item): string{
         $path = (is_array($item) ? $item[0]: $item);
         return \Solves\Solves::getRelativePath($path);
     }
 
-    public static function getUiVersion(){return SolvesUi::$UI_VERSION;}
+    public static function getUiVersion(): string{return SolvesUi::$UI_VERSION;}
     public static function setUiVersion($p){SolvesUi::$UI_VERSION = $p;}
-    public static function getCacheUiVersion(){
+    public static function getCacheUiVersion(): string{
         return \Solves\Solves::getSystemName().'_'.\Solves\Solves::getSystemVersion().(\Solves\Solves::isNotBlank(SolvesUi::$UI_VERSION)?'_ui'.SolvesUi::$UI_VERSION:'');
     }
 

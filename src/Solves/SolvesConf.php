@@ -104,6 +104,16 @@ class SolvesConf {
         return self::$SOLVES_CONF_RESPONSIVE_FILEMANAGER;
     }
 
+    /** Configuração dados de WebSocket */
+    /** @var \Solves\SolvesConfWebSocket */
+    private static $SOLVES_CONF_WEBSOCKET;
+    public static function setSolvesConfWebSocket(\Solves\SolvesConfWebSocket $ws){
+        self::$SOLVES_CONF_WEBSOCKET = $ws;
+    }
+    public static function getSolvesConfWebSocket() :\Solves\SolvesConfWebSocket {
+        return self::$SOLVES_CONF_WEBSOCKET;
+    }
+
 
     public static function build(){
         \Solves\Solves::config(self::$SOLVES_CONF_IDENTIFICACAO->getSystemName(),
@@ -159,7 +169,7 @@ class SolvesConf {
                 self::$SOLVES_CONF_NOTIFICATIONS->getSenderId());
         }
         if(isset(self::$SOLVES_CONF_UI)){
-            \Solves\Solves::configUi(self::$SOLVES_CONF_UI->getCssFilePaths(),
+            \Solves\Solves::configUi(self::$SOLVES_CONF_UI->getUiCssList(),
                 self::$SOLVES_CONF_UI->getScriptsFilePaths(),
                 self::$SOLVES_CONF_UI->getUiThemeBackgroundColor(),
                 self::$SOLVES_CONF_UI->getUiThemeColor(),
@@ -168,6 +178,13 @@ class SolvesConf {
                 \SolvesUi\SolvesCabecalho::setLogoOnLoading(self::$SOLVES_CONF_UI->getLogoOnLoading());
             }
             \SolvesUi\SolvesCabecalho::config(self::$SOLVES_CONF_UI->getScriptAnalytics());
+        }
+        if(isset(self::$SOLVES_CONF_WEBSOCKET)){
+            \SolvesWebsocket\SolvesWebsocketServer::config(self::$SOLVES_CONF_WEBSOCKET->getUrl(), self::$SOLVES_CONF_WEBSOCKET->getHost(), self::$SOLVES_CONF_WEBSOCKET->getPort());
+            $routesConf = self::$SOLVES_CONF_WEBSOCKET->getRoutes();
+            foreach($routesConf as $route){
+                \SolvesWebsocket\SolvesWebsocketServer::addConfigRoute($route->getName(), $route->getPath());
+            }
         }
     }
 }
@@ -311,8 +328,9 @@ class SolvesConfUi{
     private $uiThemeBackgroundColor = '#FFFFFF';
     private $uiThemeColor;
     private $scriptsFilePaths = array();
-    private $cssFilePaths = array();
+    private $uiCssList = array();
     private $scriptAnalytics='';
+    private $googleAnalyticsIdCode=null;
     private $logoOnLoading='';
 
     /**
@@ -373,18 +391,18 @@ class SolvesConfUi{
     /**
      * @return array
      */
-    public function getCssFilePaths(): array
+    public function getUiCssList(): array
     {
-        return $this->cssFilePaths;
+        return $this->uiCssList;
     }
 
     /**
-     * @param array $cssFilePaths
+     * @param \SolvesUi\SolvesUiCss $uiCss
      * @return SolvesConfUi
      */
-    public function setCssFilePaths(array $cssFilePaths): SolvesConfUi
+    public function addUiCss(\SolvesUi\SolvesUiCss $uiCss): SolvesConfUi
     {
-        $this->cssFilePaths = $cssFilePaths;
+        $this->uiCssList[] = $uiCss;
         return $this;
     }
 
@@ -403,6 +421,33 @@ class SolvesConfUi{
     public function setScriptAnalytics(string $scriptAnalytics): SolvesConfUi
     {
         $this->scriptAnalytics = $scriptAnalytics;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGoogleAnalyticsIdCode(): string
+    {
+        return $this->googleAnalyticsIdCode;
+    }
+
+    /**
+     * @param string $scriptAnalytics
+     * @return SolvesConfUi
+     */
+    public function setGoogleAnalyticsIdCode(string $googleAnalyticsIdCode): SolvesConfUi
+    {
+        $this->googleAnalyticsIdCode = $googleAnalyticsIdCode;
+        $this->scriptAnalytics = "<!-- Global site tag (gtag.js) - Google Analytics -->".
+            "<script async src=\"https://www.googletagmanager.com/gtag/js?id=".$this->googleAnalyticsIdCode."\"></script>".
+            "<script>".
+            "window.dataLayer = window.dataLayer || [];".
+            "function gtag(){dataLayer.push(arguments);}".
+            "gtag('js', new Date());".
+            "gtag('config', '".$this->googleAnalyticsIdCode."');".
+            "</script>
+";
         return $this;
     }
 
@@ -739,7 +784,7 @@ class SolvesConfUrls{
         //CDN app
         $this->cdnApp = self::SOLVES_CDN.$dirCdnInApp;
         //LOCAL CDN app
-        $this->localCdn = $this->getPathRaiz().self::SOLVES_LOCAL_CDN;
+        $this->localCdn = $this->getPathRaiz().Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN);
         $this->localCdnApp = $this->localCdn.$dirCdnInApp;
         //Local CDN ADDRESS (starting like http:// https://)
         $this->localCdnAddress = $solvesConfUrl->getSiteUrl().Solves::removeBarraInicial($this->localCdn);
@@ -1592,5 +1637,53 @@ class SolvesConfResponsiveFileManager{
         return $this->url.'dialog.php?crossdomain=1&amp;type=2&amp;field_id='.$fieldElmId.'&amp;relative_url=1&amp;multiple='.($isMultiple?1:0).'&amp;akey='.$this->privateKey;
     }
 
+}
+class SolvesConfWebsocket{
+
+    private $host;
+    private $port;
+    private $url;
+    /**
+    *@var SolvesConfWebsocketRoute[]
+    */
+    private $routes = [];
+
+    /**
+     * SolvesConfWebsocket constructor.
+     * @param $host
+     * @param $port
+     */
+    public function __construct(string $host, int $port)
+    {
+        $this->host = $host;
+        $this->port = $port;
+        $this->url = 'ws://'.$host.((isset($port) && $port>0)?':'.$port:'');
+    }
+
+
+    public function setHost($p){$this->host = $p;}
+    public function getHost(): string{return $this->host;}
+    public function setPort($p){$this->port = $p;}
+    public function getPort(): string{return $this->port;}
+    /*public function setUrl($p){$this->url = $p;} */
+    public function getUrl(): string{return $this->url;}
+    public function addRoute(string $name, string $path){$this->routes[] = new SolvesConfWebsocketRoute($name, $path);}
+    public function getRoutes(): array{return $this->routes;}
+
+}
+class SolvesConfWebsocketRoute{
+    private $name;
+    private $path;
+    /**
+     * SolvesConfWebsocketRoute constructor.
+     * @param $name
+     * @param $path
+     */
+    public function __construct(string $name, string $path){
+        $this->name = $name;
+        $this->path = $path;
+    }
+    public function getName(): string{return $this->name;}
+    public function getPath(): string{return $this->path;}
 }
 ?>
