@@ -34,7 +34,7 @@ class SolvesWebSocketServer {
     	self::$routes[$instance->getPath()] = $instance;
 	    self::$app->route($instance->getPath(), $instance, array('*'));
     }
-    public static function getWsUrl(): string{
+    public static function getWsUrl(): ?string{
         return self::$url;
     }
     public static function getRoutesStringObjArr(): string{
