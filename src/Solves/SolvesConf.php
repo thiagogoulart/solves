@@ -186,6 +186,20 @@ class SolvesConf {
                 \SolvesWebsocket\SolvesWebsocketServer::addConfigRoute($route->getName(), $route->getPath());
             }
         }
+        if(isset(self::$SOLVES_CONF_PAY)){
+            $paypalConf = self::$SOLVES_CONF_PAY->getConfPaypalMethod();
+            if(isset($paypalConf)){
+                \SolvesPay\SolvesPayPaypal::config($paypalConf->getPaypalUsuario(), $paypalConf->getPaypalSenha(),
+                    $paypalConf->getPaypalAssinatura(), $paypalConf->getPaypalEmail(), $paypalConf->getPaypalBrandName(),
+                    $paypalConf->getPaypalNotifyUrl(), $paypalConf->getPaypalReturnUrl(), $paypalConf->getPaypalReturnUrl(), $paypalConf->getPaypalPathLog());
+            }
+            $pagseguroConf = self::$SOLVES_CONF_PAY->getConfPagseguroMethod();
+            if(isset($pagseguroConf)) {
+                //TODO configurar PAGSEGURO
+                // \SolvesPay\SolvesPayPagseguro::config
+            }
+        }
+
     }
 }
 class SolvesConfIdentificacao{
@@ -1363,7 +1377,7 @@ class SolvesConfPayMethod{
     /**
      * @return mixed
      */
-    public function getConfPaypalMethod() :\Solves\SolvesConfPayMethodPaypal    {
+    public function getConfPaypalMethod(): ?\Solves\SolvesConfPayMethodPaypal    {
         return $this->confPaypalMethod;
     }
 
@@ -1379,7 +1393,7 @@ class SolvesConfPayMethod{
     /**
      * @return mixed
      */
-    public function getConfPagseguroMethod() :\Solves\SolvesConfPayMethodPagseguro    {
+    public function getConfPagseguroMethod(): ?\Solves\SolvesConfPayMethodPagseguro    {
         return $this->confPagseguroMethod;
     }
 

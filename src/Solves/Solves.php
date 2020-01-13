@@ -9,7 +9,6 @@ namespace Solves;
 use SolvesAuth\SolvesAuth;
 use SolvesMail\SolvesMail;
 use SolvesDAO\SolvesDAO;
-use SolvesPay\SolvesPay;
 use SolvesNotification\SolvesNotification;
 use SolvesUi\SolvesUi;
 

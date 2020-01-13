@@ -203,6 +203,10 @@ abstract class SolvesObject {
   		 $cols = $this->dao->getColunas();
 		
 		foreach($cols as $col){
+		    if(isset($this->arrIdsColunasSensiveis) && array_search($col->getColumnOrder(), $this->arrIdsColunasSensiveis)){
+                continue;
+            }
+		    //TODO try to find getter of value and label
 			$arr[$col->getNome()] = $this->dao->getValorColunaByOrder($col->getColumnOrder())->getValor();
 		}
   		 return $arr; 
