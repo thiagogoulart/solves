@@ -227,6 +227,27 @@ class Solves {
 	        return "";
 	    }
 	}
+    /**
+     * @param string $str 
+     * @return string
+     * Procura por trechos de scripts e também por palavrões na string, e ao encontrar substitui todas as ocorrências por "****"
+     */
+	public static function removerConteudoMalicioso(string $str): string{
+		$scripts = array('<script','location.href');
+		$palavroes = array('arrombad','bucet','bocet','blowjob','caralh','c*',' cu ',' cú ','cacete','cacetinho','cacetao','cacetaum','pênis','penis','foder','f****','fodase','fodasi','fodassi','fodassa','fodinha','fodao','fodaum','foda1','fodona','f***','fodeu','f****','fudeu','fodasse','fuckoff','fuckyou','filho da puta','filha da puta','filhodaputa','filhadaputa','gozo','goza','gozar','gozada','gozadanacara','m****','merdao','merdaum','merdinha','vadia','vasefoder','venhasefoder','voufoder','vasefuder','venhasefuder','voufuder','vaisefoder','vaisefuder','venhasefuder','vaisifude','v****','vaisifuder','vasifuder','vasefuder','vasefoder','pirigueti','piriguete','p****','porraloca','porraloka','porranacara','#@?$%~','putinha','putona','putassa','putao','punheta','putamerda','putaquepariu','putaquemepariu','#@?$%~','putavadia','putaqpariu','putaqpario','putaqparil','peido','peidar','xoxota','xota','xoxotinha','xerequinha','xereqinha','xerekinha','xoxotona','toma no c','toma no cú','toma no toba','tomar no cu','tomar no cú','tomar no toba','xvideos','porn','xana','caralho','kralho','pau no cu','pau no cú','pau no','f.o.d.a.s.e'
+        );
+        $qtdArray = count($scripts);
+        for ($n = 0; $n != $qtdArray; $n++) {
+            $str = str_ireplace($scripts[$n], "****", $str);
+        }
+        $qtdArray = count($palavroes);
+        for ($n = 0; $n != $qtdArray; $n++) {
+            $str = str_ireplace($palavroes[$n], "****", $str);
+        }
+        $str = strip_tags($str);
+
+        return $str;
+	}
 	public static function getAnoCopyright(){
 	    $anoStart = 2019;
 	    $anoAtual = SolvesTime::getAnoAtual();

@@ -117,4 +117,16 @@ class SolvesTest extends TestCase {
 			}
 		}
 	}
+	public function testRemoverConteudoMalicioso(){
+		$strReplaced = "****";
+		$params = array('Seu filho da PUta','seu arrombado',' olá, <script type="text/javascript"></script>', ' textolocation.hreftexto');
+		$expected = array('Seu '.$strReplaced,'seu '.$strReplaced.'o', ' olá, '.$strReplaced.' type="text/javascript">', ' texto'.$strReplaced.'texto');
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$s = \Solves\Solves::removerConteudoMalicioso($p);
+			$this->assertEquals($expected[$i], $s, 'String ['.$p.'] String ['.$s.']. String não ficou como esperada:'.$expected[$i]);
+		}
+
+	}
 }
