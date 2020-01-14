@@ -237,6 +237,10 @@ abstract class SolvesObject {
         $arr = array();
         $cols = $this->dao->getColunas();
 
+        $arr['id'] = $this->getId();
+        $arr[$this->dao->getPk()] = $arr['id'];
+
+
         foreach($cols as $col){
             if(isset($this->arrIdsColunasSensiveis) && array_search($col->getColumnOrder(), $this->arrIdsColunasSensiveis)){
                 continue;
@@ -320,8 +324,8 @@ abstract class SolvesObject {
             // Getter/Setter not defined so return property if it exists
             return $this->{$nomeAtributo};
         }else if(!$secondChance){
-        	$nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
-        	return $this->get($nomeAtributo, true);
+            $nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
+            return $this->get($nomeAtributo, true);
         }
         return null;
     }
@@ -335,21 +339,21 @@ abstract class SolvesObject {
             // Getter/Setter not defined so return property if it exists
             $this->{$nomeAtributo} = $valor;
         }else if(!$secondChance){
-        	$nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
-        	return $this->set($nomeAtributo, $valor, true);
+            $nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
+            return $this->set($nomeAtributo, $valor, true);
         }
         return $this;
     }
     public function __call($name, $arguments){
-	    if(\Solves\Solves::isNotBlank($name) && strlen($name)>3){
-			$nomeAtributo = lcfirst(substr($name, 3));
-	    	if(\Solves\Solves::stringComecaCom($name, 'get')){
-	    		return $this->get($nomeAtributo);
-	    	}else if(\Solves\Solves::stringComecaCom($name, 'set')){
-	    		return $this->set($nomeAtributo, $arguments);
-	    	}
-	    }
-	}
+        if(\Solves\Solves::isNotBlank($name) && strlen($name)>3){
+            $nomeAtributo = lcfirst(substr($name, 3));
+            if(\Solves\Solves::stringComecaCom($name, 'get')){
+                return $this->get($nomeAtributo);
+            }else if(\Solves\Solves::stringComecaCom($name, 'set')){
+                return $this->set($nomeAtributo, $arguments);
+            }
+        }
+    }
 
 }
 ?>
