@@ -542,8 +542,11 @@ class Solves {
 	    return $arr;
 	}
 
-	public static function stringComecaCom($string, $startPart){
+	public static function stringComecaCom(string $string, string $startPart): bool{
 	    return (preg_match("/^".$startPart."/", $string));
+	}
+	public static function stringTerminaCom(string $string,string  $startPart): bool{
+	    return (preg_match("/".$startPart."^/", $string));
 	}
 	public static function validaEmail($mail){
 	    //if(preg_match("/^([[:alnum:]_.-]){3,}@([[:lower:][:digit:]_.-]{3,})(.[[:lower:]]{2,3})(.[[:lower:]]{2})?$/", $mail)) 
@@ -598,6 +601,16 @@ class Solves {
 	public static function removeBarraInicial($url){
 		if($url[0]=='/'){$url = substr($url,1,strlen($url));}
 		return $url;
+	}
+	public static function getNomeNormalizadoComUnderline(string $str, $lower=true){
+		$pieces = preg_split('/(?=[A-Z])/',$str);
+		$first = true;
+		$result ='';
+		foreach($pieces as $pc){			
+			$result .= (!$first?'_':'').strtolower($pc);
+			$first = false;
+		}
+		return $result;
 	}
 	public static function getUrlName($root,$url,$primeiraLetraMaiuscula=true){
 	    if(Solves::isNotBlank($root)){

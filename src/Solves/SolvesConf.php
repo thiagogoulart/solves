@@ -38,6 +38,9 @@ class SolvesConf {
     private static $SOLVES_CONF_URLS;
     public static function setSolvesConfUrls(\Solves\SolvesConfUrls $urls){
         self::$SOLVES_CONF_URLS = $urls;
+        if(null==self::$SOLVES_CONF_URLS->getSolvesConfUrlAtivo()){
+            self::$SOLVES_CONF_URLS->setDevUrlEnvironment();
+        }
     }
     public static function getSolvesConfUrls() :\Solves\SolvesConfUrls {
         return self::$SOLVES_CONF_URLS;
@@ -750,6 +753,10 @@ class SolvesConfUrls{
     public function isModeDev() :bool {return $this->isModeDev;}
     public function isModeHml() :bool {return $this->isModeHml;}
     public function isModeProd() :bool {return $this->isModeProd;}
+
+    public function setDevUrlEnvironment(){
+        $this->fillAttrs($this->solvesConfUrlDev);
+    }
 
     public function getSolvesConfUrlDev() :\Solves\SolvesConfUrl {return $this->solvesConfUrlDev;}
     public function setSolvesConfUrlDev(\Solves\SolvesConfUrl $solvesConfUrlDev){

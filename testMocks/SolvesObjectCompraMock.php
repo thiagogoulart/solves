@@ -27,22 +27,19 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
 		parent::__construct($con, self::$TABELA, self::$PK, self::$SEQUENCIA, $parentDao);
 	}
 
-
-//ID
- 	public function getId() {return null;}
- 	public function setId($p) {}
-
-
 //DAO
-	public function afterSave(){
-		
-	}
-	public function afterUpdate($old){
-		
-	}
-	public function afterDelete(){
+    public function beforeSaveAndUpdate(){
 
-	}
+    }
+    public function afterSave(){
+
+    }
+    public function afterUpdate($old){
+
+    }
+    public function afterDelete(){
+
+    }
 
 	public function findOneByToken($token, $payerId, $correlationId){
  		$list =  $this->findArrayByToken($token, $payerId, $correlationId);
