@@ -53,10 +53,10 @@ abstract class SolvesObject {
     public abstract function afterDelete();
 
     public function setId($id){
-        $this->set($this->dao->getPk(), $id);
+        return $this->set($this->dao->getPk(), $id);
     }
     public function getId(){
-        $this->get($this->dao->getPk());
+        return $this->get($this->dao->getPk());
     }
 
     public function setArrIdsColunasSensiveis($p) {
