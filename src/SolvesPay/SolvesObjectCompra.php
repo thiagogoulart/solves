@@ -52,7 +52,7 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
         $sysName = \Solves\Solves::getSystemName();
         $sysVersion = \Solves\Solves::getSystemVersion();
 
-        $this->keySys = $sysName[0].$sysVersion[0];
+        $this->keySys = substr($sysName, 0, 1).substr($sysVersion, 0, 1);
         $this->keyTipo = $keyTipo;
     }
 
