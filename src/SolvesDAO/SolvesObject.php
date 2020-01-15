@@ -313,9 +313,6 @@ abstract class SolvesObject {
             if(!$result[0] && property_exists($this,$nomeAtributo)){
                 // Getter/Setter not defined so return property if it exists
                 $v =  $this->$nomeAtributo;
-                if(is_array($v)){
-                    $v = (count($v)==1 ? $v[0] : (count($v)>1?$v:null) );
-                }
                 return $v;
             }
         }
@@ -334,6 +331,9 @@ abstract class SolvesObject {
             $result = $this->executeMethodIfExists($setterName, $valor);
             if(!$result[0] && property_exists($this,$nomeAtributo)){
                 // Setter not defined so return property if it exists
+                if(is_array($valor)){
+                    $valor = (count($valor)==1 ? $valor[0] : (count($valor)>1?$valor:null) );
+                }
                 $this->$nomeAtributo = $valor;
             }
         }
@@ -358,6 +358,9 @@ abstract class SolvesObject {
     private function executeMethodIfExists(string $method, $attrs=null): array{
         $result = array(false, null);
         $v = null;
+        if(null!=$attrs && is_array($attrs)){
+            $attrs = (count($attrs)==1 ? $attrs[0] : (count($attrs)>1?$attrs:null) );
+        }
         $rc = new \ReflectionClass($this);
         $has = $rc->hasMethod($method);
         if($has) {

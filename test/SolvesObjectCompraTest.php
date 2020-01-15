@@ -68,12 +68,23 @@ class SolvesObjectCompraTest extends TestCase {
 
         //Atributo que possui getter e setter
 		$obj->createdAt = '2020-01-15';
+        $this->assertEquals('2020-01-15', $obj->created_at, 'Atributo que possui getter e setter: Atribute direct access created_at não bate.');
         $this->assertEquals('2020-01-15', $obj->createdAt, 'Atributo que possui getter e setter: Atribute direct access createdAt não bate.');
         $this->assertEquals('2020-01-15', $obj->getCreatedAt(), 'Atributo que possui getter e setter: getCreatedAt não bate.');
         //Atributo que possui getter e setter
 		$obj->setCreatedAt('2020-01-16 08:00:00');
+        $this->assertEquals('2020-01-16 08:00:00', $obj->created_at, 'Atributo que possui getter e setter, usingSetter: Atribute direct created_at anotacoes não bate.');
         $this->assertEquals('2020-01-16 08:00:00', $obj->createdAt, 'Atributo que possui getter e setter, usingSetter: Atribute direct createdAt anotacoes não bate.');
         $this->assertEquals('2020-01-16 08:00:00', $obj->getCreatedAt(), 'Atributo que possui getter e setter, usingSetter: getCreatedAt não bate.');
+        //Atributo que possui getter e setter
+		$obj->created_at = '2020-01-17';
+        $this->assertEquals('2020-01-17', $obj->created_at, 'Atributo que possui getter e setter: Atribute direct access created_at não bate.');
+        $this->assertEquals('2020-01-17', $obj->createdAt, 'Atributo que possui getter e setter: Atribute direct access createdAt não bate.');
+        $this->assertEquals('2020-01-17', $obj->getCreatedAt(), 'Atributo que possui getter e setter: getCreatedAt não bate.');
 
+        //Atributo que possui getter e setter
+        $this->assertEquals('Alysson Teixeira Mangos-NÃO Foi vendido.', $obj->vendedor_com_anotacoes, 'Atributo que possui getter e setter: Atribute direct access vendedor_com_anotacoes não bate.');
+        $this->assertEquals('Alysson Teixeira Mangos-NÃO Foi vendido.', $obj->vendedorComAnotacoes, 'Atributo que possui getter e setter: Atribute direct access vendedorComAnotacoes não bate.');
+        $this->assertEquals('Alysson Teixeira Mangos-NÃO Foi vendido.', $obj->getVendedorComAnotacoes(), 'Atributo que possui getter e setter: getVendedorComAnotacoes não bate.');
 	}
 }

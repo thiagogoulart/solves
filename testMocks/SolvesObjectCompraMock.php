@@ -34,12 +34,23 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
      */
 	protected $anotacoes='';
 
+    /**
+     * @var string
+     */
+	protected $vendedor_com_anotacoes='';
+
+
 	public function __construct($con, $parentDao=null) {
 		parent::__construct($con, self::$TABELA, self::$PK, self::$SEQUENCIA, $parentDao);
 	}
 
 	public function getAnotacoes() {return $this->anotacoes;}
 	public function setAnotacoes($p) {return $this->anotacoes = $p;}
+
+	public function getVendedorComAnotacoes() {
+		return $this->vendedor.'-'.$this->anotacoes;
+	}
+	public function setVendedorComAnotacoes($p) {return $this->vendedor_com_anotacoes = $p;}
 
 
 //DAO
