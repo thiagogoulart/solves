@@ -38,14 +38,16 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
 	protected $paid_transaction_subject;
 	protected $paid_receiver_id;
 
+	protected $keyTipo;
 	
     public static $S_NOVO = "Pré-cadastro";
     public static $S_AGUARDANDO = "Aguardando autorização do Pagamento";
     public static $S_APROVADO = "Pagamento autorizado";
     public static $S_CANCELADO  = "Pagamento cancelado";
 
-	public function __construct($con, $tabela, $pk, $sequencia=null, $parentDao=null) {
+	public function __construct($con, $tabela, $pk, $sequencia=null, $keyTipo=null, $parentDao=null) {
 		parent::__construct($con, $tabela, $pk, $sequencia, $parentDao);
+		$this->keyTipo = $keyTipo;
 	}
 
 
@@ -58,6 +60,9 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
 	//IMPLEMENT
 	public abstract function afterDoPay($jsonNvp, $transactionId, $token, $redirectURL);
 	
+	public function getKeyTipo() {return $this->keyTipo;}
+	public function setKeyTipo($p) {$this->keyTipo = $p;}
+
 	public function getValorTotal() {return $this->valor_total;}
 	public function setValorTotal($p) {$this->valor_total = $p;}
 	public function getValorTotalLabel() {return $this->valor_total_label;}

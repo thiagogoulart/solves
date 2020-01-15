@@ -1,38 +1,81 @@
 <?php
+namespace SolvesPay;
+
 /**
+ * Class SolvesPay
+ * @package SolvesPay
  * @author Thiago G.S. Goulart
  * @version 1.0
  * @created 19/07/2019
- */ 
-namespace SolvesPay;
-
+ */
 abstract class SolvesPay {
-	protected $environment;
-	protected $initialized=false;
-	protected $solvesCompra=null;
+    /**
+     * @var
+     */
+    protected $environment;
+    /**
+     * @var bool
+     */
+    protected $initialized=false;
+    /**
+     * @var SolvesPayCompra|null
+     */
+    protected $solvesCompra=null;
 
-	public function __construct(\SolvesPay\SolvesPayCompra $solvesCompra) {
+    /**
+     * SolvesPay constructor.
+     * @param SolvesPayCompra $solvesCompra
+     */
+    public function __construct(\SolvesPay\SolvesPayCompra $solvesCompra) {
 		$this->solvesCompra = $solvesCompra;
 		$this->setEnvironmentProduction();
 	}
 
-	public function getSolvesCompra(){
+    /**
+     * @return SolvesPayCompra|null
+     */
+    public function getSolvesCompra(): ?\SolvesPay\SolvesPayCompra{
 		return $this->solvesCompra;
 	}
-	public function setEnvironmentProduction(){
+
+    /**
+     *
+     */
+    public function setEnvironmentProduction(){
 		$this->environment = 'production';
 	}
-	public function setEnvironmentSandbox(){
+
+    /**
+     *
+     */
+    public function setEnvironmentSandbox(){
 		$this->environment = 'sandbox';
 	}
-	public function isSandbox(){
+
+    /**
+     * @return bool
+     */
+    public function isSandbox(): bool{
 		return ($this->environment == 'sandbox');
 	}
-	public function isApp(){
+
+    /**
+     * @return bool
+     */
+    public function isApp(): bool{
 		return ($this->solvesCompra->getConnectionDao()->isApp());
 	}
-	public abstract function init($forceInitialization=false);
-	public abstract function solicitarPagamento();
+
+    /**
+     * @param bool $forceInitialization
+     * @return mixed
+     */
+    public abstract function init($forceInitialization=false);
+
+    /**
+     * @return mixed
+     */
+    public abstract function solicitarPagamento();
 	//public abstract function trataNotificacaoSucesso($token, $payerId);
 
 }	

@@ -109,7 +109,7 @@ class SolvesPayPaypal extends SolvesPay{
             'RETURNURL' => self::getCompleteReturnUrl(),
             'CANCELURL' => self::getCompleteCancelUrl(),
             'BUTTONSOURCE' => 'BR_EC_EMPRESA',
-            'PAYMENTREQUEST_0_INVNUM' => $this->getSolvesCompra()->getId()
+            'PAYMENTREQUEST_0_INVNUM' => $this->getSolvesCompra()->getInvoiceId()
         );
         $itens = $this->getItens();
         $requestNvp = array_merge($requestNvp, $itens);
@@ -226,6 +226,7 @@ class SolvesPayPaypal extends SolvesPay{
 	 
 	    //Verificando se deu tudo certo e, caso algum erro tenha ocorrido,
 	    //gravamos um log para depuração.
+
 	    if (isset($responseNvp['ACK']) && $responseNvp['ACK'] != 'Success') {
 	        for ($i = 0; isset($responseNvp['L_ERRORCODE' . $i]); ++$i) {
 	            $message = sprintf("(".$originMethod.")(Resultado de sendNvpRequest vindo de '".$originMethod."') PayPal NVP %s[%d]: %s\n",
@@ -267,7 +268,7 @@ class SolvesPayPaypal extends SolvesPay{
 		    if($php_post['payment_status'] != "" && $php_post['txn_id'] != "" &&
 		        $this->isEmailOfReceiverCorrect($php_post['receiver_email']) ){
 				$this->log("--(NOTIFICACAO)-- ATRIBUTOS CORRETOS : ". $transactionId);
-		        $compraId = @\Solves\Solves::getIntValue($php_post['invoice']);
+                $compraId = \SolvesPay\SolvesPayCompra::getIdByInvoiceId($php_post['invoice']);
 		        $situacao = $php_post['payment_status'];
 				$this->log("--(NOTIFICACAO)-- [ ". $compraId."; ".$situacao."]");
 
