@@ -173,13 +173,13 @@ class SolvesPayPaypal extends SolvesPay{
         }
     }
     private function getCompleteNotifyUrl(){
-    	return \Solves\Solves::getCompleteUrl(false, false, self::$PAYPAL_NOTIFYURL);
+    	return (\Solves\Solves::stringComecaCom(self::$PAYPAL_NOTIFYURL, 'http') ?  self::$PAYPAL_NOTIFYURL : \Solves\Solves::getCompleteUrl(false, false, self::$PAYPAL_NOTIFYURL));
     }
     private function getCompleteReturnUrl(){
-    	return \Solves\Solves::getCompleteUrl(false, $this->isApp(), self::$PAYPAL_RETURNURL);
+    	return (\Solves\Solves::stringComecaCom(self::$PAYPAL_RETURNURL, 'http') ?  self::$PAYPAL_RETURNURL : \Solves\Solves::getCompleteUrl(false, $this->isApp(), self::$PAYPAL_RETURNURL));
     }
     private function getCompleteCancelUrl(){
-    	return \Solves\Solves::getCompleteUrl(false, $this->isApp(), self::$PAYPAL_CANCELURL);
+    	return (\Solves\Solves::stringComecaCom(self::$PAYPAL_CANCELURL, 'http') ?  self::$PAYPAL_CANCELURL : \Solves\Solves::getCompleteUrl(false, $this->isApp(), self::$PAYPAL_CANCELURL));
     }
     private function log($log){        
         if(\Solves\Solves::isNotBlank(SolvesPayPaypal::$PAYPAL_PATH_LOG)){
