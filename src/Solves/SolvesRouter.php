@@ -218,7 +218,7 @@ class SolvesRouter {
                 $this->isPageController = false;
                 $this->include404();
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if($this->isWebSocket){
                 echo $e->getMessage();
             }else{

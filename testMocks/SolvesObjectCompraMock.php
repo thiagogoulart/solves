@@ -22,10 +22,25 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
  	public static $PK = '';
 	public static $SEQUENCIA = '';
 
+    /**
+     * @var string
+     * nome do vendedor
+     */
+	protected $vendedor='';
+
+    /**
+     * @var string
+     * anotações. Tem getter e setter
+     */
+	protected $anotacoes='';
 
 	public function __construct($con, $parentDao=null) {
 		parent::__construct($con, self::$TABELA, self::$PK, self::$SEQUENCIA, $parentDao);
 	}
+
+	public function getAnotacoes() {return $this->anotacoes;}
+	public function setAnotacoes($p) {return $this->anotacoes = $p;}
+
 
 //DAO
     public function beforeSaveAndUpdate(){

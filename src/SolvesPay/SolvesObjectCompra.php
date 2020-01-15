@@ -171,7 +171,7 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
 	public function atualizaSePagoPorSituacao($situacao, $paid_first_name, $paid_last_name, $paid_business, $paid_payer_email, $paid_ipn_track_id, $paid_transaction_subject, $paid_receiver_id){
         $creditar = false;
         $success = false;
-        $this->pago = $aprovado;
+        $this->pago = false;
         $this->updated_at = \Solves\SolvesTime::getTimestampAtual();
 
 		$this->updatePaidAttrs($paid_first_name, $paid_last_name, $paid_business, $paid_payer_email, $paid_ipn_track_id, $paid_transaction_subject, $paid_receiver_id);
@@ -185,7 +185,7 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
         }          	
         try{
         	$success = $this->update();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         	$success = false;
         }
         return ($success && $creditar);

@@ -221,15 +221,6 @@ abstract class SolvesObject {
         foreach($itemArr as $key=>$value){
             $object->set($key, $value);
         }
-        /* //POR COLUNA
-        $cols = $this->dao->getColunas();
-        foreach($cols as $col){
-            $object->set($col->getNome(), $itemArr[$col->getColumnOrder()]);
-            if(array_key_exists($col->getColumnOrder().'_label', $itemArr)){
-                $object->set($col->getNome().'_label', $itemArr[$col->getColumnOrder().'_label']);
-            }
-        }
-        */
         return $object;
     }
     public function toArray() {
@@ -316,13 +307,20 @@ abstract class SolvesObject {
     }
     public function get(string $nomeAtributo, $secondChance=false){
         $getterName = 'get'.\Solves\Solves::getNomeClasse($nomeAtributo);
-        if(method_exists($this, $nomeAtributo)){
-            return $this->$nomeAtributo();
-        }else if(method_exists($this, $getterName)){
-            return $this->$getterName();
-        }else if(property_exists($this,$nomeAtributo)){
-            // Getter/Setter not defined so return property if it exists
-            return $this->{$nomeAtributo};
+        $result = $this->executeMethodIfExists($nomeAtributo);
+        if(!$result[0]){
+            $result = $this->executeMethodIfExists($getterName);
+            if(!$result[0] && property_exists($this,$nomeAtributo)){
+                // Getter/Setter not defined so return property if it exists
+                $v =  $this->$nomeAtributo;
+                if(is_array($v)){
+                    $v = (count($v)==1 ? $v[0] : (count($v)>1?$v:null) );
+                }
+                return $v;
+            }
+        }
+        if($result[0]){
+            return $result[1];
         }else if(!$secondChance){
             $nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
             return $this->get($nomeAtributo, true);
@@ -331,13 +329,16 @@ abstract class SolvesObject {
     }
     public function set(string $nomeAtributo, $valor, $secondChance=false){ 
         $setterName = 'set'.\Solves\Solves::getNomeClasse($nomeAtributo);
-        if(method_exists($this, $nomeAtributo)){
-            return $this->$nomeAtributo($valor);
-        }else if(method_exists($this, $setterName)){
-            return $this->$setterName($valor);
-        }else if(property_exists($this,$nomeAtributo)){
-            // Getter/Setter not defined so return property if it exists
-            $this->{$nomeAtributo} = $valor;
+        $result = $this->executeMethodIfExists($nomeAtributo, $valor);
+        if(!$result[0]){
+            $result = $this->executeMethodIfExists($setterName, $valor);
+            if(!$result[0] && property_exists($this,$nomeAtributo)){
+                // Setter not defined so return property if it exists
+                $this->$nomeAtributo = $valor;
+            }
+        }
+        if($result[0]){
+            return $result[1];
         }else if(!$secondChance){
             $nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
             return $this->set($nomeAtributo, $valor, true);
@@ -353,6 +354,36 @@ abstract class SolvesObject {
                 return $this->set($nomeAtributo, $arguments);
             }
         }
+    }
+    private function executeMethodIfExists(string $method, $attrs=null): array{
+        $result = array(false, null);
+        $v = null;
+        $rc = new \ReflectionClass($this);
+        $has = $rc->hasMethod($method);
+        if($has) {
+            $v = $this->$method($attrs);
+        }else{
+            while($rc->getParentClass()){
+                $parent = $rc->getParentClass()->name;
+                $rc = new \ReflectionClass($parent);
+                $has = $rc->hasMethod($method);
+                if($has){
+                    $reflectionMethod = new ReflectionMethod($parent, $method);
+                    $v = $reflectionMethod->invoke($this, $attrs);
+                    break;
+                }
+            }
+        }
+        $result[0] = $has;
+        $result[1] = $v;
+        return $result;
+    }
+    public function __toString(): string{
+        $str = '';
+        foreach ($this as $key => $value) {
+            $str .= "$key => $value\n";
+        }
+        return $str;
     }
 
 }
