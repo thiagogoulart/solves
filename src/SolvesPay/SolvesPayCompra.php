@@ -28,9 +28,7 @@ class SolvesPayCompra {
         return $this->id;
     }
     public function getInvoiceId(): string{
-        $sysName = \Solves\Solves::getSystemName();
-        $sysVersion = \Solves\Solves::getSystemVersion();
-        $pre = $sysName[0].$sysVersion[0].'-';
+        $pre = $this->solvesObjectCompra->getKeySys().'-';
         if(\Solves\Solves::isNotBlank($this->solvesObjectCompra->getKeyTipo())){
             $pre.= $this->solvesObjectCompra->getKeyTipo().'-';
         }
