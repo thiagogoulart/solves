@@ -69,7 +69,7 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
 
     }
     public function afterDelete(){
-        echo '--afterDelete--';
+       // echo '--afterDelete--';
         $this->excluido = true;
     }
 

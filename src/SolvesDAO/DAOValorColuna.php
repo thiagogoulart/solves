@@ -31,7 +31,7 @@ class DAOValorColuna {
 		if($this->column->isObrigatorio() && !\Solves\Solves::isNotBlank($this->valor)){
             if($this->column->isTipoBoolean()){
                 $this->valor = 'false';
-            }else{
+            }else if(!$this->dao->isMock()){
                 throw new \Exception('Coluna '.$this->column->getNome().' é obrigatória ['.$this->dao->getTabela().'].');
             }
         }

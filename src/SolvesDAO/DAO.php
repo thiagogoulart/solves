@@ -60,6 +60,9 @@ class DAO {
 	public function getConnection() : SolvesDAOConnection{
 		return $this->connection;
 	}
+	public function isMock() : bool{
+		return $this->isMock;
+	}
 	public function setConnection(SolvesDAOConnection $p=null){
 		$this->connection = $p;
 		$this->isMock = ($this->getBdConnection() instanceof SolvesDAOConnectionMock);
@@ -1086,14 +1089,20 @@ class DAO {
 			if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
 				$result = $this->getBdConnection()->query($sql, MYSQLI_USE_RESULT) or die($this->msgError.
                                         (false ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->getBdConnection()->error."</div>"));
-				while($dados=$result->fetch_array(MYSQLI_ASSOC)){
-					$resultado[] = $dados;
+				if($this->isMock){
+					$resultado = $result;
+					$dados = null;
+					$result = null;
+				}else{
+					while($dados=$result->fetch_array(MYSQLI_ASSOC)){
+						$resultado[] = $dados;
+					}
+					$dados = null;
+					@$result->close();
+					/* free result set */
+	   				@mysqli_free_result($result);
+					$result = null;
 				}
-				$dados = null;
-				@$result->close();
-				/* free result set */
-   				@mysqli_free_result($result);
-				$result = null;
 			}else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
 				$result = pg_query($this->getBdConnection(), $sql) or die($this->msgError.
                                         (\Solves\Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));

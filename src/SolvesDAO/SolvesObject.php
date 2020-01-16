@@ -36,7 +36,7 @@ abstract class SolvesObject {
 
     protected $arrIdsColunasSensiveis = array();
 
-    public function __construct($con, $tabela, $pk, $sequencia=null, $parentDao=null) {
+    public function __construct(?\SolvesDAO\SolvesDAOCOnnection $con, $tabela, $pk, $sequencia=null, $parentDao=null) {
         $this->connection = $con;
         $this->parentDao = $parentDao;
 
@@ -164,7 +164,15 @@ abstract class SolvesObject {
         return $result;
     }
 
-    public function toObjectArray($list) {$resultado = array();$qtd = count($list);for ($i = 0; $i != $qtd; $i++) {$object = $this->getObject($list[$i]);$resultado[] = $object;}return $resultado;}
+    public function toObjectArray($list) {
+        $resultado = array();
+        $qtd = (isset($list) && is_array($list) ? count($list) : 0);
+        for ($i = 0; $i != $qtd; $i++) {
+            $object = $this->getObject($list[$i]);
+            $resultado[] = $object;
+        }
+        return $resultado;
+    }
     public function toOneObject($list) {
         $resultado = $this->toObjectArray($list);
         if (isset($resultado) && count($resultado) > 0) {
