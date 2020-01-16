@@ -112,15 +112,4 @@ class SolvesObjectMockTest extends TestCase {
                 $this->assertEquals(999, $result, 'RESULT de saveReturningId não bate.');
                 $this->assertEquals(999, $mock->getId(), 'RESULT de getId depois de ter usado o saveReturningId não bate.');
         }
-        /*
-        public function testAfterSave(){
-                $con = \SolvesDAO\SolvesDAO::openConnectionMock();
-                $obj = new SolvesObjectCompraMock($con);
-
-                $mock = new \SolvesDAO\SolvesObjectMock($obj);
-                $mock->mockMethod('afterSave', function() use ($mock){$mock->vendedor='a';});
-                $result = $mock->saveReturningId();
-                $this->assertEquals('a', $mock->vendedor, 'RESULT de vendedor depois de ter usado o saveReturningId não bate.');
-        }
-        */
 }
