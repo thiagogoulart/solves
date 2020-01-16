@@ -98,7 +98,7 @@ class SolvesObjectMockTest extends TestCase {
 
                 $mock = new \SolvesDAO\SolvesObjectMock($obj);
                 $id = 1;
-                $mock->mockMethod('findById', function() use ($id) {return ($id==1? "SIM" : null);});
+                $mock->mockMethod('findById', function($id) {return ($id==1? "SIM" : null);});
                 $result = $mock->findById(1);
                 $this->assertEquals("SIM", $result, 'RESULT de findById não bate.');
         }

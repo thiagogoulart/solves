@@ -25,9 +25,9 @@ class SolvesObjectMock {
     public function hasMockMethod(string $methodname): bool{
         return array_key_exists($methodname, $this->mockedMethods);
     }
-    public function executeMockMethod(string $methodname){
+    public function executeMockMethod(string $methodname, $args){
         $function = $this->getMockMethod($methodname);
-        return $function();
+        return call_user_func_array($function, $args);
     }
     public function __get(string $nomeAtributo){
       // echo 'Calling __get method ',$nomeAtributo,'<br />';
@@ -37,10 +37,10 @@ class SolvesObjectMock {
      //  echo 'Calling __set method ',$nomeAtributo,'<br />';
         return $this->object->set($nomeAtributo, $valor);
     }
-    public function __call(string $method_name, $args) {
+    public function __call(string $method_name, ?array $args) {
       // echo 'Calling method ',$method_name,'<br />';
        if($this->hasMockMethod($method_name)){
-            return $this->executeMockMethod($method_name);
+            return $this->executeMockMethod($method_name, $args);
        }
        return call_user_func_array(array($this->object, $method_name), $args);
     }
