@@ -12,6 +12,7 @@ abstract class SolvesObject {
     protected $parentDao;
     protected $connection;
 
+    protected $solvesObjId;
     protected $numRows;
     protected $old;
     protected $oldArray;
@@ -35,6 +36,7 @@ abstract class SolvesObject {
     protected $removed_atLabel;
 
     protected $arrIdsColunasSensiveis = array();
+    protected $mock;
 
     public function __construct(?\SolvesDAO\SolvesDAOCOnnection $con, $tabela, $pk, $sequencia=null, $parentDao=null) {
         $this->connection = $con;
@@ -53,10 +55,23 @@ abstract class SolvesObject {
     public abstract function afterDelete();
 
     public function setId($id){
+        $this->solvesObjId = $id;
         return $this->set($this->dao->getPk(), $id);
     }
     public function getId(){
-        return $this->get($this->dao->getPk());
+        $result = $this->get($this->dao->getPk());
+        if(isset($result)){
+            return $result;
+        }else{
+            return $this->solvesObjId;
+        }
+    }
+    public function setMock(\SolvesDAO\SolvesObjectMock $m){
+        $this->mock = $m;
+        $this->dao->setMock($m);
+    }
+    public function getMock(): \SolvesDAO\SolvesObjectMock{
+        return $this->mock;
     }
 
     public function setArrIdsColunasSensiveis($p) {
@@ -154,7 +169,13 @@ abstract class SolvesObject {
     public function findById($id) {if (@$id && isset($id)) {$list = $this->findObjectArrayById($id);return $this->toOneObject($list);}return null; }
 
     public function findObjectArrayById($id) {if (@$id && isset($id)) {return $this->dao->findById($id);}return null;}
-    public function save() {$this->addValores();$id = $this->dao->save();$this->setId($id);$this->afterSave(); return $id;}
+    public function save() {
+        $this->addValores();
+        $id = $this->dao->save();
+        $this->setId($id);
+        $this->afterSave(); 
+        return $id;
+    }
     public function update() {$this->addValores();$result = $this->dao->update($this->getId());$this->afterUpdate($this->old);return $result;}
     public function remove() {$dt = \Solves\SolvesTime::getTimestampAtual();$this->setRemoved(1);$this->setUpdatedAt($dt);$this->setRemovedAt($dt);$result = $this->update();$this->afterDelete();return $result;}
 

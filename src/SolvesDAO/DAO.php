@@ -37,6 +37,7 @@ class DAO {
 
 	/*Colunas que não devem estar presentes no retorno da consulta */
 	private $arrIdsColunasSensiveis = array();
+	protected $mock;
 
 	public static $NULL_TIMESTAMP = null;
 
@@ -63,6 +64,12 @@ class DAO {
 	public function isMock() : bool{
 		return $this->isMock;
 	}
+    public function setMock(\SolvesDAO\SolvesObjectMock $m){
+        $this->mock = $m;
+    }
+    public function getMock(): \SolvesDAO\SolvesObjectMock{
+        return $this->mock;
+    }
 	public function setConnection(SolvesDAOConnection $p=null){
 		$this->connection = $p;
 		$this->isMock = ($this->getBdConnection() instanceof SolvesDAOConnectionMock);
@@ -669,6 +676,11 @@ class DAO {
 	}
 
 	public function save(){
+		if($this->isMock && isset($this->mock)){
+			if($this->getMock()->hasMockDaoMethod( __METHOD__ )){
+				return $this->getMock()->executeMockDaoMethod( __METHOD__ );
+			}
+		}
 		if($this->tabela){
 			$hasParent = false;
 			$sqlParent = '';
@@ -903,6 +915,11 @@ class DAO {
 		}
 	}
 	public function update($id){
+		if($this->isMock && isset($this->mock)){
+			if($this->getMock()->hasMockDaoMethod( __METHOD__ )){
+				return $this->getMock()->executeMockDaoMethod( __METHOD__, $id );
+			}
+		}
 		if($this->tabela && $id){
 			$sql = $this->getSqlUpdate($id);
 			$result = $this->executeQuery($sql,'update');
@@ -926,6 +943,11 @@ class DAO {
 	}
 
     public function delete($id){
+		if($this->isMock && isset($this->mock)){
+			if($this->getMock()->hasMockDaoMethod( __METHOD__ )){
+				return $this->getMock()->executeMockDaoMethod( __METHOD__, $id );
+			}
+		}
         //Exclui o registro do banco
         $sql = "DELETE FROM ".$this->tabela." WHERE ".$this->pk."=".$id.";";
         $result = $this->executeQuery($sql,'delete');

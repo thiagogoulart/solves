@@ -102,4 +102,25 @@ class SolvesObjectMockTest extends TestCase {
                 $result = $mock->findById(1);
                 $this->assertEquals("SIM", $result, 'RESULT de findById não bate.');
         }
+        public function testSaveReturningId(){
+                $con = \SolvesDAO\SolvesDAO::openConnectionMock();
+                $obj = new SolvesObjectCompraMock($con);
+
+                $mock = new \SolvesDAO\SolvesObjectMock($obj);
+                $mock->mockDaoMethod('save', function() {return 999;});
+                $result = $mock->saveReturningId();
+                $this->assertEquals(999, $result, 'RESULT de saveReturningId não bate.');
+                $this->assertEquals(999, $mock->getId(), 'RESULT de getId depois de ter usado o saveReturningId não bate.');
+        }
+        /*
+        public function testAfterSave(){
+                $con = \SolvesDAO\SolvesDAO::openConnectionMock();
+                $obj = new SolvesObjectCompraMock($con);
+
+                $mock = new \SolvesDAO\SolvesObjectMock($obj);
+                $mock->mockMethod('afterSave', function() use ($mock){$mock->vendedor='a';});
+                $result = $mock->saveReturningId();
+                $this->assertEquals('a', $mock->vendedor, 'RESULT de vendedor depois de ter usado o saveReturningId não bate.');
+        }
+        */
 }
