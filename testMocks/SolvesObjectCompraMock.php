@@ -18,8 +18,8 @@ use \SolvesPay\SolvesObjectCompra;
 
 class SolvesObjectCompraMock extends SolvesObjectCompra{ 
 
-	public static $TABELA = '';
- 	public static $PK = '';
+	public static $TABELA = 'compra_mock';
+ 	public static $PK = 'compra_mock_id';
 	public static $SEQUENCIA = '';
 
     /**
@@ -38,6 +38,11 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
      * @var string
      */
 	protected $vendedor_com_anotacoes='';
+
+    /**
+     * @var bool
+     */
+    protected $excluido=false;
 
 
 	public function __construct($con, $parentDao=null) {
@@ -64,7 +69,8 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
 
     }
     public function afterDelete(){
-
+        echo '--afterDelete--';
+        $this->excluido = true;
     }
 
 	public function findOneByToken($token, $payerId, $correlationId){

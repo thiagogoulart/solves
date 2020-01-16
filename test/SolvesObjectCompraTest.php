@@ -87,4 +87,11 @@ class SolvesObjectCompraTest extends TestCase {
         $this->assertEquals('Alysson Teixeira Mangos-NÃO Foi vendido.', $obj->vendedorComAnotacoes, 'Atributo que possui getter e setter: Atribute direct access vendedorComAnotacoes não bate.');
         $this->assertEquals('Alysson Teixeira Mangos-NÃO Foi vendido.', $obj->getVendedorComAnotacoes(), 'Atributo que possui getter e setter: getVendedorComAnotacoes não bate.');
 	}
+        public function testDeleteAndAfterDelete(){
+                $con = \SolvesDAO\SolvesDAO::openConnectionMock();
+                $obj = new SolvesObjectCompraMock($con);
+
+                $obj->delete();
+                $this->assertEquals(true, $obj->excluido, 'Nao alterou atributo "excluido".');
+        }
 }

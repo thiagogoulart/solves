@@ -159,7 +159,9 @@ abstract class SolvesObject {
     public function remove() {$dt = \Solves\SolvesTime::getTimestampAtual();$this->setRemoved(1);$this->setUpdatedAt($dt);$this->setRemovedAt($dt);$result = $this->update();$this->afterDelete();return $result;}
 
     public function delete(){
-        return $this->dao->delete($this->getId());
+        $result =  $this->dao->delete($this->getId());
+        $this->afterDelete();
+        return $result;
     }
 
     public function toObjectArray($list) {$resultado = array();$qtd = count($list);for ($i = 0; $i != $qtd; $i++) {$object = $this->getObject($list[$i]);$resultado[] = $object;}return $resultado;}
@@ -305,7 +307,10 @@ abstract class SolvesObject {
     public function __set(string $nomeAtributo, $valor){
         return $this->set($nomeAtributo, $valor);
     }
-    public function get(string $nomeAtributo, $secondChance=false){
+    public function get(?string $nomeAtributo, $secondChance=false){ 
+        if(!\Solves\Solves::isNotBlank($nomeAtributo)){
+            return null;
+        }
         $getterName = 'get'.\Solves\Solves::getNomeClasse($nomeAtributo);
         $result = $this->executeMethodIfExists($nomeAtributo);
         if(!$result[0]){
@@ -324,7 +329,10 @@ abstract class SolvesObject {
         }
         return null;
     }
-    public function set(string $nomeAtributo, $valor, $secondChance=false){ 
+    public function set(?string $nomeAtributo, $valor, $secondChance=false){ 
+        if(!\Solves\Solves::isNotBlank($nomeAtributo)){
+            return null;
+        }
         $setterName = 'set'.\Solves\Solves::getNomeClasse($nomeAtributo);
         $result = $this->executeMethodIfExists($nomeAtributo, $valor);
         if(!$result[0]){

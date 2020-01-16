@@ -13,23 +13,29 @@ class SolvesDAOConnection {
 	private $transactionOpened=false;
 
 	private $isApp=false;
+	private $mock=false;
 
 
 	/*Colunas que não devem estar presentes no retorno da consulta */
 	private $exibeColunasSensiveis = true;
 
-	public function __construct() {
+	public function __construct(?bool $mock = false) {
 	    $this->BD_CONNECTION = null;
-		$bd_host = SolvesDAO::getBdHost();
-		$bd_port = SolvesDAO::getBdPort();
-		$bd_url = SolvesDAO::getBdUrl();
-		$bd_user = SolvesDAO::getBdUser();
-		$bd_passwd = SolvesDAO::getBdPassword();
-		$bd_database = SolvesDAO::getBdDatabase();
-	    $this->BD_CONNECTION = self::connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database);
-	    if(SolvesDAO::isDebug()){
-	    	echo '[$bd_host:'.$bd_host.'], [$bd_port:'.$bd_port.'], [$bd_url:'.$bd_url.'], [$bd_user:'.$bd_user.'], [$bd_passwd:'.$bd_passwd.'], [$bd_database:'.$bd_database.']';
-	    	var_dump($this->BD_CONNECTION);
+	    $this->mock = $mock;
+	    if($this->mock) {
+	    	$this->BD_CONNECTION = new SolvesDAOConnectionMock();
+	    }else{ 
+			$bd_host = SolvesDAO::getBdHost();
+			$bd_port = SolvesDAO::getBdPort();
+			$bd_url = SolvesDAO::getBdUrl();
+			$bd_user = SolvesDAO::getBdUser();
+			$bd_passwd = SolvesDAO::getBdPassword();
+			$bd_database = SolvesDAO::getBdDatabase();
+		    $this->BD_CONNECTION = self::connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database);
+		    if(SolvesDAO::isDebug()){
+		    	echo '[$bd_host:'.$bd_host.'], [$bd_port:'.$bd_port.'], [$bd_url:'.$bd_url.'], [$bd_user:'.$bd_user.'], [$bd_passwd:'.$bd_passwd.'], [$bd_database:'.$bd_database.']';
+		    	var_dump($this->BD_CONNECTION);
+		    }
 	    }
 	}
 	private static function connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database) {
@@ -123,6 +129,53 @@ class SolvesDAOConnection {
 	}
 	public function commit() : bool{
 		return $this->commitTransaction(true);
+	}
+
+}
+class SolvesDAOConnectionMock{
+	const TYPE_INSERT = 'insert';
+	const TYPE_UPDATE = 'update';
+	const TYPE_DELETE = 'delete';
+
+	public $error = '';
+	public $insert_id;
+
+	public $transactionStarted = false;
+	public $commited = false;
+	public $rolledback = false;
+	public $closed = false;
+	
+
+	public function query(string $sql, $type=null){
+		$isConsulta = (isset($type) && MYSQLI_USE_RESULT==$type);
+		if($isConsulta){
+			return true;
+		}else if(isset($type)){
+			if(self::TYPE_INSERT==$type){
+				return true;
+			}else if(self::TYPE_UPDATE==$type){
+				return true;
+			}else if(self::TYPE_DELETE==$type){
+				return true;
+			}
+		}
+		return null;
+	}
+	public function autocommit(bool $enable){
+		$this->autocommit = $enable;
+	}
+	public function commit(): bool{
+		$this->commited=true;
+		return $this->commited;
+	}
+	public function rollback(){
+		$this->rolledback=true;
+	}
+	public function close(){
+		$this->closed=true;
+	}
+	public function begin_transaction($type=null){
+		$this->transactionStarted=true;
 	}
 
 }

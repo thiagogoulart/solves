@@ -33,6 +33,7 @@ class DAO {
 
 	private $msgError;
 	private $charset;
+	private $isMock = false;
 
 	/*Colunas que não devem estar presentes no retorno da consulta */
 	private $arrIdsColunasSensiveis = array();
@@ -61,6 +62,7 @@ class DAO {
 	}
 	public function setConnection(SolvesDAOConnection $p=null){
 		$this->connection = $p;
+		$this->isMock = ($this->getBdConnection() instanceof SolvesDAOConnectionMock);
 	}
 	public function setOrderByEspecifico($p){
 		$this->orderByEspecifico = $p;
@@ -268,7 +270,7 @@ class DAO {
 		$this->setQtdColunas(count($this->colunas));
 	}
 	private function getBdConnection(){
-		return $this->connection->getBdConnection();
+		return (isset($this->connection) ? $this->connection->getBdConnection() : null);
 	}
 /*END getters e setters*/
 	public function getSequencePkValue(){
@@ -794,7 +796,7 @@ class DAO {
             if($tipo=="string" || $tipo=="date" || $tipo=="text" || $tipo=="timestamp" || $tipo=="time"){
                  if($hasValue){
                  	if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
-                 		$value = mysqli_real_escape_string($this->getBdConnection(), $value);
+                 		$value = ($this->isMock ? $value : mysqli_real_escape_string($this->getBdConnection(), $value));
                  	}else{
                  		$value = addslashes($value);
                  	}
@@ -1034,10 +1036,15 @@ class DAO {
 		if($sql && $sql!=""){
 			$result = false;
 			//echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$op." | ".$sql.". </div>";exit;
+			if(!isset($this->connection) || null==$this->getBdConnection()){
+				$erro = 'Não encontrada conexão de BD ativa.';
+				$this->msgError .= $erro;
+				throw new \Exception($erro);
+			}
 			try{
 				$this->openTransaction();
 				if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
-					$result = $this->getBdConnection()->query($sql);
+					$result = ($this->isMock ? $this->getBdConnection()->query($sql, $op) : $this->getBdConnection()->query($sql));
 					if($result){
 						if($op=='insert'){
 							$id = $this->getBdConnection()->insert_id;

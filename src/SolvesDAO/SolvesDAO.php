@@ -65,6 +65,9 @@ class SolvesDAO {
 	public static function openConnection() {
 	    return new SolvesDAOConnection();
 	}
+	public static function openConnectionMock() {
+	    return new SolvesDAOConnection(true);
+	}
 
 	public static function closeConnection(SolvesDAOConnection $con) {
 	    if (isset($con)) {
