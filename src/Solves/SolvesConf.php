@@ -1674,11 +1674,11 @@ class SolvesConfWebsocket{
      * @param $host
      * @param $port
      */
-    public function __construct(string $host, int $port)
+    public function __construct(string $host, int $port, ?bool $isWss=false)
     {
         $this->host = $host;
         $this->port = $port;
-        $this->url = 'ws://'.$host.((isset($port) && $port>0)?':'.$port:'');
+        $this->url = ($isWss?'wss://':'ws://').$host.((isset($port) && $port>0)?':'.$port:'');
     }
 
 

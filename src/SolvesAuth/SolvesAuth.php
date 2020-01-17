@@ -4,7 +4,7 @@
  * @version 1.1
  * @created 08/05/2019
  * @updated 19/07/2019
- */ 
+ */
 namespace SolvesAuth;
 
 use Kreait\Firebase\Factory;
@@ -20,7 +20,7 @@ class SolvesAuth {
     private static $KEY_TOKEN = 'S!@&!#511.;,;.,[[[q1';
     private static $FIREBASE_CONFIG_JSON_FILE;
     private static $FIREBASE_CONFIG_USER;
-    
+
     public static function config($firebaseJsonFile, $firebaseUser){
         SolvesAuth::setFirebaseConfigJsonFile($firebaseJsonFile);
         SolvesAuth::setFirebaseConfigUser($firebaseUser);
@@ -36,7 +36,7 @@ class SolvesAuth {
     public static function getFirebase(){SolvesAuth::initFirebase();return SolvesAuth::$firebase;}
 
     public static function initFirebase() {
-        if(SolvesAuth::$firebase==null){ 
+        if(SolvesAuth::$firebase==null){
             if(!SolvesAuth::$FIREBASE_CONFIG_JSON_FILE){
                 throw new \Exception('Configuração do Firebase não definida.');
             }
@@ -71,23 +71,23 @@ class SolvesAuth {
         }
         return null;
     }
-    public static function getUserLogado($CONNECTION, $empresaId, $token, $userData, $perfil, $usuario, $createdAt){
+    public static function getUserLogado(?\SolvesDAO\SolvesDAOConnection $CONNECTION, $empresaId, $token, $userData, $perfil, $usuario, $createdAt){
         $object = null;
         /*Autentica por TOKEN*/
         $user = SolvesAuth::checkToken($CONNECTION, $token, $userData);
         if (isset($user) && $user->getId()>0) {
-           $object = $user;
+            $object = $user;
         }
         return $object;
     }
-    public static function checkToken($CONNECTION, $receivedToken, $receivedData){
+    public static function checkToken(?\SolvesDAO\SolvesDAOConnection $CONNECTION, $receivedToken, $receivedData){
         if(!\Solves\Solves::isNotBlank($receivedToken) || !\Solves\Solves::isNotBlank($receivedData)){
             return null;
         }
         $token = SolvesAuth::createToken($receivedData);
         // We check if token is ok !
-       //    echo 'wrong data !['.$receivedData.']';
-           //echo 'wrong Token !['.$receivedToken.'] != ['.$token.']';
+        //    echo 'wrong data !['.$receivedData.']';
+        //echo 'wrong Token !['.$receivedToken.'] != ['.$token.']';
         if ($receivedToken != $token){
             return null;
         }
@@ -104,12 +104,12 @@ class SolvesAuth {
         $token_CLIENTE_IP = \Solves\Solves::descriptografa($arrUserData->CLIENTE_IP);
         $token_REQUEST_TIME = \Solves\Solves::descriptografa($arrUserData->REQUEST_TIME);
 
-        $isSameUserAgentOnRequest = ($_SERVER['HTTP_USER_AGENT']==$token_HTTP_USER_AGENT);
+        $isSameUserAgentOnRequest = (@$_SERVER['HTTP_USER_AGENT']==$token_HTTP_USER_AGENT);
 
         if(isset($tipo) && isset($creationTimeToken) && isset($userIdToken) && isset($senhaToken)){
-            if(\Solves\Solves::isNotBlank($token_HTTP_USER_AGENT) && \Solves\Solves::isNotBlank($token_CLIENTE_IP)){ 
+            if(\Solves\Solves::isNotBlank($token_HTTP_USER_AGENT) && \Solves\Solves::isNotBlank($token_CLIENTE_IP)){
                 $classe = ucwords($tipo);
-                $obj = new $classe($CONNECTION); 
+                $obj = new $classe($CONNECTION);
                 $user = $obj->findByIdAndSenha($userIdToken, $senhaToken);
                 return $user;
             }
@@ -118,7 +118,21 @@ class SolvesAuth {
     }
     public static function createToken($data){
         /* Create a part of token using secretKey and other stuff */
-        $tokenGeneric = SolvesAuth::getKeyToken().$_SERVER["SERVER_NAME"]; 
+        $server = @$_SERVER["SERVER_NAME"];
+        if(!\Solves\Solves::isNotBlank($server)){
+            $host = \Solves\SolvesConf::getSolvesConfUrls()->getSolvesConfUrlAtivo()->getSiteUrl();
+            $arrHost = explode('https://', $host);
+            if(count($arrHost)>1){
+                $host = $arrHost[1];
+            }else{
+                $host = $arrHost[0];
+                $arrHost = explode('http://', $host);
+                $host = (count($arrHost)>1?$arrHost[1]:$arrHost[0]);
+            }
+            $arrHost = explode('/', $host);
+            $server = $arrHost[0];
+        }
+        $tokenGeneric = SolvesAuth::getKeyToken().$server;
         /* Encoding token */
         return  hash('sha256', $tokenGeneric.$data);
     }
@@ -132,9 +146,9 @@ class SolvesAuth {
         $userData->u = \Solves\Solves::criptografa($userId);
         $userData->z = \Solves\Solves::criptografa($tipo);
         $userData->s = \Solves\Solves::criptografa($senha);
-        $userData->HTTP_USER_AGENT = \Solves\Solves::criptografa($_SERVER['HTTP_USER_AGENT']);
+        $userData->HTTP_USER_AGENT = \Solves\Solves::criptografa(@$_SERVER['HTTP_USER_AGENT']);
         $userData->CLIENTE_IP = \Solves\Solves::criptografa(\Solves\Solves::getClientIp());
-        $userData->REQUEST_TIME = \Solves\Solves::criptografa($_SERVER['REQUEST_TIME']);
+        $userData->REQUEST_TIME = \Solves\Solves::criptografa(@$_SERVER['REQUEST_TIME']);
         $data = json_encode($userData);
         $token = SolvesAuth::getToken(\Solves\Solves::criptografa($data));
         return json_encode($token);
@@ -161,14 +175,14 @@ class SolvesAuth {
             if(!\Solves\Solves::isNotBlank($url)){
                 $url = $firebaseAuthUser->profile->picture->data->url;
             }
-        }catch(Exception $e){
+        }catch(\Exception $e){
 
         }
         return $url;
     }
     public static function getCredentialProviderId($firebaseAuthUser, $firebaseUserChecked){
         $c = null;
-        try{    
+        try{
             if(\Solves\Solves::isNotBlank($firebaseAuthUser) && \Solves\Solves::isNotBlank($firebaseAuthUser->user) && \Solves\Solves::isNotBlank($firebaseAuthUser->user->providerData)){
                 $c = $firebaseAuthUser->user->providerData[0]->providerId;
             }
@@ -178,7 +192,7 @@ class SolvesAuth {
             if(!\Solves\Solves::isNotBlank($c)){
                 $c = $firebaseUserChecked->providerData[0]->providerId;
             }
-        }catch(Exception $e){
+        }catch(\Exception $e){
 
         }
         return $c;

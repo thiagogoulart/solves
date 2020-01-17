@@ -31,8 +31,12 @@ class SolvesMail {
     public static function setEmailRemetenteFromLabel($p){SolvesMail::$EMAIL_REMETENTE_FROM_LABEL = $p;}
     
     public static function getNewMailer() {
-        $mail = new PHPMailer();
-        return SolvesMail::configureMailer($mail);
+        if(\Solves\Solves::isTestMode()){
+            return new PHPMailerMock();
+        }else{
+            $mail = new PHPMailer();
+            return SolvesMail::configureMailer($mail);
+        }
     }
     public static function configureMailer($mail) {
         $mail->isSMTP();
@@ -48,4 +52,39 @@ class SolvesMail {
         return $mail;
     }
 
+}
+class PHPMailerMock{
+    public $Subject;
+    public $Body;
+    public $AltBody;
+
+
+    public $enviado = false;
+    public $adresses = [];
+/**
+     * Add a "To" address.
+     *
+     * @param string $address The email address to send to
+     * @param string $name
+     *
+     * @throws Exception
+     *
+     * @return bool true on success, false if address already used or invalid in some way
+     */
+    public function addAddress($address, $name = ''){ 
+        $this->adresses[$address]= $name;
+    }
+
+    /**
+     * Create a message and send it.
+     * Uses the sending method specified by $Mailer.
+     *
+     * @throws Exception
+     *
+     * @return bool false on error - See the ErrorInfo property for details of the error
+     */
+    public function send(): bool{
+        $this->enviado = true;
+        return $this->enviado;
+    }
 }

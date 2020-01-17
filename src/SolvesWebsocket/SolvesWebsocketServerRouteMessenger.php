@@ -27,6 +27,7 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
     /**
      * @param ConnectionInterface $from
      * @param $token
+     * @param $userData
      * @param $restName
      * @param $methodName
      * @param $receiverId
@@ -36,7 +37,7 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
      *
      * Quando uma nova mensagem é recebida, este método é chamado.
      */
-    public abstract function onEventMessage(\Ratchet\ConnectionInterface $from, $token, $restName, $methodName, $receiverId, $msg, $msgId);
+    public abstract function onEventMessage(\Ratchet\ConnectionInterface $from, string $token, string $userData, ?string $restName, $methodName, $receiverId, $msg, $msgId);
 
     /**
      * @param ConnectionInterface $conn
@@ -65,12 +66,13 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
      * @param string $rest
      * @param string $method
      * @param string $token
+     * @param string $userData
      * @param $dados
      * @param string $prefixDir
      * @return |null
      * Instancia um objeto rest e executa o método cahamdo com base nos parâmetros de nome do rest e de seu método. Só irá executar se o arquivo do rest for encontrado e a classe e método existirem.
      */
-    protected function executeRest(string $rest, string $method, string $token, $dados, string $prefixDir=''){
+    protected function executeRest(string $rest, string $method, string $token, string $userData, $dados, string $prefixDir=''){
         if(null!=$rest){
             $url = $prefixDir.'rest/'.$rest.'/'.$method;
             $_HTTPREQUEST_SERVER = null;
@@ -85,6 +87,7 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
 
             $router = new \Solves\SolvesRouter($_HTTPREQUEST_SERVER, $_HTTPREQUEST_POST, $_HTTPREQUEST_GET, $_HTTPREQUEST_PUT, $_HTTPREQUEST_DELETE, $_HTTPREQUEST_FILES, '', true);
             $router->setToken($token);
+            $router->setUserData($userData);
 
             $fileInclude = $router->getPagInclude();
 
@@ -111,12 +114,12 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
         $msg = $json->dados;
 
         $token = \Solves\SolvesJson::getPropertyData($json, 'token', true, 'Token');
+        $userData = \Solves\SolvesJson::getPropertyData($json, 'userData', true, 'userData');
         $rest = \Solves\SolvesJson::getPropertyData($json, 'rest', false, 'Rest');
         $rest_method = \Solves\SolvesJson::getPropertyData($json, 'rest_method', false, 'RestMethod');
         $receiver_id = \Solves\SolvesJson::getPropertyData($json, 'receiver_id', false, 'receiver_id');
         $msg_id = \Solves\SolvesJson::getPropertyData($json, 'msg_id', false, 'msg_id');
-
-        $this->onEventMessage($from, $token, $rest, $rest_method, $receiver_id, $msg, $msg_id);
+        $this->onEventMessage($from, $token, $userData, $rest, $rest_method, $receiver_id, $msg, $msg_id);
     }
 
     /**
@@ -246,8 +249,7 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
     protected function getJsonObjectMessage(\Ratchet\ConnectionInterface $from, string $msg): object{
         $obj = $this->getDefaultJsonObjectMessage($from);
         $obj->msg = $msg;
-        $json = json_encode($obj);
-        return $json;
+        return $obj;
     }
 
     /**
@@ -274,7 +276,7 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
      * @param string $msg Mensagem de erro a ser enviada
      */
     protected function devolveMsgDeErro(\Ratchet\ConnectionInterface $conn, string $msg='Ocorreu um erro na operação!'){
-        $this->sendToOne($conn, $this->getResourceId($conn), $msg);
+        $this->sendMsgToOne($conn, $this->getResourceId($conn), $msg);
     }
 
     /**
@@ -373,8 +375,51 @@ abstract class SolvesWebSocketServerRouteMessenger extends SolvesWebSocketServer
         $querystring = $conn->httpRequest->getUri()->getQuery();
         parse_str($querystring,$queryarray);
         if(isset($queryarray) && array_key_exists($paramName, $queryarray)){
-            return $queryarray[$paramName];
+            $v =  $queryarray[$paramName];
+            if(\Solves\Solves::isNotBlank($v)){
+                $v2 = json_decode(utf8_encode($v), false);
+                if(\Solves\Solves::isNotBlank($v2)){
+                    $v = $v2;
+                }
+            } 
+            return $v;
         }
         return null;
+    }
+
+    /**
+     * @param ConnectionInterface $conn
+     * @param ?bool $isObrigatorio
+     * @return |null
+     */
+    protected function getHttpParameterToken(\Ratchet\ConnectionInterface $conn, ?bool $isObrigatorio=true){
+        $v = $this->getHttpParameter($conn,'token');
+        if($isObrigatorio && !isset($v)){
+            $this->devolveMsgDeErro($conn, 'Usuário não autenticado.');
+        }
+        return $v;
+    }
+
+    /**
+     * @param ConnectionInterface $conn
+     * @param ?bool $isObrigatorio
+     * @return |null
+     */
+    protected function getHttpParameterUserData(\Ratchet\ConnectionInterface $conn, ?bool $isObrigatorio=true){
+        $v = $this->getHttpParameter($conn,'userData');
+        if($isObrigatorio && !isset($v)){
+            $this->devolveMsgDeErro($conn, 'Usuário não autenticado.');
+        }
+        return $v;
+    }
+
+    protected function getUser(?\SolvesDAO\SolvesDAOConnection $CONNECTION,\Ratchet\ConnectionInterface $conn, ?string $token = null, ?string $userData = null){
+        if(!isset($token)){
+            $token = $this->getHttpParameterToken($conn);
+        }
+        if(!isset($userData)){
+            $userData = $this->getHttpParameterUserData($conn);
+        }
+        return \SolvesAuth\SolvesAuth::checkToken($CONNECTION,$token,$userData);
     }
 }

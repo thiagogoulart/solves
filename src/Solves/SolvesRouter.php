@@ -411,6 +411,9 @@ class SolvesRouter {
     public function getUserData(){
         return $this->userData;
     }
+    public function setUserData($t){
+        $this->userData = $t;
+    }
     public function getUsuario(){
         return $this->usuario;
     }

@@ -45,6 +45,7 @@ class Solves {
 	private static $DEFAULT_CHARSET = '';
 	private static $MODO_SOON_ATIVADO = false;
 	private static $MODO_DEBUG = false;
+	private static $MODO_TEST = false;
 
 	private static $APP_GOOGLE_PLAY_STORE_LINK = '';
 	private static $APP_APPLE_STORE_LINK = '';
@@ -161,6 +162,10 @@ class Solves {
 
 	public static function isDebugMode() {return Solves::$MODO_DEBUG;}
 	public static function setDebugMode() {Solves::$MODO_DEBUG=true;}
+
+	public static function isTestMode() {return Solves::$MODO_TEST;}
+	public static function setTestMode() {Solves::$MODO_TEST=true;}
+	public static function setTestModeOff() {Solves::$MODO_TEST=false;}
 
 	public static function isNotBlank($n) {
 	    return (isset($n) && $n !== 'null' && $n !== null && $n !== "" && $n !== " ");
