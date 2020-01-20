@@ -117,6 +117,15 @@ class SolvesConf {
         return self::$SOLVES_CONF_WEBSOCKET;
     }
 
+    /** Configuração dados de Telegram */
+    /** @var \Solves\SolvesConfTelegram */
+    private static $SOLVES_CONF_TELEGRAM;
+    public static function setSolvesConfTelegram(\Solves\SolvesConfTelegram $t){
+        self::$SOLVES_CONF_TELEGRAM = $t;
+    }
+    public static function getSolvesConfTelegram() :\Solves\SolvesConfTelegram {
+        return self::$SOLVES_CONF_TELEGRAM;
+    }
 
     public static function build(){
         \Solves\Solves::config(self::$SOLVES_CONF_IDENTIFICACAO->getSystemName(),
@@ -1706,5 +1715,43 @@ class SolvesConfWebsocketRoute{
     }
     public function getName(): string{return $this->name;}
     public function getPath(): string{return $this->path;}
+}
+class SolvesConfTelegram{
+    private $botToken;
+    private $chatId;
+    private $urlSendMessage;
+    /**
+     * SolvesConfTelegram constructor.
+     * @param $botToken
+     * @param $chatId
+     */
+    public function __construct(string $botToken, string $chatId){
+        $this->botToken = $botToken;
+        $this->chatId = $chatId;
+        $this->urlSendMessage = "https://api.telegram.org/" .$this->botToken. "/sendMessage?chat_id=" . $this->chatId;
+    }
+    public function getBotToken(): string{return $this->botToken;}
+    public function getChatId(): string{return $this->chatId;}
+
+    public function getUrlEnviaMensagem(string $mensagem): string{
+        return $this->urlSendMessage . "&parse_mode=Markdown&text=" . urlencode($mensagem);
+    }
+    public function enviaMensagem(string $mensagem) : mixed{
+        $result=null;
+        try{
+            $url = $this->getUrlEnviaMensagem($mensagem);
+            $ch = curl_init();
+            $optArray = array(
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true
+            );
+            curl_setopt_array($ch, $optArray);
+            $result = curl_exec($ch);
+            curl_close($ch);
+        } catch (\Exception $ex){
+            error_log("Erro no telegram" . $ex->getMessage() );
+        }
+        return $result;
+    }
 }
 ?>

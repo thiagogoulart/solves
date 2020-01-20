@@ -236,10 +236,11 @@ abstract class SolvesObject {
         if ($id) {
             $this->dao->setPkValue($id);
         }
-        $cols = $this->dao->getColunas();
+        $cols = $this->dao->getColunas(false);
 
         foreach($cols as $col){
-            $this->dao->addValorColuna($col->getColumnOrder(), $this->get($col->getNome()));
+            $v = $this->get($col->getNome());
+            $this->dao->addValorColuna($col->getColumnOrder(), $v);
         }
     }
 

@@ -185,9 +185,10 @@ class DAO {
 	public function getColuna($order) : DAOColuna{
 		return $this->colunas[$order];
 	}
-	public function getColunas($isSelect=true){
+	public function getColunas(?bool $isSelect=true){
 		$cols = $this->colunas;
-		if($isSelect && !$this->connection->isExibeColunasSensiveis() && isset($this->arrIdsColunasSensiveis) && count($this->arrIdsColunasSensiveis)>0){
+		$naoExibeSensiveis = (!$this->connection->isExibeColunasSensiveis() && isset($this->arrIdsColunasSensiveis) && count($this->arrIdsColunasSensiveis)>0);
+		if($isSelect && $naoExibeSensiveis){
 			foreach($this->arrIdsColunasSensiveis as $idColuna){
 				unset($cols[$idColuna]);
 				unset($cols[$idColuna."_label"]);
