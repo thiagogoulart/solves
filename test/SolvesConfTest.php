@@ -52,8 +52,12 @@ class SolvesConfTest extends TestCase {
 		$solvesConfUrls->setSolvesConfUrlProd($solvesConfUrlProd);
 		$solvesConfUrls->setAppGooglePlayStoreLink('https://play.google.com/store/apps/details?id=br.com.rbcworks.compartilhatube');
 		\Solves\SolvesConf::setSolvesConfUrls($solvesConfUrls);
-//'https://compartilhatube.com.br/new/../new/vendor/thiagogoulart/solves_cdn/'
+
+		\Solves\SolvesConf::build();
+
 		$this->assertEquals('https://compartilhatube.com.br/new/vendor/thiagogoulart/solves_cdn/', $solvesConfUrls->getLocalCdnAddress(), 'getLocalCdnAddress');
+		
+		$this->assertEquals('https://compartilhatube.com.br/new/vendor/thiagogoulart/solves_cdn/apps/compartilhatube/2.0/', $solvesConfUrls->getLocalCdnAppAddress(), 'getLocalCdnAppAddress');
 	}
 	public function testSolvesConfUrlsLocal(){		
 		$PATH_RAIZ = '';
@@ -79,8 +83,12 @@ class SolvesConfTest extends TestCase {
 		$solvesConfUrls->setSolvesConfUrlProd($solvesConfUrlProd);
 		$solvesConfUrls->setAppGooglePlayStoreLink('https://play.google.com/store/apps/details?id=br.com.rbcworks.compartilhatube');
 		\Solves\SolvesConf::setSolvesConfUrls($solvesConfUrls);
-//'https://compartilhatube.com.br/new/../new/vendor/thiagogoulart/solves_cdn/'
+
+		\Solves\SolvesConf::build();
+
 		$this->assertEquals('http://localhost/compartilhatube_new/app/vendor/thiagogoulart/solves_cdn/', $solvesConfUrls->getLocalCdnAddress(), 'getLocalCdnAddress');
+
+		$this->assertEquals('http://localhost/compartilhatube_new/app/vendor/thiagogoulart/solves_cdn/apps/compartilhatube/2.0/', $solvesConfUrls->getLocalCdnAppAddress(), 'getLocalCdnAppAddress');
 	}
 	public function testSolvesConfUrlsLocalModelOtherPath(){		
 		$PATH_RAIZ = '../public_html/';
@@ -106,7 +114,11 @@ class SolvesConfTest extends TestCase {
 		$solvesConfUrls->setSolvesConfUrlProd($solvesConfUrlProd);
 		$solvesConfUrls->setAppGooglePlayStoreLink('https://play.google.com/store/apps/details?id=br.com.rbcworks.compartilhatube');
 		\Solves\SolvesConf::setSolvesConfUrls($solvesConfUrls);
-//'https://compartilhatube.com.br/new/../new/vendor/thiagogoulart/solves_cdn/'
+
+		\Solves\SolvesConf::build();
+
 		$this->assertEquals('http://localhost/compartilhatube_new/app/../public_html/vendor/thiagogoulart/solves_cdn/', $solvesConfUrls->getLocalCdnAddress(), 'getLocalCdnAddress');
+
+		$this->assertEquals('http://localhost/compartilhatube_new/app/../public_html/vendor/thiagogoulart/solves_cdn/apps/compartilhatube/2.0/', $solvesConfUrls->getLocalCdnAppAddress(), 'getLocalCdnAppAddress');
 	}
 }

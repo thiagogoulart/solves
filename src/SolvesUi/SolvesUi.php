@@ -47,7 +47,7 @@ class SolvesUi {
     public static function isRestrictedUrl($url){
         if(\Solves\Solves::isNotBlank($url)){
             $arrUrl = explode('/', $url);
-            $url = ($arrUrl[0]=='app' ? $arrUrl[0].'/'.$arrUrl[1] : $arrUrl[0]);
+            $url = ($arrUrl[0]=='app' && count($arrUrl)>1 ? $arrUrl[0].'/'.$arrUrl[1] : $arrUrl[0]);
         }
         if(SolvesUi::$ALL_RESTRICTED){
             return !in_array($url, SolvesUi::$PUBLIC_URLS);

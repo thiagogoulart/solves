@@ -150,12 +150,14 @@ class SolvesConf {
         \Solves\Solves::setAppleStoreLink(self::$SOLVES_CONF_URLS->getAppAppleStoreLink());
         \Solves\Solves::setWindowsStoreLink(self::$SOLVES_CONF_URLS->getAppWindowsStoreLink());
 
-        \Solves\Solves::configAuth(self::$SOLVES_CONF_FIREBASE->getFirebaseConfigJsonFile(),
-            self::$SOLVES_CONF_FIREBASE->getFirebaseConfigUser());
-        \SolvesUi\SolvesConfigJS::setFirebaseJsonConfig(self::$SOLVES_CONF_FIREBASE->getFirebaseConfigJsonConfig());
-        \SolvesUi\SolvesConfigJS::useFirebaseAuthGoogle(self::$SOLVES_CONF_FIREBASE->getFirebaseConfigAuthGoogle());
-        if(self::$SOLVES_CONF_FIREBASE->isUseAuthFacebook()){
-            \SolvesUi\SolvesConfigJS::useFirebaseAuthFacebook();
+        if(isset(self::$SOLVES_CONF_FIREBASE)){
+            \Solves\Solves::configAuth(self::$SOLVES_CONF_FIREBASE->getFirebaseConfigJsonFile(),
+                self::$SOLVES_CONF_FIREBASE->getFirebaseConfigUser());
+            \SolvesUi\SolvesConfigJS::setFirebaseJsonConfig(self::$SOLVES_CONF_FIREBASE->getFirebaseConfigJsonConfig());
+            \SolvesUi\SolvesConfigJS::useFirebaseAuthGoogle(self::$SOLVES_CONF_FIREBASE->getFirebaseConfigAuthGoogle());
+            if(self::$SOLVES_CONF_FIREBASE->isUseAuthFacebook()){
+                \SolvesUi\SolvesConfigJS::useFirebaseAuthFacebook();
+            }
         }
         if(isset(self::$SOLVES_CONF_EMAILS)){
             \Solves\Solves::configMail(self::$SOLVES_CONF_EMAILS->getEmailHost(),
@@ -818,12 +820,13 @@ class SolvesConfUrls{
         $this->cdnApp = self::SOLVES_CDN.$dirCdnInApp;
         //LOCAL CDN app
         $this->localCdn = $this->getPathRaiz().Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN);
-        $this->localCdnApp = $this->localCdn.$dirCdnInApp;
+        $this->localCdnAppSemPathRaiz = Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN).$dirCdnInApp;
+        $this->localCdnApp = $this->getPathRaiz().$this->localCdnAppSemPathRaiz;
         //Local CDN ADDRESS (starting like http:// https://)
         $urlRaiz = $solvesConfUrl->getUrlRaiz();
         $urlRaizOuSiteUrl = $solvesConfUrl->getUrlRaiz(true);
         $this->localCdnAddress = $urlRaizOuSiteUrl.(Solves::isNotBlank($urlRaiz) ? Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN) : Solves::removeBarraInicial($this->localCdn));
-        $this->localCdnAppAddress = $urlRaizOuSiteUrl.(Solves::isNotBlank($urlRaiz) ? Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN) : Solves::removeBarraInicial($this->localCdnApp));
+        $this->localCdnAppAddress = $urlRaizOuSiteUrl.(Solves::isNotBlank($urlRaiz) ? Solves::removeBarraInicial($this->localCdnAppSemPathRaiz) : Solves::removeBarraInicial($this->localCdnApp));
 
         //Informa lib Solves
         if($this->isModeProd){

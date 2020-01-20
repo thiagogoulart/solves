@@ -16,23 +16,29 @@ class SolvesWebSocketServer {
     private static $host;
     private static $port;
 
+    private static $buildApp;
+
     private static $configRoutes = [];
     private static $routes = [];
 
-    public static function config(string $url, string $host, string $port){
+    public static function config(string $url, string $host, string $port, ?bool $buildApp=false){
         self::$url = $url;
         self::$host = $host;
         self::$port = $port;
-        self::$app = new \Ratchet\App(self::$host, self::$port);
-
+        self::$buildApp = $buildApp;
+        if(self::$buildApp){
+            self::$app = new \Ratchet\App(self::$host, self::$port);
+        }
     }
     public static function addConfigRoute(string $name, string $path){
         self::$configRoutes[$name] = $path;
 
     }
     public static function addRoute(SolvesWebSocketServerRoute $instance){    
-    	self::$routes[$instance->getPath()] = $instance;
-	    self::$app->route($instance->getPath(), $instance, array('*'));
+        self::$routes[$instance->getPath()] = $instance;
+        if(isset(self::$app)){
+            self::$app->route($instance->getPath(), $instance, array('*'));
+        }
     }
     public static function getWsUrl(): ?string{
         return self::$url;
@@ -46,19 +52,23 @@ class SolvesWebSocketServer {
         }
         return $arrStr;
     }
-    public static function addRouteEcho(){    	
-	    self::$app->route('/echo', new \Ratchet\Server\EchoServer, array('*'));
+    public static function addRouteEcho(){
+        if(isset(self::$app)){
+            self::$app->route('/echo', new \Ratchet\Server\EchoServer, array('*'));
+        }
     }
     public static function getRoute($path){
         return self::$routes[$path];
     }
     public static function getRoutes(): array{
-    	return self::$routes;
+        return self::$routes;
     }
 
     public static function startServer(){
-	    //RUN
-    	self::$app->run();
+        //RUN
+        if(isset(self::$app)){
+            self::$app->run();
+        }
     }
 
 }
