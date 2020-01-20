@@ -1736,7 +1736,7 @@ class SolvesConfTelegram{
     public function getUrlEnviaMensagem(string $mensagem): string{
         return $this->urlSendMessage . "&parse_mode=Markdown&text=" . urlencode($mensagem);
     }
-    public function enviaMensagem(string $mensagem) : mixed{
+    public function enviaMensagem(string $mensagem){
         $result=null;
         try{
             $url = $this->getUrlEnviaMensagem($mensagem);
