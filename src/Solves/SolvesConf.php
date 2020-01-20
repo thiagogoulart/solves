@@ -638,7 +638,10 @@ class SolvesConfUrl{
     /**
      * @return mixed
      */
-    public function getUrlRaiz(){
+    public function getUrlRaiz(?bool $getValidOne=false){
+        if($getValidOne){
+            return (\Solves\Solves::isNotBlank($this->urlRaiz) ? $this->urlRaiz :$this->siteUrl);
+        }
         return $this->urlRaiz;
     }
 
@@ -817,8 +820,10 @@ class SolvesConfUrls{
         $this->localCdn = $this->getPathRaiz().Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN);
         $this->localCdnApp = $this->localCdn.$dirCdnInApp;
         //Local CDN ADDRESS (starting like http:// https://)
-        $this->localCdnAddress = $solvesConfUrl->getSiteUrl().Solves::removeBarraInicial($this->localCdn);
-        $this->localCdnAppAddress = $solvesConfUrl->getSiteUrl().Solves::removeBarraInicial($this->localCdnApp);
+        $urlRaiz = $solvesConfUrl->getUrlRaiz();
+        $urlRaizOuSiteUrl = $solvesConfUrl->getUrlRaiz(true);
+        $this->localCdnAddress = $urlRaizOuSiteUrl.(Solves::isNotBlank($urlRaiz) ? Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN) : Solves::removeBarraInicial($this->localCdn));
+        $this->localCdnAppAddress = $urlRaizOuSiteUrl.(Solves::isNotBlank($urlRaiz) ? Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN) : Solves::removeBarraInicial($this->localCdnApp));
 
         //Informa lib Solves
         if($this->isModeProd){
