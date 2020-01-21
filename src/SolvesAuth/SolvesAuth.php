@@ -21,9 +21,35 @@ class SolvesAuth {
     private static $FIREBASE_CONFIG_JSON_FILE;
     private static $FIREBASE_CONFIG_USER;
 
+
+    /**MOCK*/
+    private static $isMock = false;
+    private static $mockServerName = null;
+    private static $mockUserAgent = null;
+    private static $mockRequestTime = null;
+
     public static function config($firebaseJsonFile, $firebaseUser){
         SolvesAuth::setFirebaseConfigJsonFile($firebaseJsonFile);
         SolvesAuth::setFirebaseConfigUser($firebaseUser);
+    }
+
+    public static function mock(string $serverName, string $userAgent, ?string $requestTime=''){
+        self::$isMock = false;
+        self::$mockServerName = $serverName;
+        self::$mockUserAgent = $userAgent;
+        self::$mockRequestTime = $requestTime;
+    }
+    public static function isMock(){
+        return self::$isMock;
+    }
+    public static function getServer(){
+        return (self::isMock() ? self::$mockServerName : @$_SERVER["SERVER_NAME"]);
+    }
+    public static function getHttpUserAgent(){
+        return (self::isMock() ? self::$mockUserAgent : @$_SERVER['HTTP_USER_AGENT']);
+    }
+    public static function getRequestTime(){
+        return (self::isMock() ? self::$mockRequestTime : @$_SERVER['REQUEST_TIME']);
     }
 
     public static function getKeyToken(){return SolvesAuth::$KEY_TOKEN;}
@@ -104,7 +130,7 @@ class SolvesAuth {
         $token_CLIENTE_IP = \Solves\Solves::descriptografa($arrUserData->CLIENTE_IP);
         $token_REQUEST_TIME = \Solves\Solves::descriptografa($arrUserData->REQUEST_TIME);
 
-        $isSameUserAgentOnRequest = (@$_SERVER['HTTP_USER_AGENT']==$token_HTTP_USER_AGENT);
+        $isSameUserAgentOnRequest = (self::getHttpUserAgent()==$token_HTTP_USER_AGENT);
 
         if(isset($tipo) && isset($creationTimeToken) && isset($userIdToken) && isset($senhaToken)){
             if(\Solves\Solves::isNotBlank($token_HTTP_USER_AGENT) && \Solves\Solves::isNotBlank($token_CLIENTE_IP)){
@@ -118,7 +144,7 @@ class SolvesAuth {
     }
     public static function createToken($data){
         /* Create a part of token using secretKey and other stuff */
-        $server = @$_SERVER["SERVER_NAME"];
+        $server = self::getServer();
         if(!\Solves\Solves::isNotBlank($server)){
             $host = \Solves\SolvesConf::getSolvesConfUrls()->getSolvesConfUrlAtivo()->getSiteUrl();
             $arrHost = explode('https://', $host);
@@ -140,17 +166,20 @@ class SolvesAuth {
         $token = SolvesAuth::createToken($data);
         return array('token' => $token, 'userData' => $data);
     }
-    public static function auth($userId, $senha,$tipo='cliente'){
+    public static function getAuthToken(int $userId, string $senha,$tipo='user'){
         $userData = new \stdClass();
         $userData->t = \Solves\Solves::criptografa(time());
         $userData->u = \Solves\Solves::criptografa($userId);
         $userData->z = \Solves\Solves::criptografa($tipo);
         $userData->s = \Solves\Solves::criptografa($senha);
-        $userData->HTTP_USER_AGENT = \Solves\Solves::criptografa(@$_SERVER['HTTP_USER_AGENT']);
+        $userData->HTTP_USER_AGENT = \Solves\Solves::criptografa(self::getHttpUserAgent());
         $userData->CLIENTE_IP = \Solves\Solves::criptografa(\Solves\Solves::getClientIp());
-        $userData->REQUEST_TIME = \Solves\Solves::criptografa(@$_SERVER['REQUEST_TIME']);
+        $userData->REQUEST_TIME = \Solves\Solves::criptografa(self::getRequestTime());
         $data = json_encode($userData);
-        $token = SolvesAuth::getToken(\Solves\Solves::criptografa($data));
+        return SolvesAuth::getToken(\Solves\Solves::criptografa($data));
+    }
+    public static function auth(int $userId, string $senha,$tipo='user'){
+        $token = self::getAuthToken($userId, $senha, $tipo);
         return json_encode($token);
     }
     public static function getUserUid($firebaseAuthUser, $firebaseUserChecked){

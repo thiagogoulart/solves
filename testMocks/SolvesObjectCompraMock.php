@@ -47,6 +47,9 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
 
 	public function __construct($con, $parentDao=null) {
 		parent::__construct($con, self::$TABELA, self::$PK, self::$SEQUENCIA, $parentDao);
+
+        $this->dao->addColunaObrigatoria(1, "vendedor", "string", true, null);
+        $this->dao->addColunaObrigatoria(2, "anotacoes", "string", false, null);        
 	}
 
 	public function getAnotacoes() {return $this->anotacoes;}

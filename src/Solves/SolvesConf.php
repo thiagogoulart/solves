@@ -194,7 +194,7 @@ class SolvesConf {
             \SolvesUi\SolvesCabecalho::config(self::$SOLVES_CONF_UI->getScriptAnalytics());
         }
         if(isset(self::$SOLVES_CONF_WEBSOCKET)){
-            \SolvesWebsocket\SolvesWebsocketServer::config(self::$SOLVES_CONF_WEBSOCKET->getUrl(), self::$SOLVES_CONF_WEBSOCKET->getHost(), self::$SOLVES_CONF_WEBSOCKET->getPort());
+            \SolvesWebsocket\SolvesWebsocketServer::config(self::$SOLVES_CONF_WEBSOCKET->getUrl(), self::$SOLVES_CONF_WEBSOCKET->getHost(), self::$SOLVES_CONF_WEBSOCKET->getPort(), self::$SOLVES_CONF_WEBSOCKET->isBuildApp());
             $routesConf = self::$SOLVES_CONF_WEBSOCKET->getRoutes();
             foreach($routesConf as $route){
                 \SolvesWebsocket\SolvesWebsocketServer::addConfigRoute($route->getName(), $route->getPath());
@@ -1681,6 +1681,7 @@ class SolvesConfWebsocket{
     private $host;
     private $port;
     private $url;
+    private $buildApp;
     /**
     *@var SolvesConfWebsocketRoute[]
     */
@@ -1690,15 +1691,19 @@ class SolvesConfWebsocket{
      * SolvesConfWebsocket constructor.
      * @param $host
      * @param $port
+     * @param $buildApp
+     * @param $isWss
      */
-    public function __construct(string $host, int $port, ?bool $isWss=false)
+    public function __construct(string $host, int $port, ?bool $buildApp=false, ?bool $isWss=false)
     {
         $this->host = $host;
         $this->port = $port;
+        $this->buildApp = $buildApp;
         $this->url = ($isWss?'wss://':'ws://').$host.((isset($port) && $port>0)?':'.$port:'');
     }
 
 
+    public function isBuildApp(): bool{return $this->buildApp;}
     public function setHost($p){$this->host = $p;}
     public function getHost(): string{return $this->host;}
     public function setPort($p){$this->port = $p;}

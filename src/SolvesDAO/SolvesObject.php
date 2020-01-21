@@ -37,6 +37,7 @@ abstract class SolvesObject {
 
     protected $arrIdsColunasSensiveis = array();
     protected $mock;
+    protected $arrAtributosAlterados = array();
 
     public function __construct(?\SolvesDAO\SolvesDAOCOnnection $con, $tabela, $pk, $sequencia=null, $parentDao=null) {
         $this->connection = $con;
@@ -53,6 +54,16 @@ abstract class SolvesObject {
     public abstract function afterSave();
     public abstract function afterUpdate($old);
     public abstract function afterDelete();
+
+    protected function limpaAtributosAlterados(){
+        $this->arrAtributosAlterados = array();
+    }
+    protected function addAtributoAlterado(string $keyNameAtributo, $value){
+        $this->arrAtributosAlterados[$keyNameAtributo] = $value;
+    }
+    public function getAtributosAlterados(){
+        return $this->arrAtributosAlterados;
+    }
 
     public function setId($id){
         $this->solvesObjId = $id;
@@ -173,10 +184,10 @@ abstract class SolvesObject {
         $this->addValores();
         $id = $this->dao->save();
         $this->setId($id);
-        $this->afterSave(); 
+        $this->afterSave();
         return $id;
     }
-    public function update() {$this->addValores();$result = $this->dao->update($this->getId());$this->afterUpdate($this->old);return $result;}
+    public function update() {$this->addValores();$result = $this->dao->update($this);$this->afterUpdate($this->old);return $result;}
     public function remove() {$dt = \Solves\SolvesTime::getTimestampAtual();$this->setRemoved(1);$this->setUpdatedAt($dt);$this->setRemovedAt($dt);$result = $this->update();$this->afterDelete();return $result;}
 
     public function delete(){
@@ -253,6 +264,7 @@ abstract class SolvesObject {
         foreach($itemArr as $key=>$value){
             $object->set($key, $value);
         }
+        $object->limpaAtributosAlterados();
         return $object;
     }
     public function toArray() {
@@ -271,7 +283,10 @@ abstract class SolvesObject {
             //try to find getter of value
             $valor = $this->get($col->getNome());
             if(null==$valor){
-                $valor = $this->dao->getValorColunaByOrder($col->getColumnOrder())->getValor();
+                $vCol = $this->dao->getValorColunaByOrder($col->getColumnOrder());
+                if(isset($vCol)){
+                    $valor = $vCol->getValor(true);
+                }
             }
             $arr[$col->getNome()] = $valor;
 
@@ -337,7 +352,7 @@ abstract class SolvesObject {
     public function __set(string $nomeAtributo, $valor){
         return $this->set($nomeAtributo, $valor);
     }
-    public function get(?string $nomeAtributo, $secondChance=false){ 
+    public function get(?string $nomeAtributo, $secondChance=false){
         if(!\Solves\Solves::isNotBlank($nomeAtributo)){
             return null;
         }
@@ -359,7 +374,7 @@ abstract class SolvesObject {
         }
         return null;
     }
-    public function set(?string $nomeAtributo, $valor, $secondChance=false){ 
+    public function set(?string $nomeAtributo, $valor, $secondChance=false){
         if(!\Solves\Solves::isNotBlank($nomeAtributo)){
             return null;
         }
@@ -376,11 +391,13 @@ abstract class SolvesObject {
             }
         }
         if($result[0]){
+            $this->addAtributoAlterado($nomeAtributo, $valor);
             return $result[1];
         }else if(!$secondChance){
             $nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
             return $this->set($nomeAtributo, $valor, true);
         }
+        $this->addAtributoAlterado($nomeAtributo, $valor);
         return $this;
     }
     public function __call($name, $arguments){

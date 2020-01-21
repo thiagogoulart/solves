@@ -94,4 +94,13 @@ class SolvesObjectCompraTest extends TestCase {
                 $obj->delete();
                 $this->assertEquals(true, $obj->excluido, 'Nao alterou atributo "excluido".');
         }
+        public function testAtributosAlterados(){
+                $con = \SolvesDAO\SolvesDAO::openConnectionMock();
+                $obj = new SolvesObjectCompraMock($con);
+                $attrs = $obj->getAtributosAlterados();
+                $this->assertEquals(0, count($attrs), 'objeto limpo nao deve ter atributos alterados');
+                $obj->setVendedor('TESTE');
+                $attrs = $obj->getAtributosAlterados();
+                $this->assertEquals(1, count($attrs), 'Somente 1 atributo foi alterado');
+        }
 }
