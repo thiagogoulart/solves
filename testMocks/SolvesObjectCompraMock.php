@@ -39,6 +39,11 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
      */
 	protected $vendedor_com_anotacoes='';
 
+
+    protected $cliente_id;
+    protected $cliente_id_label;
+    protected $cliente_id_email;
+
     /**
      * @var bool
      */
@@ -49,7 +54,13 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
 		parent::__construct($con, self::$TABELA, self::$PK, self::$SEQUENCIA, $parentDao);
 
         $this->dao->addColunaObrigatoria(1, "vendedor", "string", true, null);
-        $this->dao->addColunaObrigatoria(2, "anotacoes", "string", false, null);        
+        $this->dao->addColunaObrigatoria(2, "anotacoes", "string", false, null);  
+        $this->dao->addColunaObrigatoria(3, "cliente_id", "integer", false, null);    
+
+        if (!isset($parentDao)) {
+            $c = new SolvesObjectClienteMock($this->dao->getConnection(), $this->dao);
+            $this->dao->addJoin(DAOJoin::$JUST_JOIN, 3, $c->getDao());
+        }  
 	}
 
 	public function getAnotacoes() {return $this->anotacoes;}

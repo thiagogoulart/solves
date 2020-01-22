@@ -248,7 +248,6 @@ abstract class SolvesObject {
             $this->dao->setPkValue($id);
         }
         $cols = $this->dao->getColunas(false);
-
         foreach($cols as $col){
             $v = $this->get($col->getNome());
             $this->dao->addValorColuna($col->getColumnOrder(), $v);
@@ -275,7 +274,6 @@ abstract class SolvesObject {
         $arr['id'] = $this->getId();
         $arr[$this->dao->getPk()] = $arr['id'];
 
-
         foreach($cols as $col){
             if(isset($this->arrIdsColunasSensiveis) && array_search($col->getColumnOrder(), $this->arrIdsColunasSensiveis)){
                 continue;
@@ -300,49 +298,44 @@ abstract class SolvesObject {
                     $arr[$col->getNome().'_label'] = $valorLabel;
                 }
             }
+            $arrJoinValues = $this->getJoinLabelValuesOfColumn($col);
+            if(isset($arrJoinValues) && count($arrJoinValues)>0){
+                $arr = array_merge($arr, $arrJoinValues);
+            }
         }
         return $arr;
     }
-    //TODO pegar colunas label do JOIN para o toArray
-    private function teste(\SolvesDAO\DAOColuna $coluna){
+    /**
+     * pegar colunas label do JOIN para o toArray
+     * */
+    private function getJoinLabelValuesOfColumn(\SolvesDAO\DAOColuna $coluna): array{
+        $arr = [];
         $joins_sql = '';
         $join = $coluna->getJoin();
-        if (isset($join)) {
-            $colName = $coluna->getNome();
-            $nomeColunaLabel= $colName ;
+        $prefixCol = $coluna->getNome().'_';
+        while (isset($join)) {
+            $daoTarget = $join->getDaoTarget();
+            $daoTargetColLabel = $daoTarget->getColunaLabelName();
+            $keyLabelName = $prefixCol.$daoTargetColLabel;
+            $valorLabel = $this->get($keyLabelName);
+            if(null==$valorLabel){
+                $valorLabel = $this->get($prefixCol.'label');
+            }
+            $arr[$keyLabelName] = $valorLabel;
 
-            $origemJoinColName = $colName;
-            $joinLabels = '';
-            while (isset($join)) {
-                $daoTarget = $join->getDaoTarget();
-                $daoTargetTabela = $daoTarget->getTabela();
-                $daoTargetAlias = $join->getAlias();
-                $hasAlias = (isset($daoTargetAlias));
-                if (!$hasAlias) {
-                    $daoTargetAlias = $daoTarget->getTabela();
-                }
-                $daoTargetPk = $daoTarget->getPk();
-                $var_colunaLabel = $daoTarget->getColunaLabel();
+            $join = (isset($var_colunaLabel) ? $var_colunaLabel->getJoin() : null);
 
-                $daoTargetColLabel = $daoTarget->getColunaLabelName();
-
-
-                $daoTargetColLabel = $daoTarget->getColunaLabelName();
-                $joins_sql .= ' ' . $join->getType() . ' JOIN ' . $daoTargetTabela . ' as ' . $daoTargetAlias . ' ON ' . $daoTargetAlias . '.' . $daoTargetPk . ' = ' . $origemJoinColName;
-
-                $origemJoinColName = $daoTargetAlias . '.' . $daoTargetColLabel;
-                $join = (isset($var_colunaLabel) ? $var_colunaLabel->getJoin() : null);
-
-                $joinLabels .= (\Solves\Solves::isNotBlank($joinLabels) ? ', ' : ''). $origemJoinColName . ' as ' . $nomeColunaLabel;
-                $daoTargetColsLabel = $daoTarget->getColsLabelOrder();
-                if(isset($daoTargetColsLabel) && count($daoTargetColsLabel)>0) {
-                    //other join labels
-                    foreach ($daoTargetColsLabel as $targetColLabel) {
-
-                    }
+            $daoTargetColsLabel = $daoTarget->getColsLabelOrder();
+            if(isset($daoTargetColsLabel) && count($daoTargetColsLabel)>0) {
+                //other join labels
+                foreach ($daoTargetColsLabel as $targetColLabel) {
+                    $keyLabelName = $prefixCol.$targetColLabel->getNome();
+                    $valorLabel = $this->get($keyLabelName);
+                    $arr[$keyLabelName] = $valorLabel;
                 }
             }
         }
+        return $arr;
     }
 
 

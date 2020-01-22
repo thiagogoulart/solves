@@ -16,6 +16,7 @@ include_once 'src/SolvesDAO/SolvesObject.php';
 include_once 'src/SolvesDAO/SolvesObjectMock.php';
 include_once 'src/SolvesPay/SolvesObjectCompra.php';
 include_once 'testMocks/SolvesObjectCompraMock.php';
+include_once 'testMocks/SolvesObjectClienteMock.php';
 use PHPUnit\Framework\TestCase;
 
 class SolvesObjectMockTest extends TestCase {
@@ -111,5 +112,19 @@ class SolvesObjectMockTest extends TestCase {
                 $result = $mock->saveReturningId();
                 $this->assertEquals(999, $result, 'RESULT de saveReturningId não bate.');
                 $this->assertEquals(999, $mock->getId(), 'RESULT de getId depois de ter usado o saveReturningId não bate.');
+        }
+        public function testToArray(){
+                $con = \SolvesDAO\SolvesDAO::openConnectionMock();
+                $obj = new SolvesObjectCompraMock($con);
+                $obj->vendedor='Thiago';
+                $obj->anotacoes='testando 1.2.3..';
+                $obj->cliente_id=1;
+                $obj->cliente_id_label='Vagner Silva';
+                $obj->cliente_id_email='vagner_silva@test.com';
+
+                $arr = $obj->toArray();
+                $this->assertTrue(array_key_exists('cliente_id', $arr), 'cliente_id nao existe no array.');
+                $this->assertTrue(array_key_exists('cliente_id_label', $arr), 'cliente_id_label nao existe no array. É label da classe join.');
+                $this->assertTrue(array_key_exists('cliente_id_email', $arr), 'cliente_id_email nao existe no array. É label da classe join.');
         }
 }

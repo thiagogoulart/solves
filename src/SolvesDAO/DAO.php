@@ -58,7 +58,7 @@ class DAO {
     public function setArrIdsColunasSensiveis($p) {
         $this->arrIdsColunasSensiveis = $p;
     }
-    public function getConnection() : SolvesDAOConnection{
+    public function getConnection() : ?SolvesDAOConnection{
         return $this->connection;
     }
     public function isMock() : bool{
