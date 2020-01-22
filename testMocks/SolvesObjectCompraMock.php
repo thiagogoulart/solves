@@ -74,7 +74,7 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
 
 //DAO
     public function beforeSaveAndUpdate(){
-
+        $this->atualizaTotais();
     }
     public function afterSave(){
 
@@ -105,13 +105,6 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
 		$success = false;
 		return $success;
 	}
-  	public function addValores() {
-     	$this->atualizaTotais();
-  	}
-  	public function getObject($itemArr) {
-  		 return null; 
- 	 }
-
  	 public function doPay(){
  	 	$response = array();
         return $response; 

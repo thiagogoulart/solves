@@ -93,6 +93,30 @@ class SolvesObjectMockTest extends TestCase {
                 $this->assertEquals('Alysson Teixeira Mangos-NÃO Foi vendido.', $mock->vendedorComAnotacoes, 'Atributo que possui getter e setter: Atribute direct access vendedorComAnotacoes não bate.');
                 $this->assertEquals('Alysson Teixeira Mangos-NÃO Foi vendido.', $mock->getVendedorComAnotacoes(), 'Atributo que possui getter e setter: getVendedorComAnotacoes não bate.');
         }
+        public function testAtributosAlterados(){
+                $con = \SolvesDAO\SolvesDAO::openConnectionMock();
+                $obj = new SolvesObjectCompraMock($con);
+
+                $mock = new \SolvesDAO\SolvesObjectMock($obj);
+                $arr = [];
+                $arrObj = [];
+                $arrObj['compra_mock_id']= 1;
+                $arrObj['vendedor']='teste';
+                $arrObj['anotacoes']='teste';
+                $arr[] = $arrObj;
+
+                $obj = $mock->toOneObject($arr);
+
+                $obj->setVendedor('Thiago');
+                $obj->update();
+                $arrAttrsAlterados = $obj->getAtributosAlterados();
+                $this->assertEquals(1, count($arrAttrsAlterados), 'vendedor foi alterado. Tem atributo mas nao tem setter explicito');
+
+                $obj->setAnotacoes('Thiago comprou');
+                $obj->update();
+                $arrAttrsAlterados = $obj->getAtributosAlterados();
+                $this->assertEquals(2, count($arrAttrsAlterados), 'anotacoes foi alterado. Tem atributo E setter explicito');
+        }
         public function testFindById(){
                 $con = \SolvesDAO\SolvesDAO::openConnectionMock();
                 $obj = new SolvesObjectCompraMock($con);

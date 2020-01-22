@@ -105,21 +105,6 @@ abstract class SolvesObject {
         return $this->dao->removeAtributosSensiveisDeArray($arrItem, $this->arrIdsColunasSensiveis);
     }
 
-    public function getCreatedAt() {return $this->created_at;}
-    public function setCreatedAt($p) {$this->created_at = $p;}
-    public function getCreatedAtLabel() {return $this->created_atLabel;}
-    public function setCreatedAtLabel($p) {$this->created_atLabel = $p;}
-
-    public function getUpdatedAt() {return $this->updated_at;}
-    public function setUpdatedAt($p) {$this->updated_at = $p;}
-    public function getUpdatedAtLabel() {return $this->updated_atLabel;}
-    public function setUpdatedAtLabel($p) {$this->updated_atLabel = $p;}
-
-    public function getAtivoAt() {return $this->ativo_at;}
-    public function setAtivoAt($p) {$this->ativo_at = $p;}
-    public function getAtivoAtLabel() {return $this->ativo_atLabel;}
-    public function setAtivoAtLabel($p) {$this->ativo_atLabel = $p;}
-
     public function isAtivo() {return \Solves\Solves::checkBoolean($this->ativo);}
     public function getAtivo() {return $this->ativo;}
     public function setAtivo($p, $createdAt=null) {
@@ -133,24 +118,8 @@ abstract class SolvesObject {
             }
         }
     }
-    public function getAtivoLabel() {return $this->ativoLabel;}
-    public function setAtivoLabel($p) {$this->ativoLabel = $p;}
-
-    public function getInativoAt() {return $this->inativo_at;}
-    public function setInativoAt($p) {$this->inativo_at = $p;}
-    public function getInativoAtLabel() {return $this->inativo_atLabel;}
-    public function setInativoAtLabel($p) {$this->inativo_atLabel = $p;}
 
     public function isRemoved() {return \Solves\Solves::checkBoolean($this->removed);}
-    public function getRemoved() {return $this->removed;}
-    public function setRemoved($p) {$this->removed = $p;}
-    public function getRemovedLabel() {return $this->removedLabel;}
-    public function setRemovedLabel($p) {$this->removedLabel = $p;}
-
-    public function getRemovedAt() {return $this->removed_at;}
-    public function setRemovedAt($p) {$this->removed_at = $p;}
-    public function getRemovedAtLabel() {return $this->removed_atLabel;}
-    public function setRemovedAtLabel($p) {$this->removed_atLabel = $p;}
 
 
     protected function getSearchTag($value){
@@ -217,7 +186,15 @@ abstract class SolvesObject {
             return null;
         }
     }
-
+    public function getOld(){
+        return $this->old;
+    }
+    public function getOldArray(){
+        return $this->oldArray;
+    }
+    public function getOldColumnValue(string $colName){
+        return (isset($this->oldArray) && array_key_exists($colName, $this->oldArray) ? $this->oldArray[$colName] : null);
+    }
     public function getConditionSqlWithPagination($paginacaoAtual, $paginacaoQtd=null, $conditionPadrao = null) {
         if(!\Solves\Solves::isNotBlank($paginacaoQtd)){
             $paginacaoQtd = self::$PAGINACAO_QTD;
@@ -244,13 +221,20 @@ abstract class SolvesObject {
     protected function addValores() {
         $this->beforeSaveAndUpdate();
         $id = $this->getId();
-        if ($id) {
+        $hasId = isset($id);
+        if ($hasId) {
             $this->dao->setPkValue($id);
         }
         $cols = $this->dao->getColunas(false);
         foreach($cols as $col){
             $v = $this->get($col->getNome());
             $this->dao->addValorColuna($col->getColumnOrder(), $v);
+            if($hasId){
+                $vOld = $this->getOldColumnValue($col->getNome());
+                if($v!=$vOld){
+                    $this->addAtributoAlterado($col->getNome(),$v);
+                }
+            }
         }
     }
 
@@ -373,6 +357,7 @@ abstract class SolvesObject {
         }
         $setterName = 'set'.\Solves\Solves::getNomeClasse($nomeAtributo);
         $result = $this->executeMethodIfExists($nomeAtributo, $valor);
+        $setouAttr = false;
         if(!$result[0]){
             $result = $this->executeMethodIfExists($setterName, $valor);
             if(!$result[0] && property_exists($this,$nomeAtributo)){
@@ -381,16 +366,21 @@ abstract class SolvesObject {
                     $valor = (count($valor)==1 ? $valor[0] : (count($valor)>1?$valor:null) );
                 }
                 $this->$nomeAtributo = $valor;
+                $setouAttr = true;
             }
         }
-        if($result[0]){
+        if($setouAttr){
+            $this->addAtributoAlterado($nomeAtributo, $valor);
+        }
+        else if($result[0]){
             $this->addAtributoAlterado($nomeAtributo, $valor);
             return $result[1];
         }else if(!$secondChance){
             $nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
             return $this->set($nomeAtributo, $valor, true);
+        }else{
+            $this->addAtributoAlterado($nomeAtributo, $valor);
         }
-        $this->addAtributoAlterado($nomeAtributo, $valor);
         return $this;
     }
     public function __call($name, $arguments){
