@@ -21,19 +21,19 @@ abstract class SolvesObject {
 
     /**Common atributes */
     protected $created_at= null;
-    protected $created_atLabel;
+    protected $created_at_label;
     protected $updated_at= null;
-    protected $updated_atLabel;
+    protected $updated_at_label;
     protected $ativo;
     protected $ativoLabel;
     protected $ativo_at= null;
-    protected $ativo_atLabel;
+    protected $ativo_at_label;
     protected $inativo_at= null;
-    protected $inativo_atLabel;
+    protected $inativo_at_label;
     protected $removed;
     protected $removedLabel;
     protected $removed_at= null;
-    protected $removed_atLabel;
+    protected $removed_at_label;
 
     protected $arrIdsColunasSensiveis = array();
     protected $mock;
@@ -351,7 +351,7 @@ abstract class SolvesObject {
         }
         return null;
     }
-    public function set(?string $nomeAtributo, $valor, $secondChance=false){
+    public function set(?string $nomeAtributo, $valor, ?bool $secondChance=false, ?bool $setLabel=false){
         if(!\Solves\Solves::isNotBlank($nomeAtributo)){
             return null;
         }
@@ -371,17 +371,47 @@ abstract class SolvesObject {
         }
         if($setouAttr){
             $this->addAtributoAlterado($nomeAtributo, $valor);
-        }
-        else if($result[0]){
+            if(!$setLabel){
+                $this->setLabelValue($nomeAtributo, $valor);
+            }
+        }else if($result[0]){
             $this->addAtributoAlterado($nomeAtributo, $valor);
+            if(!$setLabel){
+                $this->setLabelValue($nomeAtributo, $valor);
+            }
             return $result[1];
         }else if(!$secondChance){
             $nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
-            return $this->set($nomeAtributo, $valor, true);
+            return $this->set($nomeAtributo, $valor, true, $setLabel);
         }else{
             $this->addAtributoAlterado($nomeAtributo, $valor);
         }
         return $this;
+    }
+    protected function setLabelValue(string $nomeAtributo, $val){
+        $nomeAtributo = \Solves\Solves::getNomeNormalizadoComUnderline($nomeAtributo);
+        $coluna = $this->dao->getColunaByNome($nomeAtributo);
+        if(isset($coluna)){
+            $valueLabel = null;
+            if ($coluna->isTipoBoolean()) {
+                $valueLabel = \Solves\Solves::getBooleanLabel($val);
+            } else if ($coluna->isTipoDate()) {
+                $valueLabel = \Solves\SolvesTime::getDataFormatadaSemHoras($val);
+            } else if ($coluna->isTipoTimestamp()) {
+                $valueLabel = \Solves\SolvesTime::getDataFormatada($val);
+            } else if ($coluna->isTipoTime()) {
+                $valueLabel = \Solves\SolvesTime::getHoraFormatada($val);
+            } else if ($coluna->isTipoDouble()) {
+                $valueLabel =$val;
+            } else if ($coluna->isTipoMoney()) {
+                $valueLabel = \Solves\Solves::formatMoney($val);
+            }  else if ($coluna->isTipoPercentual()) {
+                $valueLabel = $val.' %';
+            }else{
+                return;
+            }
+            $this->set($nomeAtributo.'_label', $valueLabel, false, true);
+        }
     }
     public function __call($name, $arguments){
         if(\Solves\Solves::isNotBlank($name) && strlen($name)>3){

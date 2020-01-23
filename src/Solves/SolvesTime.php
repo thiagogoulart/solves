@@ -159,7 +159,6 @@ class SolvesTime {
         $str = $dia . "/" . $mes . "/" . $ano . " às " . $horas;
         return $str;
     }
-
     public static function getDataFormatadaSemHoras($timestamp) {
         $dia = substr($timestamp, 8, 2);
         $mes = substr($timestamp, 5, 2);
@@ -169,7 +168,11 @@ class SolvesTime {
 
         return $str;
     }
-
+    public static function getHoraFormatada($time) {
+        $format = "Y-m-d H:i:s";
+        $data = DateTime::createFromFormat($format, $time);
+        return $data->format($format);
+    }
     public static function getDateFormated($data) {
         if (\Solves\Solves::isNotBlank($data)) {
             $dia = substr($data, 0, 2);

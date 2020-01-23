@@ -1116,19 +1116,19 @@ class DAO {
         $nomeColuna = $coluna->getNome();
         $nomeColunaLabel = $nomeColuna . '_label';
         $colName = $coluna->getDao()->getTabela() . "." . $nomeColuna;
-        if ($coluna->getTipo() == "boolean") {
+        if ($coluna->isTipoBoolean()) {
             $colLabel = 'formatBoolean(' . $colName . ')  as ' . $nomeColunaLabel;
-        } else if ($coluna->getTipo() == "date") {
+        } else if ($coluna->isTipoDate()) {
             $colLabel = 'formatDate(' . $colName . ')  as ' . $nomeColunaLabel;
-        } else if ($coluna->getTipo() == "timestamp") {
+        } else if ($coluna->isTipoTimestamp()) {
             $colLabel = 'formatTimestamp(' . $colName . ')  as ' . $nomeColunaLabel;
-        } else if ($coluna->getTipo() == "time") {
+        } else if ($coluna->isTipoTime()) {
             $colLabel = '' . $colName . '  as ' . $nomeColunaLabel;
-        } else if ($coluna->getTipo() == "double") {
+        } else if ($coluna->isTipoDouble()) {
             $colLabel = $colName . " as " . $nomeColunaLabel;
-        } else if ($coluna->getTipo() == "money") {
+        } else if ($coluna->isTipoMoney()) {
             $colLabel = 'formatMoney(' . $colName . ')  as ' . $nomeColunaLabel;
-        }  else if ($coluna->getTipo() == "percentual") {
+        }  else if ($coluna->isTipoPercentual()) {
             $colLabel = '(CASE WHEN '.$colName.' IS NOT NULL THEN replace(round(' . $colName . '::numeric,2)::text, \'.\', \',\')||\' %\'  ELSE \'\' END)  as ' . $nomeColunaLabel;
         } else {
             $join = $coluna->getJoin();

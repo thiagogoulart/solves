@@ -72,7 +72,7 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
     public function setKeyTipo($p) {$this->keyTipo = $p;}
 
     public function getValorTotal() {return $this->valor_total;}
-    public function setValorTotal($p) {$this->valor_total = $p;}
+    public function setValorTotal($p) {$this->valor_total = $p;$this->valor_total_label = \Solves\Solves::formatMoney($this->valor_total);}
     public function getValorTotalLabel() {return $this->valor_total_label;}
     public function setValorTotalLabel($p) {$this->valor_total_label = $p;}
 
@@ -82,12 +82,12 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
     public function setValorTotalDescontoLabel($p) {$this->valor_total_desconto_label = $p;}
 
     public function getValorTotalFinal() {return $this->valor_total_final;}
-    public function setValorTotalFinal($p) {$this->valor_total_final = $p;}
+    public function setValorTotalFinal($p) {$this->valor_total_final = $p;$this->valor_total_final_label = \Solves\Solves::formatMoney($this->valor_total_final);}
     public function getValorTotalFinalLabel() {return $this->valor_total_final_label;}
     public function setValorTotalFinalLabel($p) {$this->valor_total_final_label = $p;}
 
     public function getValorTotalPago() {return $this->valor_total_pago;}
-    public function setValorTotalPago($p) {$this->valor_total_pago = $p;}
+    public function setValorTotalPago($p) {$this->valor_total_pago = $p;$this->valor_total_pago_label = \Solves\Solves::formatMoney($this->valor_total_pago);}
     public function getValorTotalPagoLabel() {return $this->valor_total_pago_label;}
     public function setValorTotalPagoLabel($p) {$this->valor_total_pago_label = $p;}
 
@@ -154,18 +154,18 @@ abstract class SolvesObjectCompra extends \SolvesDAO\SolvesObject{
     protected function atualizaTotais(){
         if(\Solves\Solves::isNotBlank($this->valor_total)){
             if(\Solves\Solves::isNotBlank($this->valor_total_desconto)){
-                $this->valor_total_final = ($this->valor_total - $this->valor_total_desconto);
+                $this->setValorTotalFinal($this->valor_total - $this->valor_total_desconto);
             }else{
-                $this->valor_total_desconto = 0;
-                $this->valor_total_final = $this->valor_total;
+                $this->setValorTotalDesconto(0);
+                $this->setValorTotalFinal( $this->valor_total);
             }
             if(!\Solves\Solves::isNotBlank($this->valor_total_pago)){
-                $this->valor_total_pago = 0;
+                $this->setValorTotalPago(0);
             }
         }else{
-            $this->valor_total = 0;
-            $this->valor_total_desconto = 0;
-            $this->valor_total_pago = 0;
+            $this->setValorTotal(0);
+            $this->setValorTotalDesconto(0);
+            $this->setValorTotalPago(0);
         }
     }
 

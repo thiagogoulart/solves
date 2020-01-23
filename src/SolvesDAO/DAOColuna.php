@@ -109,7 +109,28 @@ class DAOColuna {
 	}
 
     public function isTipoBoolean(){
-        return ($this->tipo=='boolean');
+        return ('boolean'==$this->tipo);
+    }
+    public function isTipoTimestamp(){
+        return ('timestamp'==$this->tipo);
+    }
+    public function isTipoDate(){
+        return ('date'==$this->tipo);
+    }
+    public function isTipoTime(){
+        return ('time'==$this->tipo);
+    }
+    public function isTipoMoney(){
+        return ('money'==$this->tipo);
+    }
+    public function isTipoInteger(){
+        return ('integer'==$this->tipo);
+    }
+    public function isTipoDouble(){
+        return ('double'==$this->tipo);
+    }
+    public function isTipoPercentual(){
+        return ('percentual'==$this->tipo);
     }
 /*END getters e setters*/	
 	

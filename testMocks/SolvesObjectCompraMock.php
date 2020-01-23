@@ -56,6 +56,8 @@ class SolvesObjectCompraMock extends SolvesObjectCompra{
         $this->dao->addColunaObrigatoria(1, "vendedor", "string", true, null);
         $this->dao->addColunaObrigatoria(2, "anotacoes", "string", false, null);  
         $this->dao->addColunaObrigatoria(3, "cliente_id", "integer", false, null);    
+        $this->dao->addColunaObrigatoria(4, "created_at", "timestamp", true, 'DESC');
+        $this->dao->addColunaObrigatoria(5, "valor_total", "money", false, null);   
 
         if (!isset($parentDao)) {
             $c = new SolvesObjectClienteMock($this->dao->getConnection(), $this->dao);

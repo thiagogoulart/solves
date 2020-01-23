@@ -138,6 +138,9 @@ class SolvesObjectMockTest extends TestCase {
                 $this->assertEquals(999, $mock->getId(), 'RESULT de getId depois de ter usado o saveReturningId não bate.');
         }
         public function testToArray(){
+                $createdAt = \Solves\SolvesTime::getTimestampAtual();
+                $valorTotal = 19.9;
+                $valorTotalLabel = 'R$ 19,90';
                 $con = \SolvesDAO\SolvesDAO::openConnectionMock();
                 $obj = new SolvesObjectCompraMock($con);
                 $obj->vendedor='Thiago';
@@ -145,10 +148,26 @@ class SolvesObjectMockTest extends TestCase {
                 $obj->cliente_id=1;
                 $obj->cliente_id_label='Vagner Silva';
                 $obj->cliente_id_email='vagner_silva@test.com';
+                $obj->setCreatedAt($createdAt);
+                $obj->setValorTotal($valorTotal);
 
                 $arr = $obj->toArray();
+
                 $this->assertTrue(array_key_exists('cliente_id', $arr), 'cliente_id nao existe no array.');
                 $this->assertTrue(array_key_exists('cliente_id_label', $arr), 'cliente_id_label nao existe no array. É label da classe join.');
                 $this->assertTrue(array_key_exists('cliente_id_email', $arr), 'cliente_id_email nao existe no array. É label da classe join.');
+                $this->assertTrue(array_key_exists('created_at', $arr), 'created_at nao existe no array.');
+                $this->assertNotNull($obj->getCreatedAtLabel(), 'getCreatedAtLabel não recebeu.');
+                $this->assertTrue(array_key_exists('created_at_label', $arr), 'created_at_label nao existe no array.');
+                $this->assertTrue(array_key_exists('valor_total', $arr), 'valor_total nao existe no array.');
+                $this->assertTrue(array_key_exists('valor_total_label', $arr), 'valor_total_label nao existe no array.');
+
+                $createdAtOfArr = $arr['created_at'];
+                $createdAtLabelOfArr = $arr['created_at_label'];
+                $valorTotalOfArr = $arr['valor_total'];
+                $valorTotalLabelOfArr = $arr['valor_total_label'];
+                $this->assertEquals($createdAt, $createdAtOfArr, 'createdAt não bate.');
+                $this->assertEquals($valorTotal, $valorTotalOfArr, 'valorTotal não bate.');
+                $this->assertEquals($valorTotalLabel, $valorTotalLabelOfArr, 'valorTotalLabel não bate.');
         }
 }
