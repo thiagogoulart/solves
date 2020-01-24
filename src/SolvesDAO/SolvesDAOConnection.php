@@ -48,7 +48,7 @@ class SolvesDAOConnection {
 
 		    $this->BD_CONNECTION = $this->connectDb();
 		    if(SolvesDAO::isDebug()){
-		    	echo '[$conName:'.$this->connectionName.'], [$bd_host:'.$this->bdHost.'], [$bd_port:'.$this->bdPort.'], [$bd_url:'.$this->bdUrl.'], [$bd_user:'.$this->bdUser.'], [$bd_database:'.$this->bdDatabase.']';
+		    	echo '[$conName:'.$this->connectionName.'], [$bdHost:'.$this->bdHost.'], [$bdPort:'.$this->bdPort.'], [$bdUrl:'.$this->bdUrl.'], [$bdUser:'.$this->bdUser.'], [$bdDatabase:'.$this->bdDatabase.']';
 		    	var_dump($this->BD_CONNECTION);
 		    }
 	    }
@@ -58,7 +58,7 @@ class SolvesDAOConnection {
 	private function connectDb() {
 	    $CONNECTION = null;
 	    if ($this->isSystemDbTypeMySql()) {
-	        $CONNECTION = new \mysqli($this->bdHost, $this->bdUser, $this->bd_passwd, $this->bd_database);
+	        $CONNECTION = new \mysqli($this->bdHost, $this->bdUser, $this->bdPassword, $this->bdDatabase);
 	        /* check connection */
 	        if (mysqli_connect_errno()) {
 	            printf("Erro na conexão: %s\n", mysqli_connect_error());

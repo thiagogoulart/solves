@@ -21,7 +21,7 @@ class SolvesDAO {
 
     public static function isDebug(){return SolvesDAO::$DEBUG;}
     public static function config(string $systemDbType, string $bdHost, string $bdPort, string $bdUrl, string $bdUser, string $bdPassword, string $bdDatabase){
-        self::configBd(DEFAULT_CONNECTION_NAME, $systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
+        self::configBd(self::DEFAULT_CONNECTION_NAME, $systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
         SolvesDAO::$DEBUG = \Solves\Solves::isDebugMode();
     }
     public static function configBd(string $connectionName, string $systemDbType, string $bdHost, string $bdPort, string $bdUrl, string $bdUser, string $bdPassword, string $bdDatabase){
@@ -83,11 +83,12 @@ class SolvesDAOConfigConnection {
 
     public function isSystemDbTypeMySql(): bool{return $this->isMysql;}
     public function isSystemDbTypePostgresql(): bool{return $this->isPostgres;}
-    public function getBdHost(): string {return $this->$bdHost;}
-    public function getBdPort(): string {return $this->$bdPort;}
-    public function getBdUrl(): string {return $this->$bdUrl;}
-    public function getBdUser(): string {return $this->$bdUser;}
-    public function getBdPassword(): string {return $this->$bdPassword;}
-    public function getBdDatabase(): string {return $this->$bdDatabase;}
+    public function getBdConnectionName(): string {return $this->connectionName;}
+    public function getBdHost(): string {return $this->bdHost;}
+    public function getBdPort(): string {return $this->bdPort;}
+    public function getBdUrl(): string {return $this->bdUrl;}
+    public function getBdUser(): string {return $this->bdUser;}
+    public function getBdPassword(): string {return $this->bdPassword;}
+    public function getBdDatabase(): string {return $this->bdDatabase;}
 }
 ?>
