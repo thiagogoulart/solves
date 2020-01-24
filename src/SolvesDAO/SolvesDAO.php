@@ -8,73 +8,86 @@ namespace SolvesDAO;
 
 class SolvesDAO {
 
-	const SYSTEM_DB_TYPE_MYSQL = 'MYSQL';
-	const SYSTEM_DB_TYPE_POSTGRESQL = 'POSTGRESQL';
+    const SYSTEM_DB_TYPE_MYSQL = 'MYSQL';
+    const SYSTEM_DB_TYPE_POSTGRESQL = 'POSTGRESQL';
+    const DEFAULT_CONNECTION_NAME = 'DEFAULT';
 
-	private static $DEBUG = false;
-	private static $SYSTEM_DB_TYPE = 'MYSQL';
+    private static $DEBUG = false;
 
-	private static $BD_HOST;
-	private static $BD_PORT;
-	private static $BD_URL;
-	private static $BD_USER;
-	private static $BD_PASSWORD;
-	private static $BD_DATABASE;
+    private static $BDS_CONF_CONNECTIONS = [];
 
     private static $MODEL_CLASSES= array();
 
 
-	public static function isDebug(){return SolvesDAO::$DEBUG;}
-	public static function config($systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase){
-		if(self::SYSTEM_DB_TYPE_POSTGRESQL==$systemDbType){
-			SolvesDAO::setSystemDbTypePostgresql();
-		}else if(self::SYSTEM_DB_TYPE_MYSQL==$systemDbType){
-			SolvesDAO::setSystemDbTypeMySql();
-		}else{
-			throw new Exception("Error Processing SolvesDAO. System DB Type not configured.", 1);			
-		}
-    	SolvesDAO::setBdHost($bdHost);
-	    SolvesDAO::setBdPort($bdPort);
-	    SolvesDAO::setBdUrl($bdUrl);
-	    SolvesDAO::setBdUser($bdUser);
-	    SolvesDAO::setBdPassword($bdPassword);
-	    SolvesDAO::setBdDatabase($bdDatabase);
-	    SolvesDAO::$DEBUG = \Solves\Solves::isDebugMode();
+    public static function isDebug(){return SolvesDAO::$DEBUG;}
+    public static function config(string $systemDbType, string $bdHost, string $bdPort, string $bdUrl, string $bdUser, string $bdPassword, string $bdDatabase){
+        self::configBd(DEFAULT_CONNECTION_NAME, $systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
+        SolvesDAO::$DEBUG = \Solves\Solves::isDebugMode();
     }
-    public static function setSystemDbTypeMySql(){SolvesDAO::$SYSTEM_DB_TYPE = self::SYSTEM_DB_TYPE_MYSQL;}
-    public static function setSystemDbTypePostgresql(){SolvesDAO::$SYSTEM_DB_TYPE = self::SYSTEM_DB_TYPE_POSTGRESQL;}
-    public static function isSystemDbTypeMySql(){return self::SYSTEM_DB_TYPE_MYSQL==SolvesDAO::$SYSTEM_DB_TYPE;}
-    public static function isSystemDbTypePostgresql(){return self::SYSTEM_DB_TYPE_POSTGRESQL==SolvesDAO::$SYSTEM_DB_TYPE;}
+    public static function configBd(string $connectionName, string $systemDbType, string $bdHost, string $bdPort, string $bdUrl, string $bdUser, string $bdPassword, string $bdDatabase){
+        self::$BDS_CONF_CONNECTIONS[$connectionName] = new SolvesDAOConfigConnection($connectionName, $systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
+    }
 
-    public static function setBdHost($p){SolvesDAO::$BD_HOST = $p;}
-    public static function setBdPort($p){SolvesDAO::$BD_PORT = $p;}
-    public static function setBdUrl($p){SolvesDAO::$BD_URL = $p;}
-    public static function setBdUser($p){SolvesDAO::$BD_USER = $p;}
-    public static function setBdPassword($p){SolvesDAO::$BD_PASSWORD = $p;}
-    public static function setBdDatabase($p){SolvesDAO::$BD_DATABASE = $p;}
-    public static function setModelClasses($p){SolvesDAO::$MODEL_CLASSES = $p;}
-    
-    public static function getBdHost(){return SolvesDAO::$BD_HOST;}
-    public static function getBdPort(){return SolvesDAO::$BD_PORT;}
-    public static function getBdUrl(){return SolvesDAO::$BD_URL;}
-    public static function getBdUser(){return SolvesDAO::$BD_USER;}
-    public static function getBdPassword(){return SolvesDAO::$BD_PASSWORD;}
-    public static function getBdDatabase(){return SolvesDAO::$BD_DATABASE;}
+    public function setModelClasses($p){SolvesDAO::$MODEL_CLASSES = $p;}
     public static function getModelClasses(){return SolvesDAO::$MODEL_CLASSES;}
-    
-	public static function openConnection() {
-	    return new SolvesDAOConnection();
-	}
-	public static function openConnectionMock() {
-	    return new SolvesDAOConnection(true);
-	}
 
-	public static function closeConnection(SolvesDAOConnection $con) {
-	    if (isset($con)) {
-	        return $con->close();
-	    }
-	    return null;
+    public static function openConnection(?string $connectionName=null) {
+    	$confBdCon = self::getConfBdConnection($connectionName);
+	    return new SolvesDAOConnection($confBdCon);
 	}
+    public static function openConnectionMock(?string $connectionName=null) {
+    	$confBdCon = self::getConfBdConnection($connectionName);
+        return new SolvesDAOConnection($confBdCon, true);
+    }
+    public static function getConfBdConnection(?string $connectionName=null) {
+    	if(null==$connectionName){
+    		$connectionName = self::DEFAULT_CONNECTION_NAME;
+    	}
+        return (array_key_exists($connectionName, self::$BDS_CONF_CONNECTIONS) ? self::$BDS_CONF_CONNECTIONS[$connectionName] : null);
+    }
+    public static function closeConnection(SolvesDAOConnection $con) {
+        if (isset($con)) {
+            return $con->close();
+        }
+        return null;
+    }
 
+}
+class SolvesDAOConfigConnection {
+    protected $connectionName;
+    protected $systemDbType;
+    protected $bdHost;
+    protected $bdPort;
+    protected $bdUrl;
+    protected $bdUser;
+    protected $bdPassword;
+    protected $bdDatabase;
+    protected $isMysql=false;
+    protected $isPostgres=false;
+
+    public function __construct(string $connectionName, string $systemDbType, string $bdHost, string $bdPort, string $bdUrl, string $bdUser, string $bdPassword, string $bdDatabase){
+        $this->isPostgres = (SolvesDAO::SYSTEM_DB_TYPE_POSTGRESQL==$systemDbType);
+        $this->isMysql = (SolvesDAO::SYSTEM_DB_TYPE_MYSQL==$systemDbType);
+        if(!$this->isPostgres && !$this->isMysql){
+            throw new \Exception("Error Processing SolvesDAO. System DB Type not configured to ".$connectionName, 1);
+        }
+        $this->connectionName = $connectionName;
+        $this->systemDbType = $systemDbType;
+        $this->bdHost = $bdHost;
+        $this->bdPort = $bdPort;
+        $this->bdUrl = $bdUrl;
+        $this->bdUser = $bdUser;
+        $this->bdPassword = $bdPassword;
+        $this->bdDatabase = $bdDatabase;
+    }
+
+    public function isSystemDbTypeMySql(): bool{return $this->isMysql;}
+    public function isSystemDbTypePostgresql(): bool{return $this->isPostgres;}
+    public function getBdHost(): string {return $this->$bdHost;}
+    public function getBdPort(): string {return $this->$bdPort;}
+    public function getBdUrl(): string {return $this->$bdUrl;}
+    public function getBdUser(): string {return $this->$bdUser;}
+    public function getBdPassword(): string {return $this->$bdPassword;}
+    public function getBdDatabase(): string {return $this->$bdDatabase;}
 }
 ?>

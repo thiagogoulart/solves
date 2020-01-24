@@ -55,6 +55,13 @@ class SolvesConf {
     public static function getSolvesConfBd() :\Solves\SolvesConfBD {
         return self::$SOLVES_CONF_BD;
     }
+    private static $SOLVES_CONF_BD_ADICIONAIS = [];
+    public static function addSolvesConfBdAdicional(string $keyName, \Solves\SolvesConfBD $bdConf){
+        self::$SOLVES_CONF_BD_ADICIONAIS[$keyName] = $bdConf;
+    }
+    public static function getSolvesConfBdAdicional(string $keyName) : ?\Solves\SolvesConfBD {
+        return self::$SOLVES_CONF_BD_ADICIONAIS[$keyName];
+    }
 
     /** Configuração de Pagamento */
     /** @var \Solves\SolvesConfPayMethod */
@@ -174,6 +181,14 @@ class SolvesConf {
                 self::$SOLVES_CONF_BD->getUser(),
                 self::$SOLVES_CONF_BD->getPassword(),
                 self::$SOLVES_CONF_BD->getDatabaseName());
+
+            if(isset(self::$SOLVES_CONF_BD_ADICIONAIS)){
+                foreach (self::$SOLVES_CONF_BD_ADICIONAIS as $key => $confBd) {
+                    \Solves\Solves::configDAOAdicional($key, $confBd->getSystemDbType(),
+                        $confBd->getHost(), $confBd->getPort(), $confBd->getUrl(), $confBd->getUser(),
+                        $confBd->getPassword(), $confBd->getDatabaseName());
+                }
+            }
         }
         if(isset(self::$SOLVES_CONF_NOTIFICATIONS)){
             \Solves\Solves::configNotifications(

@@ -41,7 +41,11 @@ class DAO {
 
     public static $NULL_TIMESTAMP = null;
 
-    public function __construct(){
+    public function __construct(?\SolvesDAO\SolvesDAOConnection $con, string $tabela, string $pk, ?string $sequencia=null) {
+        $this->setConnection($con);
+        $this->setTabela($tabela);
+        $this->setPk($pk);
+        $this->setSequencePk($sequencia);
         $this->colunas = array();
         $this->valoresColunas = array();
         $this->outrosFieldsSelect = array();
@@ -53,6 +57,8 @@ class DAO {
         $this->msgError = '<br>Solicita&ccedil;&atilde;o n&atilde;o atendida. n&atilde;o foi poss&iacute;vel executar consulta.';
     }
 
+    public function isSystemDbTypeMySql(): bool{return $this->connection->isSystemDbTypeMySql();}
+    public function isSystemDbTypePostgresql(): bool{return $this->connection->isSystemDbTypePostgresql();}
 
     /*START getters e setters*/
     public function setArrIdsColunasSensiveis($p) {
@@ -821,7 +827,7 @@ class DAO {
 
         if($tipo=="string" || $tipo=="date" || $tipo=="text" || $tipo=="timestamp" || $tipo=="time"){
             if($hasValue){
-                if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
+                if($this->isSystemDbTypeMySql()){
                     $value = ($this->isMock ? $value : mysqli_real_escape_string($this->getBdConnection(), $value));
                 }else{
                     $value = addslashes($value);
@@ -837,7 +843,7 @@ class DAO {
                 $vcol .= "null";
             }
         }else if($tipo=="boolean"){
-            $vcol .= (\Solves\Solves::checkBoolean($value) ? 'true' : ((\SolvesDAO\SolvesDAO::isSystemDbTypeMySql())?'0':'false'));
+            $vcol .= (\Solves\Solves::checkBoolean($value) ? 'true' : (($this->isSystemDbTypeMySql())?'0':'false'));
         }
         else if($tipo=="array_int"){
             if($hasValue){
@@ -1038,7 +1044,7 @@ class DAO {
             }
             try{
                 $this->openTransaction();
-                if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
+                if($this->isSystemDbTypeMySql()){
                     $result = ($this->isMock ? $this->getBdConnection()->query($sql, $op) : $this->getBdConnection()->query($sql));
                     if($result){
                         if($op=='insert'){
@@ -1051,7 +1057,7 @@ class DAO {
                         $this->rollbackTransaction();
                         throw new \Exception($erro);
                     }
-                }else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
+                }else if($this->isSystemDbTypePostgresql()){
                     $result = pg_query($this->getBdConnection(), $sql);
                 }
 
@@ -1078,7 +1084,7 @@ class DAO {
         if($sql && $sql!=""){
             //echo "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>";
             $resultado = array();
-            if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){
+            if($this->isSystemDbTypeMySql()){
                 $result = $this->getBdConnection()->query($sql, MYSQLI_USE_RESULT) or die($this->msgError.
                     (false ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". ".$this->getBdConnection()->error."</div>"));
                 if($this->isMock){
@@ -1095,7 +1101,7 @@ class DAO {
                     @mysqli_free_result($result);
                     $result = null;
                 }
-            }else if(\SolvesDAO\SolvesDAO::isSystemDbTypePostgresql()){
+            }else if($this->isSystemDbTypePostgresql()){
                 $result = pg_query($this->getBdConnection(), $sql) or die($this->msgError.
                     (\Solves\Solves::isProdMode() ? '' : "<div style=\"display:none\"><br><br><br>".$this->tabela." | ".$sql.". </div>"));
 

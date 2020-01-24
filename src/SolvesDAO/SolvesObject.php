@@ -39,15 +39,11 @@ abstract class SolvesObject {
     protected $mock;
     protected $arrAtributosAlterados = array();
 
-    public function __construct(?\SolvesDAO\SolvesDAOCOnnection $con, $tabela, $pk, $sequencia=null, $parentDao=null) {
+    public function __construct(?\SolvesDAO\SolvesDAOConnection $con, string $tabela, string $pk, ?string $sequencia=null, ?\SolvesDAO\DAO  $parentDao=null) {
         $this->connection = $con;
         $this->parentDao = $parentDao;
 
-        $this->dao = new DAO();
-        $this->dao->setConnection($con);
-        $this->dao->setTabela($tabela);
-        $this->dao->setPk($pk);
-        $this->dao->setSequencePk($sequencia);
+        $this->dao = new DAO($con, $tabela, $pk, $sequencia);
     }
 
     public abstract function beforeSaveAndUpdate();

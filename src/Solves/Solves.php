@@ -74,8 +74,11 @@ class Solves {
     public static function configMail($emailHost, $emailPort, $emailRemetente, $emailRemetentePasswd, $emailRemetenteFromLabel){
     	SolvesMail::config($emailHost, $emailPort, $emailRemetente, $emailRemetentePasswd, $emailRemetenteFromLabel);
     }
-    public static function configDAO($systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase){
+    public static function configDAO(string $systemDbType, string $bdHost, string $bdPort, string $bdUrl, string $bdUser, string $bdPassword, string $bdDatabase){
     	SolvesDAO::config($systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
+    }
+    public static function configDAOAdicional(string $connectionName, string $systemDbType, string $bdHost, string $bdPort, string $bdUrl, string $bdUser, string $bdPassword, string $bdDatabase){
+    	SolvesDAO::configBd($connectionName,$systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
     }
     public static function configNotifications($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId){
     	SolvesNotification::config($serverSubscriptionsUrl, $publicKey, $privateKey, $senderId);

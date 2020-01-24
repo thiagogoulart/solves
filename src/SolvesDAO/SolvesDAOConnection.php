@@ -15,33 +15,50 @@ class SolvesDAOConnection {
 	private $isApp=false;
 	private $mock=false;
 
+    protected $connectionName;
+    protected $bdHost;
+    protected $bdPort;
+    protected $bdUrl;
+    protected $bdUser;
+    protected $bdPassword;
+    protected $bdDatabase;
+    protected $isMysql=false;
+    protected $isPostgres=false;
+
 
 	/*Colunas que não devem estar presentes no retorno da consulta */
 	private $exibeColunasSensiveis = true;
 
-	public function __construct(?bool $mock = false) {
+	public function __construct(?\SolvesDAO\SolvesDAOConfigConnection $configConnection, ?bool $mock = false) {
 	    $this->BD_CONNECTION = null;
 	    $this->mock = $mock;
 	    if($this->mock) {
 	    	$this->BD_CONNECTION = new SolvesDAOConnectionMock();
 	    }else{ 
-			$bd_host = SolvesDAO::getBdHost();
-			$bd_port = SolvesDAO::getBdPort();
-			$bd_url = SolvesDAO::getBdUrl();
-			$bd_user = SolvesDAO::getBdUser();
-			$bd_passwd = SolvesDAO::getBdPassword();
-			$bd_database = SolvesDAO::getBdDatabase();
-		    $this->BD_CONNECTION = self::connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database);
+
+	        $this->connectionName = $configConnection->getBdConnectionName();
+	        $this->isPostgres = $configConnection->isSystemDbTypePostgresql();
+        	$this->isMysql = $configConnection->isSystemDbTypeMySql();
+	        $this->bdHost = $configConnection->getBdHost();
+	        $this->bdPort = $configConnection->getBdPort();
+	        $this->bdUrl = $configConnection->getBdUrl();
+	        $this->bdUser = $configConnection->getBdUser();
+	        $this->bdPassword = $configConnection->getBdPassword();
+	        $this->bdDatabase = $configConnection->getBdDatabase();
+
+		    $this->BD_CONNECTION = $this->connectDb();
 		    if(SolvesDAO::isDebug()){
-		    	echo '[$bd_host:'.$bd_host.'], [$bd_port:'.$bd_port.'], [$bd_url:'.$bd_url.'], [$bd_user:'.$bd_user.'], [$bd_passwd:'.$bd_passwd.'], [$bd_database:'.$bd_database.']';
+		    	echo '[$conName:'.$this->connectionName.'], [$bd_host:'.$this->bdHost.'], [$bd_port:'.$this->bdPort.'], [$bd_url:'.$this->bdUrl.'], [$bd_user:'.$this->bdUser.'], [$bd_database:'.$this->bdDatabase.']';
 		    	var_dump($this->BD_CONNECTION);
 		    }
 	    }
 	}
-	private static function connectDb($bd_host, $bd_port, $bd_url, $bd_user, $bd_passwd, $bd_database) {
+    public function isSystemDbTypeMySql(): bool{return $this->isMysql;}
+    public function isSystemDbTypePostgresql(): bool{return $this->isPostgres;}
+	private function connectDb() {
 	    $CONNECTION = null;
-	    if (SolvesDAO::isSystemDbTypeMySql()) {
-	        $CONNECTION = new \mysqli($bd_host, $bd_user, $bd_passwd, $bd_database);
+	    if ($this->isSystemDbTypeMySql()) {
+	        $CONNECTION = new \mysqli($this->bdHost, $this->bdUser, $this->bd_passwd, $this->bd_database);
 	        /* check connection */
 	        if (mysqli_connect_errno()) {
 	            printf("Erro na conexão: %s\n", mysqli_connect_error());
@@ -56,18 +73,18 @@ class SolvesDAOConnection {
 	            return $CONNECTION;
 	        } 
 
-	    } else if (SolvesDAO::isSystemDbTypePostgresql()) {
-	        $CONNECTION = pg_connect('host=' . $bd_host . ' port=' . $bd_port . ' dbname=' . $bd_database . ' user=' . $bd_user . ' password=' . $bd_passwd) or die("Erro na conexão com o Database PostgreSQL --> " . pg_last_error($CONNECTION));
+	    } else if ($this->isSystemDbTypePostgresql()) {
+	        $CONNECTION = pg_connect('host=' .$this->bdHost. ' port=' .$this->bdPort. ' dbname=' . $this->bdDatabase . ' user=' .$this->bdUser . ' password=' . $this->bdPassword) or die("Erro na conexão com o Database PostgreSQL --> " . pg_last_error($CONNECTION));
 	        pg_set_client_encoding($CONNECTION, 'utf8');
 	    }
 	    return $CONNECTION;
 	}
 	public function close() {
 	    if (isset($this->BD_CONNECTION)) {
-	        if (SolvesDAO::isSystemDbTypeMySql()) {
+	        if ($this->isSystemDbTypeMySql()) {
 	            @$this->BD_CONNECTION->close();
 	            @mysqli_close($this->BD_CONNECTION);
-	        } else if (SolvesDAO::isSystemDbTypePostgresql()) {
+	        } else if ($this->isSystemDbTypePostgresql()) {
 	            @pg_close($this->BD_CONNECTION);
 	        }
 	        $this->BD_CONNECTION = null;
@@ -89,7 +106,7 @@ class SolvesDAOConnection {
 
   	public function setCommitManual(){
   		$this->commitManual = true;
-  		if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
+  		if($this->isSystemDbTypeMySql()){ 
 			$this->BD_CONNECTION->autocommit(FALSE);
   		}
   	}
@@ -104,7 +121,7 @@ class SolvesDAOConnection {
   	}
 
 	public function openTransaction(){
-		if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
+		if($this->isSystemDbTypeMySql()){ 
 			if(!$this->commitManual || !$this->transactionOpened){
 				$this->BD_CONNECTION->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 				$this->transactionOpened = true;		
@@ -112,14 +129,14 @@ class SolvesDAOConnection {
 		}
 	}
 	public function rollbackTransaction(){
-		if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
+		if($this->isSystemDbTypeMySql()){ 
 			$this->BD_CONNECTION->rollback();
 			$this->transactionOpened=false;	
 		}	
 	}
 	public function commitTransaction($doManualCommit=false) : bool{
 		$result = true;
-		if(\SolvesDAO\SolvesDAO::isSystemDbTypeMySql()){ 
+		if($this->isSystemDbTypeMySql()){ 
 			if(!$this->commitManual || $doManualCommit){
 				$result = $this->BD_CONNECTION->commit();	
 				$this->transactionOpened=false;
