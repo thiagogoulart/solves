@@ -284,7 +284,7 @@ abstract class SolvesRest {
         if(null==$connectionName){
             $connectionName = \SolvesDAO\SolvesDAO::DEFAULT_CONNECTION_NAME;
         }
-        $this->CONNECTION = $this->CONNECTIONS[$connectionName];
+        $this->CONNECTION = (isset($this->CONNECTIONS) && array_key_exists($connectionName, $this->CONNECTIONS) ? $this->CONNECTIONS[$connectionName] : null);
         if($this->CONNECTION==null){
             $this->CONNECTION = \SolvesDAO\SolvesDAO::openConnection($connectionName);
             if($this->router->IS_APP){
