@@ -9,6 +9,7 @@ namespace Solves;
 abstract class SolvesRest {
 
     protected $CONNECTION;
+    protected $CONNECTIONS=[];
     protected $router;
     protected $restrito=false;
     protected $restritoTipo=null;
@@ -279,29 +280,39 @@ abstract class SolvesRest {
     protected function getUser(){
         return $this->user;
     }
-    protected function getConnection(){
+    protected function getConnection(?string $connectionName=null){
+        if(null==$connectionName){
+            $connectionName = \SolvesDAO\SolvesDAO::DEFAULT_CONNECTION_NAME;
+        }
+        $this->CONNECTION = $this->CONNECTIONS[$connectionName];
         if($this->CONNECTION==null){
-            $this->CONNECTION = \SolvesDAO\SolvesDAO::openConnection();
+            $this->CONNECTION = \SolvesDAO\SolvesDAO::openConnection($connectionName);
             if($this->router->IS_APP){
                 $this->CONNECTION->setIsApp();
             }
+            $this->CONNECTIONS[$connectionName] = $this->CONNECTION;
         }
         return $this->CONNECTION;
     }
-    protected function closeConnection(){
+    protected function closeConnection(?string $connectionName=null){
+        if(null==$connectionName){
+            $connectionName = \SolvesDAO\SolvesDAO::DEFAULT_CONNECTION_NAME;
+        }
+        $this->CONNECTION = $this->CONNECTIONS[$connectionName];
         if($this->CONNECTION!=null){
             $this->CONNECTION = \SolvesDAO\SolvesDAO::closeConnection($this->CONNECTION);
             $this->CONNECTION = null;
+            unset($this->CONNECTIONS[$connectionName]);
         }
     }
-    protected function isLogado(){
+    protected function isLogado(?string $connectionName=null){
         if($this->user==null){
-            $this->user = \SolvesAuth\SolvesAuth::checkToken($this->getConnection(), $this->router->getToken(), $this->router->getUserData());
+            $this->user = \SolvesAuth\SolvesAuth::checkToken($this->getConnection($connectionName), $this->router->getToken(), $this->router->getUserData());
         }
         return (isset($this->user) && $this->user->getId()>0);
     }
-    protected function atualizaUsuarioLogado(){
-        $this->user = \SolvesAuth\SolvesAuth::checkToken($this->getConnection(), $this->router->getToken(), $this->router->getUserData());
+    protected function atualizaUsuarioLogado(?string $connectionName=null){
+        $this->user = \SolvesAuth\SolvesAuth::checkToken($this->getConnection($connectionName), $this->router->getToken(), $this->router->getUserData());
     }
     protected function isRestritoTipo(){
         if($this->restritoTipo!=null && $this->user!=null){
