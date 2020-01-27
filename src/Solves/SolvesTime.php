@@ -151,6 +151,19 @@ class SolvesTime {
         }
         return $newTimestampStr;
     }
+    public static function addHorasToTimestamp($timestamp, $horas){
+        $newTimestampStr = "";
+        if (\Solves\Solves::isNotBlank($timestamp)) {
+            $format = "Y-m-d H:i:s";
+            if(strlen($timestamp)==10){
+                $format = "Y-m-d";
+            }
+            $data = DateTime::createFromFormat($format, $timestamp);
+            $data->add(new DateInterval('PT'.$horas.'H')); // QTD horas
+            $newTimestampStr = $data->format($format);
+        }
+        return $newTimestampStr;
+    }
     public static function getDataFormatada($timestamp) {
         $dia = substr($timestamp, 8, 2);
         $mes = substr($timestamp, 5, 2);
