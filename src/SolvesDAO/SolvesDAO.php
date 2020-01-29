@@ -28,7 +28,7 @@ class SolvesDAO {
         self::$BDS_CONF_CONNECTIONS[$connectionName] = new SolvesDAOConfigConnection($connectionName, $systemDbType, $bdHost, $bdPort, $bdUrl, $bdUser, $bdPassword, $bdDatabase);
     }
 
-    public function setModelClasses($p){SolvesDAO::$MODEL_CLASSES = $p;}
+    public static function setModelClasses($p){SolvesDAO::$MODEL_CLASSES = $p;}
     public static function getModelClasses(){return SolvesDAO::$MODEL_CLASSES;}
 
     public static function openConnection(?string $connectionName=null) {
