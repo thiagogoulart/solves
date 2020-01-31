@@ -209,10 +209,10 @@ class SolvesConf {
             \SolvesUi\SolvesCabecalho::config(self::$SOLVES_CONF_UI->getScriptAnalytics());
         }
         if(isset(self::$SOLVES_CONF_WEBSOCKET)){
-            \SolvesWebsocket\SolvesWebsocketServer::config(self::$SOLVES_CONF_WEBSOCKET->getUrl(), self::$SOLVES_CONF_WEBSOCKET->getHost(), self::$SOLVES_CONF_WEBSOCKET->getPort(), self::$SOLVES_CONF_WEBSOCKET->isBuildApp());
+            \SolvesWebsocket\SolvesWebSocketServer::config(self::$SOLVES_CONF_WEBSOCKET->getUrl(), self::$SOLVES_CONF_WEBSOCKET->getHost(), self::$SOLVES_CONF_WEBSOCKET->getPort(), self::$SOLVES_CONF_WEBSOCKET->isBuildApp(), self::$SOLVES_CONF_WEBSOCKET->isWss(), self::$SOLVES_CONF_WEBSOCKET->getLocalCert(), self::$SOLVES_CONF_WEBSOCKET->getLocalPk());
             $routesConf = self::$SOLVES_CONF_WEBSOCKET->getRoutes();
             foreach($routesConf as $route){
-                \SolvesWebsocket\SolvesWebsocketServer::addConfigRoute($route->getName(), $route->getPath());
+                \SolvesWebsocket\SolvesWebSocketServer::addConfigRoute($route->getName(), $route->getPath());
             }
         }
         if(isset(self::$SOLVES_CONF_PAY)){
@@ -1697,10 +1697,15 @@ class SolvesConfWebsocket{
     private $port;
     private $url;
     private $buildApp;
+    private $wss;
+    private $local_cert;
+    private $local_pk;
     /**
     *@var SolvesConfWebsocketRoute[]
     */
     private $routes = [];
+
+
 
     /**
      * SolvesConfWebsocket constructor.
@@ -1709,16 +1714,20 @@ class SolvesConfWebsocket{
      * @param $buildApp
      * @param $isWss
      */
-    public function __construct(string $host, int $port, ?bool $buildApp=false, ?bool $isWss=false)
+    public function __construct(string $host, int $port, ?bool $buildApp=false, ?bool $isWss=false, ?string $local_cert=null, ?string $local_pk=null)
     {
         $this->host = $host;
         $this->port = $port;
         $this->buildApp = $buildApp;
         $this->url = ($isWss?'wss://':'ws://').$host.((isset($port) && $port>0)?':'.$port:'');
+        $this->wss = $isWss;
+        $this->local_cert = $local_cert;
+        $this->local_pk = $local_pk;
     }
 
 
     public function isBuildApp(): bool{return $this->buildApp;}
+    public function isWss(): bool{return $this->wss;}
     public function setHost($p){$this->host = $p;}
     public function getHost(): string{return $this->host;}
     public function setPort($p){$this->port = $p;}
@@ -1727,6 +1736,8 @@ class SolvesConfWebsocket{
     public function getUrl(): string{return $this->url;}
     public function addRoute(string $name, string $path){$this->routes[] = new SolvesConfWebsocketRoute($name, $path);}
     public function getRoutes(): array{return $this->routes;}
+    public function getLocalCert(): ?string{return $this->local_cert;}
+    public function getLocalPk(): ?string{return $this->local_pk;}
 
 }
 class SolvesConfWebsocketRoute{

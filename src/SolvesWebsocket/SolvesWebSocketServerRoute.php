@@ -32,6 +32,10 @@ abstract class SolvesWebSocketServerRoute {
      */
     protected $connections = array();
 
+
+    protected $hasPeriodicFunction=false;
+    protected $intervalSecondsPeriodicFunction;
+
     /**
      * SolvesWebSocketServerRoute constructor.
      * @param string $name
@@ -42,6 +46,23 @@ abstract class SolvesWebSocketServerRoute {
         $this->path = $path;
         $this->clients = new \SplObjectStorage;
     }
+
+    public function configPeriodicFunction(int $intervalSecondsPeriodicFunction){
+        $this->intervalSecondsPeriodicFunction = $intervalSecondsPeriodicFunction;
+        $this->hasPeriodicFunction=true;
+    }
+
+    public function hasPeriodicFunction(): bool{
+        return $this->hasPeriodicFunction;
+    }
+    public function getIntervalSecondsPeriodicFunction(): int{
+        return $this->intervalSecondsPeriodicFunction;
+    }
+    public function executePeriodicFunction($server, \React\EventLoop\LoopInterface $loop, ?\React\EventLoop\Timer\Timer $timer=null){
+        $this->periodicFunction($server, $loop, $timer);
+    }
+
+    public abstract function periodicFunction($server, \React\EventLoop\LoopInterface $loop, ?\React\EventLoop\Timer\Timer $timer=null);
 
     /**
      * @return string
