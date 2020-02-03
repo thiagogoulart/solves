@@ -159,7 +159,13 @@ class SolvesTime {
                 $format = "Y-m-d";
             }
             $data = DateTime::createFromFormat($format, $timestamp);
-            $data->add(new DateInterval('PT'.$horas.'H')); // QTD horas
+            if($horas>0){
+                $data->add(new DateInterval('PT'.$horas.'H')); // QTD horas
+            }else if($horas<0){
+                $data->sub(new DateInterval('PT'.($horas*-1).'H')); // QTD horas
+            }else{
+                $newTimestampStr = $timestamp;
+            }
             $newTimestampStr = $data->format($format);
         }
         return $newTimestampStr;
