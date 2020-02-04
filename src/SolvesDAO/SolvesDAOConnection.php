@@ -58,7 +58,7 @@ class SolvesDAOConnection {
 	private function connectDb() {
 	    $CONNECTION = null;
 	    if ($this->isSystemDbTypeMySql()) {
-	        $CONNECTION = new \mysqli($this->bdHost, $this->bdUser, $this->bdPassword, $this->bdDatabase);
+	        $CONNECTION = new \Mysqli($this->bdHost, $this->bdUser, $this->bdPassword, $this->bdDatabase);
 	        /* check connection */
 	        if (mysqli_connect_errno()) {
 	            printf("Erro na conexão: %s\n", mysqli_connect_error());
