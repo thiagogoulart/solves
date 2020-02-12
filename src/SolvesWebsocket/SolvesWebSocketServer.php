@@ -79,6 +79,23 @@ class SolvesWebSocketServer {
         $instance = self::getRouteInstance();
         if(isset($instance)){
             if(self::$wss){
+                $app = new \Ratchet\Http\HttpServer(
+                    new \Ratchet\WebSocket\WsServer(
+                        $instance
+                    )
+                );
+
+                $loop = \React\EventLoop\Factory::create();
+
+                $secure_websockets = new \React\Socket\Server(self::$host.':'.self::$port, $loop);
+                $secure_websockets = new \React\Socket\SecureServer($secure_websockets, $loop, [
+                    'local_cert' => self::$local_cert,
+                    'local_pk' => self::$local_pk,
+                    'verify_peer' => false
+                ]);
+
+                self::$app = new \Ratchet\Server\IoServer($app, $secure_websockets, $loop);
+                /**OLD
                 self::$app   = Factory::create();
                 $optValue = array(
                     'local_cert'        => self::$local_cert, // path to your cert
@@ -97,7 +114,7 @@ class SolvesWebSocketServer {
                         )
                     ),
                     $webSock
-                );
+                ); */
             }else {
                 self::$app = IoServer::factory(
                     new HttpServer(

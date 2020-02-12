@@ -34,7 +34,7 @@ class SolvesAuth {
     }
 
     public static function mock(string $serverName, string $userAgent, ?string $requestTime=''){
-        self::$isMock = false;
+        self::$isMock = true;
         self::$mockServerName = $serverName;
         self::$mockUserAgent = $userAgent;
         self::$mockRequestTime = $requestTime;
@@ -157,6 +157,9 @@ class SolvesAuth {
             }
             $arrHost = explode('/', $host);
             $server = $arrHost[0];
+        }
+        if(\Solves\SolvesConf::$SYSTEM_DEBUG_MODE){
+            var_dump('SERVER:'. $server);
         }
         $tokenGeneric = SolvesAuth::getKeyToken().$server;
         /* Encoding token */
