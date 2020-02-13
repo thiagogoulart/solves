@@ -38,10 +38,22 @@ class SolvesMail {
             return SolvesMail::configureMailer($mail);
         }
     }
-    public static function configureMailer($mail) {
+    public static function configureMailer($mail, ?bool $useTls=true) {
         $mail->isSMTP();
         $mail->SMTPAuth = true;
         $mail->SMTPKeepAlive = true; // SMTP connection will not close after each email sent, reduces SMTP overhead
+        if($useTls){
+            $mail->SMTPSecure = 'tls';
+            $mail->smtpConnect(
+                array(
+                    "ssl" => array(
+                        "verify_peer" => false,
+                        "verify_peer_name" => false,
+                        "allow_self_signed" => true
+                    )
+                )
+            );
+        }
         $mail->Host = SolvesMail::$EMAIL_HOST;
         $mail->Port = SolvesMail::$EMAIL_PORT;
         $mail->IsHTML(true); // Define que o e-mail será enviado como HTML
