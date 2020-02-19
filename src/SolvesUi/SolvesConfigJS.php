@@ -73,8 +73,8 @@ if(undefined!==$.SolvesNotifications){
       return '
 //SolvesWebsocket
 if(undefined!==$.SolvesWebsocket){
-      $.SolvesWebsocket.webSocketUrl="'.\SolvesWebsocket\SolvesWebsocketServer::getWsUrl().'";
-      $.SolvesWebsocket.webSocketRoutes=['.\SolvesWebsocket\SolvesWebsocketServer::getRoutesStringObjArr().'];
+      $.SolvesWebsocket.webSocketUrl="'.\SolvesWebsocket\SolvesWebSocketServer::getWsUrl().'";
+      $.SolvesWebsocket.webSocketRoutes=['.\SolvesWebsocket\SolvesWebSocketServer::getRoutesStringObjArr().'];
 }
 ';
     }
