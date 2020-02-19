@@ -52,6 +52,11 @@ final class IdTokenVerifier implements Verifier
         try {
             $this->verifier->verifyIdToken($token);
 
+            // We're using getClaim() instead of hasClaim() to also check for an empty value
+            if (!($token->getClaim('sub', false))) {
+                throw new InvalidToken($token, 'The token has no "sub" claim');
+            }
+
             return $token;
         } catch (UnknownKey $e) {
             throw $e;
@@ -128,7 +133,7 @@ final class IdTokenVerifier implements Verifier
 
         try {
             return (new Parser())->parse((string) $token);
-        } catch (\InvalidArgumentException $e) {
+        } catch (Throwable $e) {
             throw new InvalidArgumentException('The given token could not be parsed: '.$e->getMessage());
         }
     }

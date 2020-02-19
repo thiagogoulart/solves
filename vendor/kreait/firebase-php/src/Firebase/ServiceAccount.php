@@ -97,7 +97,7 @@ class ServiceAccount
     public function withPrivateKey(string $value): self
     {
         $serviceAccount = clone $this;
-        $serviceAccount->privateKey = $value;
+        $serviceAccount->privateKey = \str_replace('\n', "\n", $value);
 
         return $serviceAccount;
     }
@@ -115,11 +115,19 @@ class ServiceAccount
             return $value;
         }
 
-        if (\is_string($value)) {
+        if (\is_string($value) && \mb_strpos($value, '{') === 0) {
             try {
                 return self::fromJson($value);
             } catch (InvalidArgumentException $e) {
+                throw new InvalidArgumentException('Invalid service account specification');
+            }
+        }
+
+        if (\is_string($value) && \mb_strpos($value, '{') !== 0) {
+            try {
                 return self::fromJsonFile($value);
+            } catch (InvalidArgumentException $e) {
+                throw new InvalidArgumentException('Invalid service account specification');
             }
         }
 

@@ -4,11 +4,11 @@
     "type": "library",
     "require": {
         "php": ">=7.1",
-        "pagseguro/pagseguro-php-sdk" : "*",
-        "kreait/firebase-php" : "*",
-        "minishlink/web-push": "^5.2.0",
-        "phpmailer/phpmailer" : "~6.0",
-        "cboden/ratchet": "^0.4"
+        "pagseguro/pagseguro-php-sdk" : "6.0.0",
+        "kreait/firebase-php" : "4.39.2",
+        "minishlink/web-push": "v5.2.4",
+        "phpmailer/phpmailer" : "v6.1.4",
+        "cboden/ratchet": "v0.4.2"
     },
     "repositories": [
         {
