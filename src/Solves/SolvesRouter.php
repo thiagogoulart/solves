@@ -313,7 +313,7 @@ class SolvesRouter {
         }else if("PUT"==$this->HTTP_METHOD || "DELETE"==$this->HTTP_METHOD) {
             $this->_HTTPREQUEST_PUT = \Solves\Solves::parsePutRequest();
             $this->dados = $this->_HTTPREQUEST_PUT["dados"];
-        }else{
+        }else if(isset($this->_HTTPREQUEST_POST) && array_key_exists('dados', $this->_HTTPREQUEST_POST)){
             $this->dados = $this->_HTTPREQUEST_POST["dados"];
         }
         if(isset($this->_HTTPREQUEST_SERVER) && array_key_exists('CONTENT_TYPE', $this->_HTTPREQUEST_SERVER) && substr($this->_HTTPREQUEST_SERVER['CONTENT_TYPE'],0,19)=='multipart/form-data'){
