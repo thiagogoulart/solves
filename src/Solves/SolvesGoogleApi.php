@@ -197,7 +197,7 @@ class SolvesGoogleApi {
     public static function logError($msg){ 
         error_log("[".date('Y-m-d H:i:s')."]SOLVES_GOOGLE_API:".$msg);
     }
-    public static function getListaVideos($canal , $limit = 50){
+    public static function getListaVideos($canal , $limit = null){
         //$dadosVideo = array("videoId" => "" ,"publishedAt" => "" , "title"=>"", "thumbnail"=>"" );
         $dadosVideo = null;
         if($canal){
@@ -332,7 +332,7 @@ class SolvesYoutubeApiKey{
     public function getYoutubeApiUrlEstatisticas(){return $this->YOUTUBE_API_URL_ESTATISTICAS; }
     public function getYoutubeApiUrlEstatisticasCanal(){return $this->YOUTUBE_API_URL_ESTATISTICAS_CANAL; }
     public function getYoutubeApiUrlVideoEstatisticas(){return $this->YOUTUBE_API_URL_VIDEO_ESTATISTICAS; }
-    public function getYoutubeApiUrlSearchVideo($canal, $limit){return $this->YOUTUBE_API_URL_SEARCH_VIDEO. urlencode($canal) . '&maxResults='.$limit; }
+    public function getYoutubeApiUrlSearchVideo($canal, $limit=null){return $this->YOUTUBE_API_URL_SEARCH_VIDEO. urlencode($canal) .(\Solves\Solves::isNotBlank($limit) ? '&maxResults='.$limit : ''); }
 
     public function addQuota(){
         if($this->quotaDay==null ||  $this->quotaUsed || \Solves\SolvesTime::getDataAtual()!=$this->quotaDay){
