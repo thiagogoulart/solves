@@ -306,7 +306,6 @@ class SolvesRouter {
         }
     }
     private function preencheVariaveisDeDados(){
-        $this->dados = $this->_HTTPREQUEST_POST["dados"];
 
         $this->HTTP_METHOD = $this->_HTTPREQUEST_SERVER['REQUEST_METHOD'];
         if("POST"==$this->HTTP_METHOD) {
@@ -314,6 +313,8 @@ class SolvesRouter {
         }else if("PUT"==$this->HTTP_METHOD || "DELETE"==$this->HTTP_METHOD) {
             $this->_HTTPREQUEST_PUT = \Solves\Solves::parsePutRequest();
             $this->dados = $this->_HTTPREQUEST_PUT["dados"];
+        }else{
+            $this->dados = $this->_HTTPREQUEST_POST["dados"];
         }
         if(substr($this->_HTTPREQUEST_SERVER['CONTENT_TYPE'],0,19)=='multipart/form-data'){
             $this->preProcessDataFromMultipartFormData();
