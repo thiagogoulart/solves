@@ -316,7 +316,7 @@ class SolvesRouter {
         }else{
             $this->dados = $this->_HTTPREQUEST_POST["dados"];
         }
-        if(substr($this->_HTTPREQUEST_SERVER['CONTENT_TYPE'],0,19)=='multipart/form-data'){
+        if(isset($this->_HTTPREQUEST_SERVER) && array_key_exists('CONTENT_TYPE', $this->_HTTPREQUEST_SERVER) && substr($this->_HTTPREQUEST_SERVER['CONTENT_TYPE'],0,19)=='multipart/form-data'){
             $this->preProcessDataFromMultipartFormData();
         }
         $this->extractData();
