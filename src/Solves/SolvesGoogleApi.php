@@ -214,12 +214,21 @@ class SolvesGoogleApi {
             if($jsonDados != null && count($jsonDados->items) > 0){
                 foreach ($jsonDados->items as $item){
                     if(@$item->id->videoId != null){
-                        $lDadosVideo["nextPageToken"] = $jsonDados->nextPageToken;
-                        $lDadosVideo["prevPageToken"] = $jsonDados->prevPageToken;
-                        $lDadosVideo["regionCode"] = $jsonDados->regionCode;
-                        $lDadosVideo["totalResults"] = $jsonDados->pageInfo->totalResults;
-                        $lDadosVideo["resultsPerPage"] = $jsonDados->pageInfo->resultsPerPage;
-
+                        if(property_exists($jsonDados, 'nextPageToken')){
+                            $lDadosVideo["nextPageToken"] = $jsonDados->nextPageToken;
+                        }
+                        if(property_exists($jsonDados, 'prevPageToken')){
+                            $lDadosVideo["prevPageToken"] = $jsonDados->prevPageToken;
+                        }
+                        if(property_exists($jsonDados, 'regionCode')){
+                            $lDadosVideo["regionCode"] = $jsonDados->regionCode;
+                        }
+                        if(property_exists($jsonDados, 'pageInfo')){
+                            $lDadosVideo["totalResults"] = $jsonDados->pageInfo->totalResults;
+                        }
+                        if(property_exists($jsonDados, 'pageInfo')){
+                            $lDadosVideo["resultsPerPage"] = $jsonDados->pageInfo->resultsPerPage;
+                        }
                         $lDadosVideo["videoId"] = $item->id->videoId;
                         $lDadosVideo["publishedAt"] = $item->snippet->publishedAt;
                         $lDadosVideo["title"] = $item->snippet->title;
