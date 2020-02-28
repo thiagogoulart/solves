@@ -158,9 +158,6 @@ class SolvesAuth {
             $arrHost = explode('/', $host);
             $server = $arrHost[0];
         }
-        if(\Solves\SolvesConf::$SYSTEM_DEBUG_MODE){
-            var_dump('SERVER:'. $server);
-        }
         $tokenGeneric = SolvesAuth::getKeyToken().$server;
         /* Encoding token */
         return  hash('sha256', $tokenGeneric.$data);
