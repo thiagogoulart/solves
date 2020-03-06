@@ -34,7 +34,7 @@ if ("serviceWorker" in navigator) {
       }
       
       try {
-        if(firebase!==undefined){firebase.messaging().useServiceWorker(reg);}
+        if(typeof firebase!=="undefined"){firebase.messaging().useServiceWorker(reg);}
       } catch (err) {
         console.log(err);
       }
