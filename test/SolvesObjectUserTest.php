@@ -45,6 +45,7 @@ class SolvesObjectUserTest extends TestCase {
 		$arr = $obj->toArray();
                 $this->assertNotNull($arr, 'Retornado NULL em toArray.');
                 $this->assertTrue(array_key_exists('nome',$arr), 'Valor de nome deveria ser retornado toArray, porém não está presente no array.');
+                $this->assertTrue(array_key_exists('avatar',$arr), 'Valor de avatar deveria ser retornado toArray, porém não está presente no array.');
                 $this->assertFalse(array_key_exists('senha',$arr), 'Valor de senha deveria estar oculto no toArray, porém retornou ['.(array_key_exists('senha',$arr) ? $arr['senha'] : 'NULL').'].');
                 $this->assertFalse(array_key_exists('senha_label',$arr), 'Valor de senha_label deveria estar oculto no toArray, porém retornou ['.(array_key_exists('senha_label',$arr) ? $arr['senha_label'] : 'NULL').'].');
                 $this->assertFalse(array_key_exists('img',$arr), 'Valor de img deveria estar oculto no toArray, porém retornou ['.(array_key_exists('img',$arr) ? $arr['img'] : 'NULL').'].');
