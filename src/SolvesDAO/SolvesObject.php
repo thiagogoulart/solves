@@ -255,7 +255,7 @@ abstract class SolvesObject {
         $arr[$this->dao->getPk()] = $arr['id'];
 
         foreach($cols as $col){
-            if(isset($this->arrIdsColunasSensiveis) && array_search($col->getColumnOrder(), $this->arrIdsColunasSensiveis)){
+            if(isset($this->arrIdsColunasSensiveis) && array_search($col->getColumnOrder(), $this->arrIdsColunasSensiveis)!==false){
                 continue;
             }
             //try to find getter of value
