@@ -58,9 +58,9 @@
         }
     },
     "config": {
-        "bin-dir": "bin/"
+        "bin-dir": "bin/solves/"
     },
     "bin": [
-        "bin/solves/"
+        "bin/"
     ]
 }
