@@ -67,7 +67,9 @@ class SolvesDAOTest extends TestCase {
             $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');
 
             //Nome com 2 palavras separadas por 2 espaços e 1 espaço no final
-            $dados = ["nome"=>"Thiago  Goulart ","page"=>"1"];
+            $dados = new StdClass;
+            $dados->nome ="Thiago  Goulart ";
+            $dados->page = "1";
             $sql = $dao->getSqlSearchByParams($userId, $dados);
             $sqlExpected=' ( UPPER(user_mock.nome) LIKE \'%THIAGO%\' AND  UPPER(user_mock.nome) LIKE \'%GOULART%\' ) ';
             $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');

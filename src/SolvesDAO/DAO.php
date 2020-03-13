@@ -613,7 +613,7 @@ class DAO {
         }
     }
 
-    public function getSqlSearchByParams(?int $usuarioId, ?array $params=null, ?bool $useAndByColumn=true, ?bool $retornaNuloSeNaoHouverResultado=false){
+    public function getSqlSearchByParams(?int $usuarioId, $params=null, ?bool $useAndByColumn=true, ?bool $retornaNuloSeNaoHouverResultado=false){
         $condition = "";
         $entrou = false;
         if(isset($params)){                
