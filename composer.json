@@ -61,6 +61,6 @@
         "bin-dir": "bin/"
     },
     "bin": [
-        "bin/solves"
+        "bin/solves/"
     ]
 }
