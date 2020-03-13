@@ -8,7 +8,8 @@
         "kreait/firebase-php" : "4.39.2",
         "minishlink/web-push": "v5.2.4",
         "phpmailer/phpmailer" : "v6.1.4",
-        "cboden/ratchet": "v0.4.2"
+        "cboden/ratchet": "v0.4.2",
+        "robmorgan/phinx": "0.11.4"
     },
     "repositories": [
         {
@@ -30,6 +31,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/ratchetphp/Ratchet.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/robmorgan/phinx.git"
         }
     ],
     "license": "proprietary",
@@ -51,5 +56,11 @@
             "SolvesNotification\\": "src/SolvesNotification/",
             "SolvesWebsocket\\": "src/SolvesWebsocket/"
         }
-    }
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "bin": [
+        "bin/solves"
+    ]
 }
