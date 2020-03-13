@@ -205,6 +205,15 @@ class Solves {
 	public static function soNumero($str) {
 	    return preg_replace("/[^0-9]/", "", $str);
 	}
+	public static function removeEspacoesExcedentes(string $str){
+		// First remove the leading/trailing whitespace
+		$str = trim($str);
+		// Now remove any doubled-up whitespace
+		$str = preg_replace('/\s(?=\s)/', '', $str);
+		// Finally, replace any non-space whitespace, with a space
+		$str = preg_replace('/[\n\r\t]/', ' ', $str);
+		return $str;
+	}
 	public static function getClientIp() {
 	     $ipaddress = '';
 	     if (@$_SERVER['HTTP_CLIENT_IP'])

@@ -135,33 +135,38 @@ class DAOColuna {
 /*END getters e setters*/	
 	
 	public function getSearchSql($search){
-		if($this->isSearchable()){
-			$cond = '';
-			$qtdAdded = 0;
+		if($this->isSearchable() && \Solves\Solves::isNotBlank($search)){
 			$search = strtoupper($search);
+			$search = \Solves\Solves::removeEspacoesExcedentes($search);
 			$palavras = explode(" ", $search);	
 			$qtdPalavras = count($palavras);
-			for($j=0; $j!=$qtdPalavras; $j++){
-				$added = false;
-				$w = '';
-				$valuePalavra = $this->dao->getValorColunaParaScript($this, $palavras[$j], true);
-				if($this->getTipo()=='string'){
-					$w .= " UPPER(".$this->getNomeWithPrefix().") LIKE ".$valuePalavra." ";
-					$added = true;
-					$qtdAdded++;
+			if($qtdPalavras>0){ 
+				$cond = '';
+				$qtdAdded = 0;
+				for($j=0; $j!=$qtdPalavras; $j++){
+					$added = false;
+					$w = '';
+					$valuePalavra = $this->dao->getValorColunaParaScript($this, $palavras[$j], true);
+					if($this->getTipo()=='string'){
+						$w .= " UPPER(".$this->getNomeWithPrefix().") LIKE ".$valuePalavra." ";
+						$added = true;
+						$qtdAdded++;
+					}
+					else if(is_numeric($search) && $this->getTipo()=='integer'){
+						$w .= " ".$this->getNomeWithPrefix()." = ".$valuePalavra." ";
+						$added = true;
+						$qtdAdded++;
+					}
+					if($qtdAdded>1 && $added){
+						$cond .= "AND ".$w;
+					}else{
+						$cond .= $w;
+					}
 				}
-				else if(is_numeric($search) && $this->getTipo()=='integer'){
-					$w .= " ".$this->getNomeWithPrefix()." = ".$valuePalavra." ";
-					$added = true;
-					$qtdAdded++;
-				}
-				if($qtdAdded>1 && $added){
-					$cond .= "AND ".$w;
-				}else{
-					$cond .= $w;
-				}
+				return $cond;
+			}else{
+				return null;
 			}
-			return $cond;
 		}
 		return null;
 	}

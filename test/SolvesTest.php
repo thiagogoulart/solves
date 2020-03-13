@@ -127,6 +127,15 @@ class SolvesTest extends TestCase {
 			$s = \Solves\Solves::removerConteudoMalicioso($p);
 			$this->assertEquals($expected[$i], $s, 'String ['.$p.'] String ['.$s.']. String não ficou como esperada:'.$expected[$i]);
 		}
-
+	}
+	public function testRemoveEspacoesExcedentes(){
+		$params = array('Teste de A',' Teste de A ', 'A','  Teste   de   A  ');
+		$expected = array('Teste de A','Teste de A', 'A', 'Teste de A');
+		$qtd = count($params);
+		for($i=0;$i!=$qtd;$i++){ 
+			$p = $params[$i];
+			$s = \Solves\Solves::removeEspacoesExcedentes($p);
+			$this->assertEquals($expected[$i], $s, 'String ['.$p.'] String ['.$s.']. String não ficou como esperada:'.$expected[$i]);
+		}
 	}
 }

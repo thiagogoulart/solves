@@ -30,16 +30,64 @@ class SolvesDAOTest extends TestCase {
 	public function tearDown()  : void{
 	  
 	}
-        public function testGetSqlUpdate(){
-                $con = \SolvesDAO\SolvesDAO::openConnectionMock();                
-                $obj = new SolvesObjectCompraMock($con);
-                $sql = $obj->getDao()->getSqlUpdate($obj, 7);
+    public function testGetSqlUpdate(){
+            $con = \SolvesDAO\SolvesDAO::openConnectionMock();                
+            $obj = new SolvesObjectCompraMock($con);
+            $sql = $obj->getDao()->getSqlUpdate($obj, 7);
 
-                $this->assertEquals('', $sql, 'SQL deveria ser vazio pois nenhum atributo foi alterado.');
+            $this->assertEquals('', $sql, 'SQL deveria ser vazio pois nenhum atributo foi alterado.');
 
-                $obj->setVendedor('TESTE');
-                $obj->beforeSaveAndUpdate();
-                $sql = $obj->getDao()->getSqlUpdate($obj, 7);
-                $this->assertEquals("UPDATE compra_mock SET vendedor='TESTE' WHERE compra_mock_id= 7;", $sql, 'SQL deveria ser vazio pois nenhum atributo foi alterado.');
-        }
+            $obj->setVendedor('TESTE');
+            $obj->beforeSaveAndUpdate();
+            $sql = $obj->getDao()->getSqlUpdate($obj, 7);
+            $this->assertEquals("UPDATE compra_mock SET vendedor='TESTE' WHERE compra_mock_id= 7;", $sql, 'SQL deveria ser vazio pois nenhum atributo foi alterado.');
+    }
+    public function testGetSqlSearchByParams(){
+    		$userId = 1;
+            $con = \SolvesDAO\SolvesDAO::openConnectionMock();                
+            $obj = new SolvesObjectUserMock($con);
+            $dao = $obj->getDao();
+
+            //Nome vazio
+            $dados = ["nome"=>"","page"=>"1"];
+            $sql = $dao->getSqlSearchByParams($userId, $dados);
+            $sqlExpected='(1=1)';
+            $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');
+
+            //Nome com 1 palavra
+            $dados = ["nome"=>"Thiago","page"=>"1"];
+            $sql = $dao->getSqlSearchByParams($userId, $dados);
+            $sqlExpected=' ( UPPER(user_mock.nome) LIKE \'%THIAGO%\' ) ';
+            $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');
+
+            //Nome com 2 palavras separadas por 1 espaço
+            $dados = ["nome"=>"Thiago Goulart","page"=>"1"];
+            $sql = $dao->getSqlSearchByParams($userId, $dados);
+            $sqlExpected=' ( UPPER(user_mock.nome) LIKE \'%THIAGO%\' AND  UPPER(user_mock.nome) LIKE \'%GOULART%\' ) ';
+            $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');
+
+            //Nome com 2 palavras separadas por 2 espaços e 1 espaço no final
+            $dados = ["nome"=>"Thiago  Goulart ","page"=>"1"];
+            $sql = $dao->getSqlSearchByParams($userId, $dados);
+            $sqlExpected=' ( UPPER(user_mock.nome) LIKE \'%THIAGO%\' AND  UPPER(user_mock.nome) LIKE \'%GOULART%\' ) ';
+            $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');
+
+            //Nome com 2 palavras separadas por 2 espaços e 1 espaço no final
+            $dados = ["nome"=>"Thiago  Goulart ","page"=>"1"];
+            $sql = $dao->getSqlSearchByParams($userId, $dados, false);
+            $sqlExpected=' ( UPPER(user_mock.nome) LIKE \'%THIAGO%\' AND  UPPER(user_mock.nome) LIKE \'%GOULART%\' ) ';
+            $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');
+
+            //Nome com 2 palavras separadas por 2 espaços e 1 espaço no final
+            $dados = ["nome"=>"Thiago  Goulart ","page"=>"1"];
+            $sql = $dao->getSqlSearchByParams($userId, $dados, true, true);
+            $sqlExpected=' ( UPPER(user_mock.nome) LIKE \'%THIAGO%\' AND  UPPER(user_mock.nome) LIKE \'%GOULART%\' ) ';
+            $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');
+
+            //Nome com 2 palavras separadas por 2 espaços e 1 espaço no final
+            $dados = ["nome"=>"","page"=>"1"];
+            $sql = $dao->getSqlSearchByParams($userId, $dados, true, true);
+            $sqlExpected=null;
+            $this->assertEquals($sqlExpected, $sql, 'SQL nao ficou como esperado ['.$sqlExpected.'].');
+    }
 }

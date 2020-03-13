@@ -613,28 +613,30 @@ class DAO {
         }
     }
 
-    public function getSqlSearchByParams($usuarioId, $params, $useAndByColumn=true){
+    public function getSqlSearchByParams(?int $usuarioId, ?array $params=null, ?bool $useAndByColumn=true, ?bool $retornaNuloSeNaoHouverResultado=false){
         $condition = "";
         $entrou = false;
-        foreach ($params as $key => $search){
-            $search = strtoupper($search);
-            $result = array();
-            $palavras = explode(" ", $search);
-            foreach($this->colunas as $coluna){
-                if($coluna->getNome()==$key){
-                    $conditionCol =$coluna->getSearchSql($search);
-                    if(\Solves\Solves::isNotBlank($conditionCol)){
-                        if($entrou){
-                            $condition .= ($useAndByColumn?"AND":"OR");
+        if(isset($params)){                
+            foreach ($params as $key => $search){
+                $search = strtoupper($search);
+                $result = array();
+                $palavras = explode(" ", $search);
+                foreach($this->colunas as $coluna){
+                    if($coluna->getNome()==$key){
+                        $conditionCol =$coluna->getSearchSql($search);
+                        if(\Solves\Solves::isNotBlank($conditionCol)){
+                            if($entrou){
+                                $condition .= ($useAndByColumn?"AND":"OR");
+                            }
+                            $condition .= " (".$conditionCol.") ";
+                            $entrou = true;
                         }
-                        $condition .= " (".$conditionCol.") ";
-                        $entrou = true;
                     }
                 }
             }
         }
         if(!$entrou){
-            $condition = '(1=1)';
+            $condition = ($retornaNuloSeNaoHouverResultado ? null : '(1=1)');
         }
         return $condition;
     }
