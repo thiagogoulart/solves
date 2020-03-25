@@ -35,6 +35,10 @@ class SolvesCabecalho {
      * @var null  Caminho da logo para ser exibida na tela de loading
      */
     private static $LOGO_ON_LOADING=null;
+    /**
+     * @var null  Caminho da imagem a ser incluida na tag de og:image
+     */
+    private static $OPEN_GRAPH_IMAGE=null;
 
 
     /**
@@ -100,7 +104,7 @@ class SolvesCabecalho {
     /**
      * @return null
      */
-    public static function getLogoOnLoading(){return SolvesCabecalho::$LOGO_ON_LOADING;}
+    public static function getLogoOnLoading(){return SolvesCabecalho::$LOGO_ON_LOADING;}    
 
     /**
      * @param $p
@@ -108,6 +112,23 @@ class SolvesCabecalho {
     public static function setLogoOnLoading($p){
         SolvesCabecalho::$LOGO_ON_LOADING=$p;
         SolvesCabecalho::setShowLogoOnLoading(\Solves\Solves::isNotBlank(SolvesCabecalho::$LOGO_ON_LOADING));
+    }
+    /**
+     * @return null
+     */
+    public static function getOpenGraphImage(){
+        if(null==SolvesCabecalho::$OPEN_GRAPH_IMAGE){
+            return (\Solves\Solves::getCompleteImgPathLogo()).'pwa-192x192.png';
+        }
+        return SolvesCabecalho::$OPEN_GRAPH_IMAGE;
+    }
+    
+
+    /**
+     * @param $p
+     */
+    public static function setOpenGraphImage($p){
+        SolvesCabecalho::$OPEN_GRAPH_IMAGE=$p;
     }
 
     /**
@@ -176,10 +197,10 @@ class SolvesCabecalho {
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="'.$SITE_TITULO.'">
     <meta name="twitter:description" content="'.$SITE_DESCRIPTION.'">
-    <meta name="twitter:image" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'pwa-192x192.png">
+    <meta name="twitter:image" content="'.SolvesCabecalho::getOpenGraphImage().'">
     <meta property="og:site_name" content="'.$SITE_TITULO.'" />
     <meta property="og:title" content="'.$SITE_TITULO.'">
-    <meta property="og:image" content="'.(\Solves\Solves::getCompleteImgPathLogo()).'pwa-192x192.png">
+    <meta property="og:image" content="'.SolvesCabecalho::getOpenGraphImage().'">
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="'.$CANNONICAL.'" />

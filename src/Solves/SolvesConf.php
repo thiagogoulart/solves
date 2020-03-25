@@ -206,6 +206,9 @@ class SolvesConf {
             if(\Solves\Solves::isNotBlank(self::$SOLVES_CONF_UI->getLogoOnLoading())){
                 \SolvesUi\SolvesCabecalho::setLogoOnLoading(self::$SOLVES_CONF_UI->getLogoOnLoading());
             }
+            if(\Solves\Solves::isNotBlank(self::$SOLVES_CONF_UI->getOpenGraphImage())){
+                \SolvesUi\SolvesCabecalho::setOpenGraphImage(self::$SOLVES_CONF_UI->getOpenGraphImage());
+            }
             \SolvesUi\SolvesCabecalho::config(self::$SOLVES_CONF_UI->getScriptAnalytics());
         }
         if(isset(self::$SOLVES_CONF_WEBSOCKET)){
@@ -375,6 +378,7 @@ class SolvesConfUi{
     private $scriptAnalytics='';
     private $googleAnalyticsIdCode=null;
     private $logoOnLoading='';
+    private $openGraphImage='';
 
     /**
      * SolvesUi constructor.
@@ -503,8 +507,22 @@ class SolvesConfUi{
      * @param string $logo
      * @return SolvesConfUi
      */
-    public function setLogoOnLoading($logo){
+    public function setLogoOnLoading($logo): SolvesConfUi{
         $this->logoOnLoading = $logo;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOpenGraphImage(){return $this->openGraphImage;}
+
+    /**
+     * @param string $img
+     * @return SolvesConfUi
+     */
+    public function setOpenGraphImage($img): SolvesConfUi{
+        $this->openGraphImage = $img;
         return $this;
     }
 
