@@ -117,10 +117,13 @@ class SolvesCabecalho {
      * @return null
      */
     public static function getOpenGraphImage(){
+        $img = (\Solves\Solves::getCompleteImgPathLogo());
         if(null==SolvesCabecalho::$OPEN_GRAPH_IMAGE){
-            return (\Solves\Solves::getCompleteImgPathLogo()).'pwa-192x192.png';
+            $img .= 'pwa-192x192.png';
+        }else{
+            $img .= SolvesCabecalho::$OPEN_GRAPH_IMAGE;
         }
-        return SolvesCabecalho::$OPEN_GRAPH_IMAGE;
+        return $img;
     }
     
 
