@@ -56,11 +56,5 @@
             "SolvesNotification\\": "src/SolvesNotification/",
             "SolvesWebsocket\\": "src/SolvesWebsocket/"
         }
-    },
-    "config": {
-        "bin-dir": "bin/solves/"
-    },
-    "bin": [
-        "bin/"
-    ]
+    }
 }
