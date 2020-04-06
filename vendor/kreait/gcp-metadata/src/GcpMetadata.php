@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Kreait;
 
-use function GuzzleHttp\choose_handler;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use Kreait\GcpMetadata\Error;
 use Psr\Http\Message\ResponseInterface;
 
 class GcpMetadata
 {
-    const baseUrl = 'http://metadata.google.internal/computeMetadata/v1/';
+    const baseUrl = 'http://169.254.169.254/computeMetadata/v1/';
     const flavorHeaderName = 'Metadata-Flavor';
     const flavorHeaderValue = 'Google';
 
@@ -24,18 +21,35 @@ class GcpMetadata
      */
     private $client;
 
+    /**
+     * @var null|bool
+     */
+    private $isAvailable;
+
     public function __construct(ClientInterface $client = null)
     {
-        $this->client = $client;
+        $this->client = $client ?? $this->createClient();
+    }
+
+    private function createClient(): Client
+    {
+        return new Client([
+            'connect_timeout' => 1.0, // Default is 0 = indefinitely
+            'timeout' => 1.0 // Default is 0 = indefinitely
+        ]);
     }
 
     public function isAvailable(): bool
     {
+        if ($this->isAvailable !== null) {
+            return $this->isAvailable;
+        }
+
         try {
             $this->instance();
-            return true;
+            return $this->isAvailable = true;
         } catch (\Throwable $e) {
-            return false;
+            return $this->isAvailable = false;
         }
     }
 
@@ -61,7 +75,7 @@ class GcpMetadata
         ];
 
         try {
-            $response = $this->client()->request('GET', $url, $options);
+            $response = $this->client->request('GET', $url, $options);
 
             $this->verifyHttpStatus($response);
             $this->verifyHeaders($response);
@@ -102,24 +116,5 @@ class GcpMetadata
         }
 
         return $lines;
-    }
-
-    private function client(): ClientInterface
-    {
-        if (!$this->client) {
-            $decider = function ($retries) {
-                return $retries < 3;
-            };
-
-            $stack = new HandlerStack(choose_handler());
-            $stack->push(Middleware::redirect(), 'allow_redirects');
-            $stack->push(Middleware::retry($decider));
-
-            $this->client = new Client([
-                'handler' => $stack,
-            ]);
-        }
-
-        return $this->client;
     }
 }

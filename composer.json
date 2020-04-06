@@ -3,13 +3,14 @@
     "description": "Classes úteis para Autorização, Pagamento, Envio de E-mail, WebSocket, Router, Mapeamento Objeto relacional de forma simples e configurável para PHP, entre outras classes úteis.",
     "type": "library",
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.3",
         "pagseguro/pagseguro-php-sdk" : "6.0.0",
         "kreait/firebase-php" : "4.39.2",
         "minishlink/web-push": "v5.2.4",
         "phpmailer/phpmailer" : "v6.1.4",
         "cboden/ratchet": "v0.4.2",
-        "robmorgan/phinx": "0.11.4"
+        "robmorgan/phinx": "0.11.4",
+        "symfony/http-foundation": ">=5.0.7"
     },
     "repositories": [
         {
