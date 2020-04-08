@@ -280,6 +280,9 @@ abstract class SolvesRest {
     protected function getUser(){
         return $this->user;
     }
+    protected function getUserId(){
+        return (isset($this->user)?$this->user->getId():null);
+    }
     protected function getConnection(?string $connectionName=null){
         if(null==$connectionName){
             $connectionName = \SolvesDAO\SolvesDAO::DEFAULT_CONNECTION_NAME;
