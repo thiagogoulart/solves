@@ -44,6 +44,11 @@ class SolvesRouter {
     private $userData = null;
     private $perfil = null;
     private $usuario = null;
+    private $firebaseauthuser = null;
+    private $firebaseauthtoken = null;
+    private $firebaseauthresult = null;
+    private $addressData = null;
+    private $geoData = null;
 
     //HTTP
     private $HTTP_METHOD;
@@ -340,12 +345,22 @@ class SolvesRouter {
         $this->userData = (array_key_exists("userData", $query_params)? $query_params["userData"] : null);
         $this->perfil = (array_key_exists("perfil", $query_params)? $query_params["perfil"] : null);
         $this->usuario = (array_key_exists("usuario", $query_params)? $query_params["usuario"] : null);
+        $this->firebaseauthuser = (array_key_exists("firebaseauthuser", $query_params) ? $query_params["firebaseauthuser"] : null);
+        $this->firebaseauthtoken = (array_key_exists("firebaseauthtoken", $query_params) ? $query_params["firebaseauthtoken"] : null);
+        $this->firebaseauthresult = (array_key_exists("firebaseauthresult", $query_params) ? $query_params["firebaseauthresult"] : null);
+        $this->addressData = (array_key_exists("addressData", $query_params) ? $query_params["addressData"] : null);
+        $this->geoData = (array_key_exists("geoData", $query_params) ? $query_params["geoData"] : null);
     }
     private function extractData(){
         $this->dados = json_decode(utf8_encode($this->dados), false);
         $this->userData = json_decode(utf8_encode($this->userData), false);
         $this->perfil = json_decode(utf8_encode($this->perfil), false);
         $this->usuario = json_decode(utf8_encode($this->usuario), false);
+        $this->firebaseauthuser = json_decode(utf8_encode($this->firebaseauthuser), false);
+        $this->firebaseauthtoken = json_decode(utf8_encode($this->firebaseauthtoken), false);
+        $this->firebaseauthresult = json_decode(utf8_encode($this->firebaseauthresult), false);
+        $this->addressData = json_decode(utf8_encode($this->addressData), false);
+        $this->geoData = json_decode(utf8_encode($this->geoData), false);
     }
     private function processaAvatar(){
         $this->isRest = true;
@@ -418,6 +433,21 @@ class SolvesRouter {
     public function getUsuario(){
         return $this->usuario;
     }
+    public function getFirebaseauthuser(){
+        return $this->firebaseauthuser;
+    }
+    public function getFirebaseauthtoken(){
+        return $this->firebaseauthtoken;
+    }
+    public function getFirebaseauthresult(){
+        return $this->firebaseauthresult;
+    }
+    public function getAddressData(){
+        return $this->addressData;
+    }
+    public function getGeoData(){
+        return $this->geoData;
+    }
     public function getDados(){
         return $this->dados;
     }
@@ -458,6 +488,11 @@ class SolvesRouter {
                 $userData = $this->userData;
                 $perfil = $this->perfil;
                 $usuario = $this->usuario;
+                $firebaseauthuser = $this->firebaseauthuser;
+                $firebaseauthtoken = $this->firebaseauthtoken;
+                $firebaseauthresult = $this->firebaseauthresult;
+                $addressData = $this->addressData;
+                $geoData = $this->geoData;
                 $restService = $this->restService;
                 $restDetails = $this->restDetails;
                 $restDetailsArr = $this->restDetailsArr;

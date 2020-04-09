@@ -808,17 +808,17 @@
     },
     {
         "name": "google/cloud-core",
-        "version": "v1.36.0",
-        "version_normalized": "1.36.0.0",
+        "version": "v1.36.1",
+        "version_normalized": "1.36.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/googleapis/google-cloud-php-core.git",
-            "reference": "4764850f256a43b7513226a54a04b349f8f385d8"
+            "reference": "52254d4e59a0f0d29650d713c228ef74a088b86b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/4764850f256a43b7513226a54a04b349f8f385d8",
-            "reference": "4764850f256a43b7513226a54a04b349f8f385d8",
+            "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/52254d4e59a0f0d29650d713c228ef74a088b86b",
+            "reference": "52254d4e59a0f0d29650d713c228ef74a088b86b",
             "shasum": ""
         },
         "require": {
@@ -844,7 +844,7 @@
             "opis/closure": "May be used to serialize closures to process jobs in the batch daemon. Please require version ^3.",
             "symfony/lock": "Required for the Spanner cached based session pool. Please require the following commit: 3.3.x-dev#1ba6ac9"
         },
-        "time": "2020-03-25T23:00:37+00:00",
+        "time": "2020-04-07T20:58:05+00:00",
         "bin": [
             "bin/google-cloud-batch"
         ],
@@ -871,17 +871,17 @@
     },
     {
         "name": "google/cloud-storage",
-        "version": "v1.20.0",
-        "version_normalized": "1.20.0.0",
+        "version": "v1.20.1",
+        "version_normalized": "1.20.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-            "reference": "d09ef3d47079e4a3cac1419856302cc5c07c5e1f"
+            "reference": "876b5563555014563a3d8b2842674d95dacf95e1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/d09ef3d47079e4a3cac1419856302cc5c07c5e1f",
-            "reference": "d09ef3d47079e4a3cac1419856302cc5c07c5e1f",
+            "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/876b5563555014563a3d8b2842674d95dacf95e1",
+            "reference": "876b5563555014563a3d8b2842674d95dacf95e1",
             "shasum": ""
         },
         "require": {
@@ -900,7 +900,7 @@
             "google/cloud-pubsub": "May be used to register a topic to receive bucket notifications.",
             "phpseclib/phpseclib": "May be used in place of OpenSSL for creating signed Cloud Storage URLs. Please require version ^2."
         },
-        "time": "2020-03-30T20:36:58+00:00",
+        "time": "2020-04-07T20:58:05+00:00",
         "type": "library",
         "extra": {
             "component": {
@@ -1474,29 +1474,29 @@
     },
     {
         "name": "league/flysystem",
-        "version": "1.0.66",
-        "version_normalized": "1.0.66.0",
+        "version": "1.0.46",
+        "version_normalized": "1.0.46.0",
         "source": {
             "type": "git",
             "url": "https://github.com/thephpleague/flysystem.git",
-            "reference": "021569195e15f8209b1c4bebb78bd66aa4f08c21"
+            "reference": "f3e0d925c18b92cf3ce84ea5cc58d62a1762a2b2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/021569195e15f8209b1c4bebb78bd66aa4f08c21",
-            "reference": "021569195e15f8209b1c4bebb78bd66aa4f08c21",
+            "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f3e0d925c18b92cf3ce84ea5cc58d62a1762a2b2",
+            "reference": "f3e0d925c18b92cf3ce84ea5cc58d62a1762a2b2",
             "shasum": ""
         },
         "require": {
-            "ext-fileinfo": "*",
             "php": ">=5.5.9"
         },
         "conflict": {
             "league/flysystem-sftp": "<1.0.6"
         },
         "require-dev": {
+            "ext-fileinfo": "*",
             "phpspec/phpspec": "^3.4",
-            "phpunit/phpunit": "^5.7.26"
+            "phpunit/phpunit": "^5.7.10"
         },
         "suggest": {
             "ext-fileinfo": "Required for MimeType",
@@ -1514,7 +1514,7 @@
             "spatie/flysystem-dropbox": "Allows you to use Dropbox storage",
             "srmklive/flysystem-dropbox-v2": "Allows you to use Dropbox storage for PHP 5 applications"
         },
-        "time": "2020-03-17T18:58:12+00:00",
+        "time": "2018-08-22T07:45:22+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -3816,17 +3816,17 @@
     },
     {
         "name": "web-token/jwt-core",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-core.git",
-            "reference": "2d6e2e6f39e9494e6634efe62f4d8b22a8f001e3"
+            "reference": "30e9df9e040d933043b16237f9dba7a3be746566"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-core/zipball/2d6e2e6f39e9494e6634efe62f4d8b22a8f001e3",
-            "reference": "2d6e2e6f39e9494e6634efe62f4d8b22a8f001e3",
+            "url": "https://api.github.com/repos/web-token/jwt-core/zipball/30e9df9e040d933043b16237f9dba7a3be746566",
+            "reference": "30e9df9e040d933043b16237f9dba7a3be746566",
             "shasum": ""
         },
         "require": {
@@ -3843,7 +3843,7 @@
         "require-dev": {
             "phpunit/phpunit": "^6.0|^7.0"
         },
-        "time": "2019-08-22T10:36:08+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -3893,17 +3893,17 @@
     },
     {
         "name": "web-token/jwt-key-mgmt",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-key-mgmt.git",
-            "reference": "0d92c381e2732bb9c6c2a8e21ab10d133ae074d2"
+            "reference": "65b1e908e50b0e5be6b28135085d3c1097b81801"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-key-mgmt/zipball/0d92c381e2732bb9c6c2a8e21ab10d133ae074d2",
-            "reference": "0d92c381e2732bb9c6c2a8e21ab10d133ae074d2",
+            "url": "https://api.github.com/repos/web-token/jwt-key-mgmt/zipball/65b1e908e50b0e5be6b28135085d3c1097b81801",
+            "reference": "65b1e908e50b0e5be6b28135085d3c1097b81801",
             "shasum": ""
         },
         "require": {
@@ -3922,7 +3922,7 @@
             "php-http/httplug": "To enable JKU/X5U support.",
             "php-http/message-factory": "To enable JKU/X5U support."
         },
-        "time": "2019-05-02T12:37:15+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -3972,17 +3972,17 @@
     },
     {
         "name": "web-token/jwt-signature",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-signature.git",
-            "reference": "b3ee58ccfdbdbaedf64177bc01abd800db1379e5"
+            "reference": "00f23e997c9032536444f819bc3338ab475d69f9"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-signature/zipball/b3ee58ccfdbdbaedf64177bc01abd800db1379e5",
-            "reference": "b3ee58ccfdbdbaedf64177bc01abd800db1379e5",
+            "url": "https://api.github.com/repos/web-token/jwt-signature/zipball/00f23e997c9032536444f819bc3338ab475d69f9",
+            "reference": "00f23e997c9032536444f819bc3338ab475d69f9",
             "shasum": ""
         },
         "require": {
@@ -4004,7 +4004,7 @@
             "web-token/jwt-signature-algorithm-none": "None Signature Algorithm",
             "web-token/jwt-signature-algorithm-rsa": "RSA Based Signature Algorithms"
         },
-        "time": "2019-08-22T10:36:08+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -4054,17 +4054,17 @@
     },
     {
         "name": "web-token/jwt-signature-algorithm-ecdsa",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-signature-algorithm-ecdsa.git",
-            "reference": "078f99ce0e63474964257b68abcbe60fa2220396"
+            "reference": "a3babd3b82c29c739d426271ccb9dc1a56222e36"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-ecdsa/zipball/078f99ce0e63474964257b68abcbe60fa2220396",
-            "reference": "078f99ce0e63474964257b68abcbe60fa2220396",
+            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-ecdsa/zipball/a3babd3b82c29c739d426271ccb9dc1a56222e36",
+            "reference": "a3babd3b82c29c739d426271ccb9dc1a56222e36",
             "shasum": ""
         },
         "require": {
@@ -4073,7 +4073,7 @@
         "require-dev": {
             "phpunit/phpunit": "^6.0|^7.0"
         },
-        "time": "2019-04-21T22:05:56+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -4123,17 +4123,17 @@
     },
     {
         "name": "web-token/jwt-signature-algorithm-eddsa",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-signature-algorithm-eddsa.git",
-            "reference": "c40765e98cf56f9c31844fdb04bd6ff45f255864"
+            "reference": "b0dad134313b14b3ba077b63a7afcc2b38e5f793"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-eddsa/zipball/c40765e98cf56f9c31844fdb04bd6ff45f255864",
-            "reference": "c40765e98cf56f9c31844fdb04bd6ff45f255864",
+            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-eddsa/zipball/b0dad134313b14b3ba077b63a7afcc2b38e5f793",
+            "reference": "b0dad134313b14b3ba077b63a7afcc2b38e5f793",
             "shasum": ""
         },
         "require": {
@@ -4142,7 +4142,7 @@
         "require-dev": {
             "phpunit/phpunit": "^6.0|^7.0"
         },
-        "time": "2019-04-21T22:05:56+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -4192,17 +4192,17 @@
     },
     {
         "name": "web-token/jwt-signature-algorithm-hmac",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-signature-algorithm-hmac.git",
-            "reference": "fd51a55534559befe6ffdfe6eb131d8c121eea82"
+            "reference": "3bc85e1d13804902a8d81a11f58c28c9a471b5e2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-hmac/zipball/fd51a55534559befe6ffdfe6eb131d8c121eea82",
-            "reference": "fd51a55534559befe6ffdfe6eb131d8c121eea82",
+            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-hmac/zipball/3bc85e1d13804902a8d81a11f58c28c9a471b5e2",
+            "reference": "3bc85e1d13804902a8d81a11f58c28c9a471b5e2",
             "shasum": ""
         },
         "require": {
@@ -4211,7 +4211,7 @@
         "require-dev": {
             "phpunit/phpunit": "^6.0|^7.0"
         },
-        "time": "2019-04-21T22:05:56+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -4261,17 +4261,17 @@
     },
     {
         "name": "web-token/jwt-signature-algorithm-none",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-signature-algorithm-none.git",
-            "reference": "0bd27b01d38868749e9a2daddfe6125a6098565a"
+            "reference": "0391e160367e85846736e63ea6026e2dab667b6e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-none/zipball/0bd27b01d38868749e9a2daddfe6125a6098565a",
-            "reference": "0bd27b01d38868749e9a2daddfe6125a6098565a",
+            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-none/zipball/0391e160367e85846736e63ea6026e2dab667b6e",
+            "reference": "0391e160367e85846736e63ea6026e2dab667b6e",
             "shasum": ""
         },
         "require": {
@@ -4280,7 +4280,7 @@
         "require-dev": {
             "phpunit/phpunit": "^6.0|^7.0"
         },
-        "time": "2019-04-21T22:05:56+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -4330,17 +4330,17 @@
     },
     {
         "name": "web-token/jwt-signature-algorithm-rsa",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-signature-algorithm-rsa.git",
-            "reference": "58947f022f1f45a4b6b7d6e463714c627e52977c"
+            "reference": "344181ef6cdd3aca77f7ff7defc9fb502eb33ec0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-rsa/zipball/58947f022f1f45a4b6b7d6e463714c627e52977c",
-            "reference": "58947f022f1f45a4b6b7d6e463714c627e52977c",
+            "url": "https://api.github.com/repos/web-token/jwt-signature-algorithm-rsa/zipball/344181ef6cdd3aca77f7ff7defc9fb502eb33ec0",
+            "reference": "344181ef6cdd3aca77f7ff7defc9fb502eb33ec0",
             "shasum": ""
         },
         "require": {
@@ -4349,7 +4349,7 @@
         "require-dev": {
             "phpunit/phpunit": "^6.0|^7.0"
         },
-        "time": "2019-04-21T22:05:56+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -4399,17 +4399,17 @@
     },
     {
         "name": "web-token/jwt-util-ecc",
-        "version": "v1.3.9",
-        "version_normalized": "1.3.9.0",
+        "version": "v1.3.10",
+        "version_normalized": "1.3.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/web-token/jwt-util-ecc.git",
-            "reference": "463370e8e96fb6a4916a41f854ec60db090cc367"
+            "reference": "2011af8454561ebce06a77fcd681c29a252e0068"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/web-token/jwt-util-ecc/zipball/463370e8e96fb6a4916a41f854ec60db090cc367",
-            "reference": "463370e8e96fb6a4916a41f854ec60db090cc367",
+            "url": "https://api.github.com/repos/web-token/jwt-util-ecc/zipball/2011af8454561ebce06a77fcd681c29a252e0068",
+            "reference": "2011af8454561ebce06a77fcd681c29a252e0068",
             "shasum": ""
         },
         "require": {
@@ -4420,7 +4420,7 @@
         "require-dev": {
             "phpunit/phpunit": "^6.0|^7.0"
         },
-        "time": "2019-04-21T22:05:56+00:00",
+        "time": "2020-03-20T13:29:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

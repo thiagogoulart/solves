@@ -129,6 +129,21 @@ abstract class SolvesRest {
     public function getPkName(){return $this->pkName;}
     public function setPkName($p){$this->pkName = $p;}
 
+    public function getFirebaseauthuser(){
+        return $this->router->getFirebaseauthuser();
+    }
+    public function getFirebaseauthtoken(){
+        return $this->router->getFirebaseauthtoken();
+    }
+    public function getFirebaseauthresult(){
+        return $this->router->getFirebaseauthresult();
+    }
+    public function getAddressData(){
+        return $this->router->getAddressData();
+    }
+    public function getGeoData(){
+        return $this->router->getGeoData();
+    }
     public function getDados(){
         return $this->router->getDados();
     }
@@ -383,6 +398,11 @@ abstract class SolvesRest {
                 $userData = $this->router->getUserData();
                 $perfil = $this->router->getPerfil();
                 $usuario = $this->router->getUsuario();
+                $firebaseauthuser = $this->router->getFirebaseauthuser();
+                $firebaseauthtoken = $this->router->getFirebaseauthtoken();
+                $firebaseauthresult = $this->router->getFirebaseauthresult();
+                $addressData = $this->router->getAddressData();
+                $geoData = $this->router->getGeoData();
                 $restService = $this->router->getRestService();
                 $restDetails = $this->router->getRestDetails();
                 $ROUTER = $this->router;
