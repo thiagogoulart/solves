@@ -5,9 +5,9 @@
     "require": {
         "php": ">=7.3",
         "pagseguro/pagseguro-php-sdk" : "6.0.0",
-        "kreait/firebase-php" : "4.39.2",
+        "kreait/firebase-php" : "5.1.0",
         "minishlink/web-push": "v5.2.4",
-        "phpmailer/phpmailer" : "v6.1.4",
+        "phpmailer/phpmailer" : "v6.1.5",
         "cboden/ratchet": "v0.4.2",
         "robmorgan/phinx": "0.11.4",
         "symfony/http-foundation": ">=5.0.7",
@@ -37,6 +37,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/robmorgan/phinx.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/paragonie/sodium_compat.git"
         }
     ],
     "license": "proprietary",

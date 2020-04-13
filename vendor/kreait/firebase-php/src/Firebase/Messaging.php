@@ -25,6 +25,7 @@ use Kreait\Firebase\Messaging\MulticastSendReport;
 use Kreait\Firebase\Messaging\RegistrationToken;
 use Kreait\Firebase\Messaging\RegistrationTokens;
 use Kreait\Firebase\Messaging\Topic;
+use Kreait\Firebase\Project\ProjectId;
 use Kreait\Firebase\Util\JSON;
 
 class Messaging
@@ -41,11 +42,16 @@ class Messaging
     /**
      * @internal
      */
-    public function __construct(ApiClient $messagingApiClient, AppInstanceApiClient $appInstanceApiClient, string $projectId = null)
+    public function __construct(ApiClient $messagingApiClient, AppInstanceApiClient $appInstanceApiClient, ?ProjectId $projectId = null)
     {
         $this->messagingApi = $messagingApiClient;
         $this->appInstanceApi = $appInstanceApiClient;
-        $this->projectId = $projectId ?: $this->determineProjectIdFromMessagingApiClient($messagingApiClient);
+
+        if ($projectId) {
+            $this->projectId = $projectId->value();
+        } else {
+            $this->projectId = $this->determineProjectIdFromMessagingApiClient($messagingApiClient);
+        }
     }
 
     private function determineProjectIdFromMessagingApiClient(ApiClient $client): string
@@ -66,6 +72,8 @@ class Messaging
      * @throws InvalidArgumentException
      * @throws MessagingException
      * @throws FirebaseException
+     *
+     * @return array<mixed>
      */
     public function send($message): array
     {
@@ -126,6 +134,8 @@ class Messaging
      * @throws InvalidMessage
      * @throws MessagingException
      * @throws FirebaseException
+     *
+     * @return array<mixed>
      */
     public function validate($message): array
     {
@@ -135,14 +145,8 @@ class Messaging
         try {
             $response = $this->messagingApi->send($request);
         } catch (NotFound $e) {
-            $error = new InvalidMessage($e->getMessage(), $e->getCode(), $e->getPrevious());
-            $error = $error->withErrors($e->errors());
-
-            if ($response = $e->response()) {
-                $error = $error->withResponse($response);
-            }
-
-            throw $error;
+            throw (new InvalidMessage($e->getMessage(), $e->getCode()))
+                ->withErrors($e->errors());
         }
 
         return JSON::decode((string) $response->getBody(), true);
@@ -154,6 +158,8 @@ class Messaging
      *
      * @throws MessagingException
      * @throws FirebaseException
+     *
+     * @return array<mixed>
      */
     public function subscribeToTopic($topic, $registrationTokenOrTokens): array
     {
@@ -171,6 +177,8 @@ class Messaging
      *
      * @throws MessagingException
      * @throws FirebaseException
+     *
+     * @return array<mixed>
      */
     public function unsubscribeFromTopic($topic, $registrationTokenOrTokens): array
     {
