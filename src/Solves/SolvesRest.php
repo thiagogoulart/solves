@@ -147,6 +147,21 @@ abstract class SolvesRest {
     public function getDados(){
         return $this->router->getDados();
     }
+    public function getClientIp() {
+         return \Solves\Solves::getClientIpByServer($this->SERVER);
+    }
+    public function getServerName(){
+         return \Solves\Solves::getServerNameByServer($this->SERVER);
+    }
+    public function getHttpUserAgent(){
+         return \Solves\Solves::getHttpUserAgentByServer($this->SERVER);
+    }
+    public function getRequestUri(){
+         return \Solves\Solves::getRequestUriByServer($this->SERVER);
+    }
+    public function getRequestTime(){
+         return \Solves\Solves::getRequestTimeByServer($this->SERVER);
+    }
     public function getDado(string $property, bool $obrigatorio=false, string $label=''){
         $value = null;
         $dados = $this->router->getDados();

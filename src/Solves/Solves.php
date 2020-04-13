@@ -215,24 +215,40 @@ class Solves {
 		return $str;
 	}
 	public static function getClientIp() {
+	    return self::getClientIpByServer(@$_SERVER);
+	}
+	public static function getClientIpByServer($SERVER) {
 	     $ipaddress = '';
-	     if (@$_SERVER['HTTP_CLIENT_IP'])
-	         $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-	     else if(@$_SERVER['HTTP_X_FORWARDED_FOR'])
-	         $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	     else if(@$_SERVER['HTTP_X_FORWARDED'])
-	         $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-	     else if(@$_SERVER['HTTP_FORWARDED_FOR'])
-	         $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-	     else if(@$_SERVER['HTTP_FORWARDED'])
-	         $ipaddress = $_SERVER['HTTP_FORWARDED'];
-	     else if(@$_SERVER['REMOTE_ADDR'])
-	         $ipaddress = $_SERVER['REMOTE_ADDR'];
+	     if (@$SERVER['HTTP_CLIENT_IP'])
+	         $ipaddress = $SERVER['HTTP_CLIENT_IP'];
+	     else if(@$SERVER['HTTP_X_FORWARDED_FOR'])
+	         $ipaddress = $SERVER['HTTP_X_FORWARDED_FOR'];
+	     else if(@$SERVER['HTTP_X_FORWARDED'])
+	         $ipaddress = $SERVER['HTTP_X_FORWARDED'];
+	     else if(@$SERVER['HTTP_FORWARDED_FOR'])
+	         $ipaddress = $SERVER['HTTP_FORWARDED_FOR'];
+	     else if(@$SERVER['HTTP_FORWARDED'])
+	         $ipaddress = $SERVER['HTTP_FORWARDED'];
+	     else if(@$SERVER['REMOTE_ADDR'])
+	         $ipaddress = $SERVER['REMOTE_ADDR'];
 	     else
 	         $ipaddress = 'UNKNOWN';
 
 	     return $ipaddress; 
 	}
+    public static function getServerNameByServer($SERVER){
+        return (@$SERVER["SERVER_NAME"]);
+    }
+    public static function getHttpUserAgentByServer($SERVER){
+        return (@$SERVER['HTTP_USER_AGENT']);
+    }
+    public static function getRequestUriByServer($SERVER){
+        return (@$SERVER["REQUEST_URI"]);
+    }
+    public static function getRequestTimeByServer($SERVER){
+        return (@$SERVER['REQUEST_TIME']);
+    }
+
 	public static function removeAcentos($var) {
     	return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/","/(ç)/","/(Ç)/"),explode(" ","a A e E i I o O u U n N c C"),$var);
 	}
