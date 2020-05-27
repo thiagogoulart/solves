@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c67ac6cb6adc67f21e28b613c21480c",
+    "content-hash": "fdb79b3600e5571346d1bc563dbd21a6",
     "packages": [
         {
             "name": "cakephp/cache",
@@ -1704,7 +1704,6 @@
                     "autoload.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "ISC"
             ],
@@ -1720,16 +1719,18 @@
             ],
             "description": "Pure PHP implementation of libsodium; uses the PHP extension if it exists",
             "keywords": [
-                "Authentication",
+                "AEAD",
                 "BLAKE2b",
                 "ChaCha20",
                 "ChaCha20-Poly1305",
                 "Chapoly",
                 "Curve25519",
+                "ECDH",
                 "Ed25519",
                 "EdDSA",
                 "Edwards-curve Digital Signature Algorithm",
                 "Elliptic Curve Diffie-Hellman",
+                "PHP",
                 "Poly1305",
                 "Pure-PHP cryptography",
                 "RFC 7748",
@@ -1741,32 +1742,34 @@
                 "XSalsa20-Poly1305",
                 "Xchacha20",
                 "Xsalsa20",
-                "aead",
+                "authentication",
                 "cryptography",
-                "ecdh",
                 "elliptic curve",
                 "elliptic curve cryptography",
                 "encryption",
                 "libsodium",
-                "php",
                 "public-key cryptography",
                 "secret-key cryptography",
                 "side-channel resistant"
             ],
+            "support": {
+                "source": "https://github.com/paragonie/sodium_compat/tree/v1.13.0",
+                "issues": "https://github.com/paragonie/sodium_compat/issues"
+            },
             "time": "2020-03-20T21:48:09+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.1.5",
+            "version": "v6.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "a8bf068f64a580302026e484ee29511f661b2ad3"
+                "reference": "c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/a8bf068f64a580302026e484ee29511f661b2ad3",
-                "reference": "a8bf068f64a580302026e484ee29511f661b2ad3",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3",
+                "reference": "c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3",
                 "shasum": ""
             },
             "require": {
@@ -1820,10 +1823,10 @@
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.1.5",
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.1.6",
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues"
             },
-            "time": "2020-03-14T14:23:48+00:00"
+            "time": "2020-05-27T12:24:03+00:00"
         },
         {
             "name": "psr/cache",
