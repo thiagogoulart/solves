@@ -7,18 +7,18 @@ namespace Composer\Autoload;
 class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '72142d7b40a3a0b14e91825290b5ad82' => __DIR__ . '/..' . '/cakephp/core/functions.php',
-        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
-        '972fda704d680a3a53c68e34e193cb22' => __DIR__ . '/..' . '/react/promise-timer/src/functions_include.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '972fda704d680a3a53c68e34e193cb22' => __DIR__ . '/..' . '/react/promise-timer/src/functions_include.php',
+        '72142d7b40a3a0b14e91825290b5ad82' => __DIR__ . '/..' . '/cakephp/core/functions.php',
+        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '27592325262b385204a263c2ab632d6e' => __DIR__ . '/..' . '/kreait/clock/src/Clock.php',
         '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         '028fdea3165c4ba1ecccc83b7fec69fc' => __DIR__ . '/..' . '/cakephp/collection/functions.php',
@@ -39,7 +39,6 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
             'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Service\\' => 26,
-            'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\Mime\\' => 23,
             'Symfony\\Component\\HttpFoundation\\' => 33,
@@ -124,12 +123,10 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         'C' => 
         array (
             'Cake\\Utility\\' => 13,
-            'Cake\\Log\\' => 9,
             'Cake\\Datasource\\' => 16,
             'Cake\\Database\\' => 14,
             'Cake\\Core\\' => 10,
             'Cake\\Collection\\' => 16,
-            'Cake\\Cache\\' => 11,
         ),
         'B' => 
         array (
@@ -165,10 +162,6 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         'Symfony\\Contracts\\Service\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
-        ),
-        'Symfony\\Component\\Yaml\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
         'Symfony\\Component\\Routing\\' => 
         array (
@@ -402,10 +395,6 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         array (
             0 => __DIR__ . '/..' . '/cakephp/utility',
         ),
-        'Cake\\Log\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/cakephp/log',
-        ),
         'Cake\\Datasource\\' => 
         array (
             0 => __DIR__ . '/..' . '/cakephp/datasource',
@@ -421,10 +410,6 @@ class ComposerStaticInit054d458285ca892e74a628baa5b4f3a3
         'Cake\\Collection\\' => 
         array (
             0 => __DIR__ . '/..' . '/cakephp/collection',
-        ),
-        'Cake\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/cakephp/cache',
         ),
         'Base64Url\\' => 
         array (

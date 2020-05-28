@@ -7,9 +7,9 @@
         "pagseguro/pagseguro-php-sdk" : "6.0.0",
         "kreait/firebase-php" : "5.1.0",
         "minishlink/web-push": "v5.2.4",
-        "phpmailer/phpmailer" : "v6.1.5",
+        "phpmailer/phpmailer" : "v6.1.6",
         "cboden/ratchet": "v0.4.2",
-        "robmorgan/phinx": "0.11.4",
+        "robmorgan/phinx": "0.12.1",
         "symfony/http-foundation": ">=5.0.7",
         "paragonie/sodium_compat": ">=1.13.0"
     },
