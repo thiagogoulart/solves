@@ -656,6 +656,11 @@ class Solves {
 		if($url[0]=='/'){$url = substr($url,1,strlen($url));}
 		return $url;
 	}
+	public static function removeBarraFinal($url){
+		$laspos = strlen($url)-1;
+		if($url[$laspos]=='/'){$url = substr($url,0,$laspos);}
+		return $url;
+	}
 	public static function getNomeNormalizadoComUnderline(string $str, $lower=true){
 		$pieces = preg_split('/(?=[A-Z])/',$str);
 		$first = true;

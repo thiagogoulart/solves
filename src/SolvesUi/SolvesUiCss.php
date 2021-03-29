@@ -43,6 +43,10 @@ class SolvesUiCss {
     /**
      * @var bool
      */
+    private $usingAssetsLib=false;
+    /**
+     * @var bool
+     */
     private $usingCdnApp=false;
     /**
      * @var bool
@@ -188,6 +192,21 @@ class SolvesUiCss {
     /**
      * @return SolvesUiCss
      */
+    public function useAssetsLib(string $dirInsideLib): SolvesUiCss{
+        $dirInsideLib = \Solves\Solves::removeBarraInicial($dirInsideLib);
+        $dirInsideLib = \Solves\Solves::removeBarraFinal($dirInsideLib);
+        $this->usingAssetsLib = true;
+        $this->external = false;
+        $this->inline = false;
+        $this->dir = \Solves\Solves::removeBarraInicial(\Solves\SolvesConf::getSolvesConfUrls()::LIB).$dirInsideLib.'/';
+        $this->configPath();
+        return $this;
+    }
+
+
+    /**
+     * @return SolvesUiCss
+     */
     public function useCdnApp(): SolvesUiCss{
         $this->usingCdnApp = true;
         $this->external = true;
@@ -205,6 +224,29 @@ class SolvesUiCss {
         $this->external = false;
         $this->inline = true;
         $this->dir = \Solves\SolvesConf::getSolvesConfUrls()->getLocalCdn();
+        $this->configPath();
+        return $this;
+    }
+
+    /**
+     * @return SolvesUiCss
+     */
+    public function useLocalCdnCss(): SolvesUiCss{
+        $this->usingLocalCdn = true;
+        $this->external = false;
+        $this->inline = true;
+        $this->dir = \Solves\SolvesConf::getSolvesConfUrls()->getLocalCdnCss();
+        $this->configPath();
+        return $this;
+    }
+    /**
+     * @return SolvesUiCss
+     */
+    public function useLocalCdnLib(): SolvesUiCss{
+        $this->usingLocalCdn = true;
+        $this->external = false;
+        $this->inline = true;
+        $this->dir = \Solves\SolvesConf::getSolvesConfUrls()->getLocalCdnLib();
         $this->configPath();
         return $this;
     }

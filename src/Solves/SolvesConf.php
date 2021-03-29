@@ -702,6 +702,7 @@ class SolvesConfUrls{
     const IMG_LOGO ='/assets/img/logo/';
     const CSS ='/assets/css/';
     const JS = '/assets/js/';
+    const LIB = '/assets/lib/';
 
 //Solves CDN
     const SOLVES_CDN = 'https://cdn.solves.com.br/';
@@ -753,6 +754,10 @@ class SolvesConfUrls{
     private $jsView;
     private $cdnApp;
     private $localCdn;
+    private $localCdnJs;
+    private $localCdnCss;
+    private $localCdnImg;
+    private $localCdnLib;
     private $localCdnApp;
     private $localCdnAddress;
     private $localCdnAppAddress;
@@ -783,6 +788,10 @@ class SolvesConfUrls{
     public function getJsView(){return $this->jsView;}
     public function getCdnApp(){return $this->cdnApp;}
     public function getLocalCdn(){return $this->localCdn;}
+    public function getLocalCdnJs(){return $this->localCdnJs;}
+    public function getLocalCdnCss(){return $this->localCdnCss;}
+    public function getLocalCdnImg(){return $this->localCdnImg;}
+    public function getLocalCdnLib(){return $this->localCdnLib;}
     public function getLocalCdnAddress(){return $this->localCdnAddress;}
     public function getLocalCdnApp(){return $this->localCdnApp;}
     public function getLocalCdnAppAddress(){return $this->localCdnAppAddress;}
@@ -853,6 +862,11 @@ class SolvesConfUrls{
         $this->cdnApp = self::SOLVES_CDN.$dirCdnInApp;
         //LOCAL CDN app
         $this->localCdn = $this->getPathRaiz().Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN);
+        $this->localCdnJs = $this->localCdn.'js/';
+        $this->localCdnCss = $this->localCdn.'css/';
+        $this->localCdnImg = $this->localCdn.'img/';
+        $this->localCdnLib = $this->localCdn.'lib/';
+
         $this->localCdnAppSemPathRaiz = Solves::removeBarraInicial(self::SOLVES_LOCAL_CDN).$dirCdnInApp;
         $this->localCdnApp = $this->getPathRaiz().$this->localCdnAppSemPathRaiz;
         //Local CDN ADDRESS (starting like http:// https://)
