@@ -285,17 +285,26 @@ abstract class SolvesRest {
     }
     protected function setResultMultiplos($arrJson, $msg='Resultado da busca encontrado com sucesso!'){
         $this->jsonObjeto = '';
-        $i=0;
+
         $this->jsonDados = '{';
-        foreach($arrJson as $key=>$valueJson){
-            if($i>0){
-                $this->jsonDados.=', ';
-            }
-            $this->jsonDados.= '"'.$key.'":'.((isset($valueJson) && strlen($valueJson)>0) ? $valueJson : "{}");
-            $i++;
-        }
+        $this->jsonDados .= $this->getValueJson($arrJson);
         $this->jsonDados .= '}';
         $this->msg = $msg;
+    }
+    private function getValueJson(array $arrJson){
+        $json = '';
+        $i=0;
+        foreach($arrJson as $key=>$valueJson){
+            if($i>0){
+                $json.=', ';
+            }
+            if(is_array($valueJson)){
+                $valueJson = '{'.$this->getValueJson($valueJson).'}';
+            }
+            $json.= '"'.$key.'":'.((isset($valueJson) && strlen($valueJson)>0) ? $valueJson : "{}");
+            $i++;
+        } 
+        return $json;
     }
     protected function setJson($json){
         $this->json = $json;
