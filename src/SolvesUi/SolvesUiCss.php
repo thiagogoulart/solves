@@ -64,6 +64,18 @@ class SolvesUiCss {
      * @var bool
      */
     private $usingLocalCdnAppAddress=false;
+    /**
+     * @var string
+     */
+    private $rel='stylesheet';
+    /**
+     * @var string
+     */
+    private $as;
+    /**
+     * @var string
+     */
+    private $crossorigin;
 
     /**
      * SolvesUi constructor.
@@ -82,6 +94,24 @@ class SolvesUiCss {
      */
     public function getPath(): string{
         return $this->path;
+    }
+    /**
+     * @return string
+     */
+    public function getRel(): string{
+        return $this->rel;
+    }
+    /**
+     * @return string
+     */
+    public function getAs(): string{
+        return $this->as;
+    }
+    /**
+     * @return string
+     */
+    public function getCrossorigin(): string{
+        return $this->crossorigin;
     }
 
     /**
@@ -115,14 +145,14 @@ class SolvesUiCss {
     public function getIncludeTag(): string{
         if($this->external){
             //Possibilidade de ajustar tag link para casos de ler URL. Avaliar benefício de  rel="preconnect"
-            return '<link rel="stylesheet" href="'.$this->path.'">';
+            return '<link rel="'.$this->rel.'" href="'.$this->path.'" '.(\Solves\Solves::isNotBlank($this->as)?'as="'.$this->as.'"':'').'  '.(\Solves\Solves::isNotBlank($this->crossorigin)?'crossorigin="'.$this->crossorigin.'"':'').'>';
         }else if($this->inline){
             $content = $this->getInlineContent();
             if(\Solves\Solves::isNotBlank($content)){
                 return $content;
             }
         }
-        return '<link rel="stylesheet" href="'.$this->path.'">';
+        return '<link rel="'.$this->rel.'" href="'.$this->path.'" '.(\Solves\Solves::isNotBlank($this->as)?'as="'.$this->as.'"':'').'>';
     }
 
     /**
@@ -162,6 +192,19 @@ class SolvesUiCss {
             $content = str_replace("../../../", $replaceFor, $content); 
         }
         return $content;
+    }
+
+    public function setRelPreload(): SolvesUiCss{
+        $this->rel='preload';
+        return $this;
+    }
+    public function setAsFont(): SolvesUiCss{
+        $this->as='font';
+        return $this;
+    }
+    public function setCrossoriginAnonymous(): SolvesUiCss{
+        $this->crossorigin='anonymous';
+        return $this;
     }
 
     /**
