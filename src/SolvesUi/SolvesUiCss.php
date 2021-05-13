@@ -202,6 +202,10 @@ class SolvesUiCss {
         $this->as='font';
         return $this;
     }
+    public function setAs($as): SolvesUiCss{
+        $this->as=$as;
+        return $this;
+    }
     public function setCrossoriginAnonymous(): SolvesUiCss{
         $this->crossorigin='anonymous';
         return $this;
