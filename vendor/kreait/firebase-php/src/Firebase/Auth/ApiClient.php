@@ -13,7 +13,6 @@ use Kreait\Firebase\Exception\Auth\UserDisabled;
 use Kreait\Firebase\Exception\AuthApiExceptionConverter;
 use Kreait\Firebase\Exception\AuthException;
 use Kreait\Firebase\Exception\FirebaseException;
-use Kreait\Firebase\Http\WrappedGuzzleClient;
 use Kreait\Firebase\Request;
 use Kreait\Firebase\Value\Provider;
 use Psr\Http\Message\ResponseInterface;
@@ -22,19 +21,20 @@ use Throwable;
 /**
  * @internal
  */
-class ApiClient implements ClientInterface
+class ApiClient
 {
-    use WrappedGuzzleClient;
+    private ClientInterface $client;
+    private ?TenantId $tenantId;
 
-    /** @var AuthApiExceptionConverter */
-    private $errorHandler;
+    private AuthApiExceptionConverter $errorHandler;
 
     /**
      * @internal
      */
-    public function __construct(ClientInterface $client)
+    public function __construct(ClientInterface $client, ?TenantId $tenantId = null)
     {
         $this->client = $client;
+        $this->tenantId = $tenantId;
         $this->errorHandler = new AuthApiExceptionConverter();
     }
 
@@ -44,7 +44,7 @@ class ApiClient implements ClientInterface
      */
     public function createUser(Request\CreateUser $request): ResponseInterface
     {
-        return $this->requestApi('signupNewUser', $request);
+        return $this->requestApi('signupNewUser', $request->jsonSerialize());
     }
 
     /**
@@ -53,7 +53,21 @@ class ApiClient implements ClientInterface
      */
     public function updateUser(Request\UpdateUser $request): ResponseInterface
     {
-        return $this->requestApi('setAccountInfo', $request);
+        return $this->requestApi('setAccountInfo', $request->jsonSerialize());
+    }
+
+    /**
+     * @param array<string, mixed> $claims
+     *
+     * @throws AuthException
+     * @throws FirebaseException
+     */
+    public function setCustomUserClaims(string $uid, array $claims): ResponseInterface
+    {
+        return $this->requestApi('https://identitytoolkit.googleapis.com/v1/accounts:update', [
+            'localId' => $uid,
+            'customAttributes' => \json_encode((object) $claims),
+        ]);
     }
 
     /**
@@ -107,13 +121,19 @@ class ApiClient implements ClientInterface
     }
 
     /**
+     * @param string|array<string> $uids
+     *
      * @throws AuthException
      * @throws FirebaseException
      */
-    public function getAccountInfo(string $uid): ResponseInterface
+    public function getAccountInfo($uids): ResponseInterface
     {
+        if (!\is_array($uids)) {
+            $uids = [$uids];
+        }
+
         return $this->requestApi('getAccountInfo', [
-            'localId' => [$uid],
+            'localId' => $uids,
         ]);
     }
 
@@ -121,6 +141,8 @@ class ApiClient implements ClientInterface
      * @throws ExpiredOobCode
      * @throws InvalidOobCode
      * @throws OperationNotAllowed
+     * @throws AuthException
+     * @throws FirebaseException
      */
     public function verifyPasswordResetCode(string $oobCode): ResponseInterface
     {
@@ -134,6 +156,8 @@ class ApiClient implements ClientInterface
      * @throws InvalidOobCode
      * @throws OperationNotAllowed
      * @throws UserDisabled
+     * @throws AuthException
+     * @throws FirebaseException
      */
     public function confirmPasswordReset(string $oobCode, string $newPassword): ResponseInterface
     {
@@ -170,25 +194,25 @@ class ApiClient implements ClientInterface
     }
 
     /**
-     * @param mixed $data
-     * @param array<string, mixed> $headers
+     * @param array<mixed> $data
      *
      * @throws AuthException
      * @throws FirebaseException
      */
-    private function requestApi(string $uri, $data, ?array $headers = null): ResponseInterface
+    private function requestApi(string $uri, array $data): ResponseInterface
     {
-        if ($data instanceof \JsonSerializable && empty($data->jsonSerialize())) {
-            $data = (object) []; // Will be '{}' instead of '[]' when JSON encoded
+        $options = [];
+
+        if ($this->tenantId) {
+            $data['tenantId'] = $this->tenantId->toString();
         }
 
-        $options = \array_filter([
-            'json' => $data,
-            'headers' => $headers,
-        ]);
+        if (!empty($data)) {
+            $options['json'] = $data;
+        }
 
         try {
-            return $this->request('POST', $uri, $options);
+            return $this->client->request('POST', $uri, $options);
         } catch (Throwable $e) {
             throw $this->errorHandler->convertException($e);
         }

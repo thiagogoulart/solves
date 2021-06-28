@@ -1,28 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Firebase\Auth\Token;
 
-use Lcobucci\JWT\Builder;
+use BadMethodCallException;
+use DateInterval;
+use DateTimeImmutable;
+use DateTimeInterface;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
 
 final class Generator implements Domain\Generator
 {
-    /**
-     * @var string
-     */
+    use ConvertsDates;
+
+    /** @var string */
     private $clientEmail;
 
-    /**
-     * @var string
-     */
-    private $privateKey;
-
-    /**
-     * @var Signer
-     */
-    private $signer;
+    /** @var Configuration */
+    private $config;
 
     /**
      * @deprecated 1.9.0
@@ -34,47 +32,41 @@ final class Generator implements Domain\Generator
         Signer $signer = null
     ) {
         $this->clientEmail = $clientEmail;
-        $this->privateKey = $privateKey;
-        $this->signer = $signer ?: new Sha256();
+
+        $this->config = Configuration::forSymmetricSigner(
+            $signer ?: new Signer\Rsa\Sha256(),
+            Signer\Key\InMemory::plainText($privateKey)
+        );
     }
 
     /**
      * Returns a token for the given user and claims.
      *
      * @param mixed $uid
-     * @param \DateTimeInterface $expiresAt
+     * @param DateTimeInterface $expiresAt
      *
-     * @throws \BadMethodCallException when a claim is invalid
+     * @throws BadMethodCallException when a claim is invalid
      */
-    public function createCustomToken($uid, array $claims = [], \DateTimeInterface $expiresAt = null): Token
+    public function createCustomToken($uid, array $claims = [], DateTimeInterface $expiresAt = null): Token
     {
-        $builder = $this->createBuilder();
+        $now = new DateTimeImmutable();
 
-        if (count($claims)) {
-            $builder->set('claims', $claims);
+        $expiresAt = $expiresAt
+            ? $this->convertExpiryDate($expiresAt)
+            : $now->add(new DateInterval('PT1H'));
+
+        $builder = $this->config->builder()
+            ->issuedBy($this->clientEmail)
+            ->relatedTo($this->clientEmail)
+            ->permittedFor('https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit')
+            ->withClaim('uid', (string) $uid)
+            ->issuedAt($now)
+            ->expiresAt($expiresAt);
+
+        if (!empty($claims)) {
+            $builder->withClaim('claims', $claims);
         }
 
-        $builder->set('uid', (string) $uid);
-
-        $now = time();
-        $expiration = $expiresAt ? $expiresAt->getTimestamp() : $now + (60 * 60);
-
-        $token = $builder
-            ->setIssuedAt($now)
-            ->setExpiration($expiration)
-            ->sign($this->signer, $this->privateKey)
-            ->getToken();
-
-        $builder->unsign();
-
-        return $token;
-    }
-
-    private function createBuilder(): Builder
-    {
-        return (new Builder())
-            ->setIssuer($this->clientEmail)
-            ->setSubject($this->clientEmail)
-            ->setAudience('https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit');
+        return $builder->getToken($this->config->signer(), $this->config->signingKey());
     }
 }

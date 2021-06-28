@@ -5,13 +5,13 @@
     "require": {
         "php": ">=7.3",
         "pagseguro/pagseguro-php-sdk" : "6.0.0",
-        "kreait/firebase-php" : "5.1.0",
-        "minishlink/web-push": "v5.2.4",
-        "phpmailer/phpmailer" : "v6.1.6",
+        "kreait/firebase-php" : "5.20.1",
+        "minishlink/web-push": "v6.0.5",
+        "phpmailer/phpmailer" : "v6.5.0",
         "cboden/ratchet": "v0.4.2",
-        "robmorgan/phinx": "0.12.1",
-        "symfony/http-foundation": ">=5.0.7",
-        "paragonie/sodium_compat": ">=1.13.0"
+        "robmorgan/phinx": "0.12.7",
+        "symfony/http-foundation": ">=5.3.1",
+        "paragonie/sodium_compat": ">=1.16.1"
     },
     "repositories": [
         {
@@ -36,7 +36,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/robmorgan/phinx.git"
+            "url": "https://github.com/cakephp/phinx.git"
         },
         {
             "type": "vcs",

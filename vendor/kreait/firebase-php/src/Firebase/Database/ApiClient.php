@@ -8,7 +8,6 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use Kreait\Firebase\Exception\DatabaseApiExceptionConverter;
 use Kreait\Firebase\Exception\DatabaseException;
-use Kreait\Firebase\Http\WrappedGuzzleClient;
 use Kreait\Firebase\Util\JSON;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -17,12 +16,10 @@ use Throwable;
 /**
  * @internal
  */
-class ApiClient implements ClientInterface
+class ApiClient
 {
-    use WrappedGuzzleClient;
-
-    /** @var DatabaseApiExceptionConverter */
-    protected $errorHandler;
+    private ClientInterface $client;
+    protected DatabaseApiExceptionConverter $errorHandler;
 
     /**
      * @internal
@@ -48,7 +45,7 @@ class ApiClient implements ClientInterface
     }
 
     /**
-     * @internal This method should only be used in the context of Database transations
+     * @internal This method should only be used in the context of Database translations
      *
      * @param UriInterface|string $uri
      *
@@ -89,7 +86,7 @@ class ApiClient implements ClientInterface
     }
 
     /**
-     * @internal This method should only be used in the context of Database transations
+     * @internal This method should only be used in the context of Database translations
      *
      * @param UriInterface|string $uri
      * @param mixed $value
@@ -111,7 +108,7 @@ class ApiClient implements ClientInterface
     }
 
     /**
-     * @internal This method should only be used in the context of Database transations
+     * @internal This method should only be used in the context of Database translations
      *
      * @param UriInterface|string $uri
      *
@@ -189,7 +186,7 @@ class ApiClient implements ClientInterface
         $request = new Request($method, $uri);
 
         try {
-            return $this->send($request, $options);
+            return $this->client->send($request, $options);
         } catch (Throwable $e) {
             throw $this->errorHandler->convertException($e);
         }

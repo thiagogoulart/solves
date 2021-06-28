@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## 1.15.0 - 2021-04-19
+
+- Use fallback cache duration (defaults to 1 hour) when fetching public keys from Google and
+  the response doesn't contain cache headers.
+- Add additional URL to fetch Google's public keys. 
+
+## 1.14.0 - 2020-12-09
+
+- Drop the `V3` suffix from handlers using `lcobucci/jwt`
+- Limit support to PHP 8.0.*
+
+## 1.13.0 - 2020-11-29
+
+- Added support for PHP 8.0
+
+## 1.12.0 - 2020-11-27
+
+- Added Tenant Awareness
+- Fixed usage of deprecated functionality from `lcobucci/jwt`
+
+## 1.11.0 - 2020-10-04
+
+- Updated dev-dependency on `symfony/cache` to address [CVE-2019-10912](https://github.com/advisories/GHSA-w2fr-65vp-mxw3)
+- The default branch of the GitHub repository has been renamed from `master` to `main` - 
+  if you're using `dev-master` as a version constraint in your `composer.json`, please 
+  update it to `dev-main`.
+- This library can now be used with PHP 8. 
+
 ## 1.10.0 - 2020-01-14
 
 - Added support for Guzzle 7

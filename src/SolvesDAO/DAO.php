@@ -4,7 +4,8 @@ Autor:  Thiago Goulart.
 Data de criação: 01/01/2010.
  alteração: 28/03/2014.
  alteração: 19/07/2019.
-Última alteração: 18/09/2019.
+ alteração: 18/09/2019.
+Última alteração: 15/06/2021
 */
 
 namespace SolvesDAO;
@@ -1093,8 +1094,8 @@ class DAO {
                     $resultado = $result;
                     $dados = null;
                     $result = null;
-                }else{
-                    while($dados=$result->fetch_array(MYSQLI_ASSOC)){
+                }else if($result){
+                    while($dados=$result->fetch_array(MYSQLI_ASSOC)){ //} or die('erro no fetch: '.$this->getBdConnection()->error)){
                         $resultado[] = $dados;
                     }
                     $dados = null;
@@ -1102,6 +1103,8 @@ class DAO {
                     /* free result set */
                     @mysqli_free_result($result);
                     $result = null;
+                }else{
+                    die($this->msgError.' | '.$this->getBdConnection()->error); 
                 }
             }else if($this->isSystemDbTypePostgresql()){
                 $result = pg_query($this->getBdConnection(), $sql) or die($this->msgError.

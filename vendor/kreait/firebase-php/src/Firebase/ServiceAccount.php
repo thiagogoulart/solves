@@ -14,7 +14,7 @@ use Throwable;
 class ServiceAccount
 {
     /** @var array<string, string> */
-    private $data = [];
+    private array $data = [];
 
     public function getProjectId(): string
     {
@@ -43,7 +43,7 @@ class ServiceAccount
     }
 
     /**
-     * @param self|string|array<string, string> $value
+     * @param self|string|array|mixed $value
      *
      * @throws InvalidArgumentException
      *
@@ -55,27 +55,27 @@ class ServiceAccount
             return $value;
         }
 
-        if (\is_string($value) && \mb_strpos($value, '{') === 0) {
+        if (\is_string($value)) {
             try {
-                return self::fromJson($value);
-            } catch (InvalidArgumentException $e) {
-                throw new InvalidArgumentException('Invalid service account specification');
-            }
-        }
+                if (\str_starts_with($value, '{')) {
+                    return self::fromJson($value);
+                }
 
-        if (\is_string($value) && \mb_strpos($value, '{') !== 0) {
-            try {
                 return self::fromJsonFile($value);
-            } catch (InvalidArgumentException $e) {
-                throw new InvalidArgumentException('Invalid service account specification');
+            } catch (Throwable $e) {
+                throw new InvalidArgumentException('Invalid service account: '.$e->getMessage(), $e->getCode(), $e);
             }
         }
 
         if (\is_array($value)) {
-            return self::fromArray($value);
+            try {
+                return self::fromArray($value);
+            } catch (Throwable $e) {
+                throw new InvalidArgumentException('Invalid service account: '.$e->getMessage(), $e->getCode(), $e);
+            }
         }
 
-        throw new InvalidArgumentException('Invalid service account specification.');
+        throw new InvalidArgumentException('Invalid service account: Unsupported value');
     }
 
     /**

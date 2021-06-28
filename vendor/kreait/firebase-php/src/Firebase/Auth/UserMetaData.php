@@ -9,11 +9,15 @@ use Kreait\Firebase\Util\DT;
 
 class UserMetaData implements \JsonSerializable
 {
-    /** @var DateTimeImmutable|null */
-    public $createdAt;
+    public ?DateTimeImmutable $createdAt = null;
+    public ?DateTimeImmutable $lastLoginAt = null;
+    public ?DateTimeImmutable $passwordUpdatedAt = null;
 
-    /** @var DateTimeImmutable|null */
-    public $lastLoginAt;
+    /**
+     * The time at which the user was last active (ID token refreshed), or null
+     * if the user was never active.
+     */
+    public ?DateTimeImmutable $lastRefreshAt = null;
 
     /**
      * @param array<string, mixed> $data
@@ -25,6 +29,14 @@ class UserMetaData implements \JsonSerializable
 
         if ($data['lastLoginAt'] ?? null) {
             $metadata->lastLoginAt = DT::toUTCDateTimeImmutable($data['lastLoginAt']);
+        }
+
+        if ($data['passwordUpdatedAt'] ?? null) {
+            $metadata->passwordUpdatedAt = DT::toUTCDateTimeImmutable($data['passwordUpdatedAt']);
+        }
+
+        if ($data['lastRefreshAt'] ?? null) {
+            $metadata->lastRefreshAt = DT::toUTCDateTimeImmutable($data['lastRefreshAt']);
         }
 
         return $metadata;

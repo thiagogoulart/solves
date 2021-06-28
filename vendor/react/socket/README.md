@@ -1,6 +1,6 @@
 # Socket
 
-[![Build Status](https://travis-ci.org/reactphp/socket.svg?branch=master)](https://travis-ci.org/reactphp/socket)
+[![CI status](https://github.com/reactphp/socket/workflows/CI/badge.svg)](https://github.com/reactphp/socket/actions)
 
 Async, streaming plaintext TCP/IP and secure TLS socket server and client
 connections for [ReactPHP](https://reactphp.org/).
@@ -425,6 +425,7 @@ $server = new React\Socket\Server('[::1]:8080', $loop, array(
   their defaults and effects of changing these may vary depending on your system
   and/or PHP version.
   Passing unknown context options has no effect.
+  The `backlog` context option defaults to `511` unless given explicitly.
   For BC reasons, you can also pass the TCP socket context options as a simple
   array without wrapping this in another array under the `tcp` key.
 
@@ -577,6 +578,7 @@ $server = new React\Socket\TcpServer('[::1]:8080', $loop, array(
 their defaults and effects of changing these may vary depending on your system
 and/or PHP version.
 Passing unknown context options has no effect.
+The `backlog` context option defaults to `511` unless given explicitly.
 
 Whenever a client connects, it will emit a `connection` event with a connection
 instance implementing [`ConnectionInterface`](#connectioninterface):
@@ -1425,13 +1427,13 @@ This project follows [SemVer](https://semver.org/).
 This will install the latest supported version:
 
 ```bash
-$ composer require react/socket:^1.4
+$ composer require react/socket:^1.7
 ```
 
 See also the [CHANGELOG](CHANGELOG.md) for details about version upgrades.
 
 This project aims to run on any platform and thus does not require any PHP
-extensions and supports running on legacy PHP 5.3 through current PHP 7+ and HHVM.
+extensions and supports running on legacy PHP 5.3 through current PHP 8+ and HHVM.
 It's *highly recommended to use PHP 7+* for this project, partly due to its vast
 performance improvements and partly because legacy PHP versions require several
 workarounds as described below.

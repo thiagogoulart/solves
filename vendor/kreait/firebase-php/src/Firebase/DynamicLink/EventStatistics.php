@@ -34,9 +34,12 @@ final class EventStatistics implements Countable, IteratorAggregate
     public const TYPE_APP_RE_OPEN = 'APP_RE_OPEN';
 
     /** @var array<int, array<string, string>> */
-    private $events;
+    private array $events;
 
-    private function __construct(array ...$events)
+    /**
+     * @param array<int, array<string, string>> $events
+     */
+    private function __construct(array $events)
     {
         $this->events = $events;
     }
@@ -46,7 +49,7 @@ final class EventStatistics implements Countable, IteratorAggregate
      */
     public static function fromArray(array $events): self
     {
-        return new self(...$events);
+        return new self($events);
     }
 
     public function onAndroid(): self
@@ -91,21 +94,17 @@ final class EventStatistics implements Countable, IteratorAggregate
 
     public function filterByType(string $type): self
     {
-        return $this->filter(static function (array $event) use ($type) {
-            return ($event['event'] ?? null) === $type;
-        });
+        return $this->filter(static fn (array $event) => ($event['event'] ?? null) === $type);
     }
 
     public function filterByPlatform(string $platform): self
     {
-        return $this->filter(static function (array $event) use ($platform) {
-            return ($event['platform'] ?? null) === $platform;
-        });
+        return $this->filter(static fn (array $event) => ($event['platform'] ?? null) === $platform);
     }
 
     public function filter(callable $filter): self
     {
-        return new self(...\array_filter($this->events, $filter));
+        return new self(\array_filter($this->events, $filter));
     }
 
     /**
@@ -113,7 +112,7 @@ final class EventStatistics implements Countable, IteratorAggregate
      *
      * @return \Traversable<array<string, string>>
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         yield from $this->events;
     }
