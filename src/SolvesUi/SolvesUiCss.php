@@ -245,7 +245,7 @@ class SolvesUiCss {
         $this->usingAssetsLib = true;
         $this->external = false;
         $this->inline = false;
-        $this->dir = \Solves\Solves::removeBarraInicial(\Solves\SolvesConf::getSolvesConfUrls()::LIB).$dirInsideLib.'/';
+        $this->dir = \Solves\SolvesConf::getSolvesConfUrls()->getSolvesConfUrlAtivo()->getSiteContext().\Solves\Solves::removeBarraInicial(\Solves\SolvesConf::getSolvesConfUrls()::LIB).$dirInsideLib.'/';
         $this->configPath();
         return $this;
     }
